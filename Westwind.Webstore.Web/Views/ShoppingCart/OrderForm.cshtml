@@ -1,0 +1,111 @@
+﻿@model OrderFormViewModel
+@{
+    ViewBag.Title =  "Order Checkout - " + wsApp.Configuration.ApplicationName;
+
+    // Full InvoiceModel Entity from View Model
+    var invoice = Model.InvoiceModel.Invoice;
+}
+
+
+<div class="container">
+    <form id="OrderForm" asp-action="OrderForm" method="post">
+
+        <h2 class="page-header-text">
+            <i class="fad fa-credit-card-front"></i>
+            Review and enter Payment
+            
+            <div class="float-end" style="font-size: 0.75em">
+                <a class="btn btn-sm btn-secondary" href="/shoppingcart" title="continue shopping or change order" >
+                    <i class="fad fa-cart-plus"></i>
+                    <span class="hidable">Change order</span>
+                    
+                </a>
+            </div>
+        </h2>
+        
+        <error-display error-display-model="Model.ErrorDisplay"></error-display>
+
+        <partial name="OrderAddress_Partial" model="invoice" />
+        
+        <partial name="ShoppingCartItems_Partial" model="Model.InvoiceModel"   />
+
+
+        <h3 class="page-header-text mt-4">
+            <i class="fad fa-credit-card"></i>
+            @AppResources.ShoppingCart.PaymentInformation
+
+            <img src="/images/ccCards.png" class="float-end hidable-xs" alt="Credit Cards">
+        </h3>
+
+        <partial name="CreditCardPayment_BrainTree_Partial" model="Model"/>
+        
+        <h3 class="page-header-text mb-0">
+            <i class="fad fa-info-circle"></i>
+            @AppResources.ShoppingCart.NotesAndInformation
+        </h3>
+
+        <div class="header-byline ">special instructions and referral information</div>
+
+
+        <div class="input-group mt-2 mb-2">
+            <textArea type="text"
+                          class="form-control"
+                          asp-for="InvoiceModel.Notes"
+                          autocapitalize="off"
+                          autocomplete="off"
+                          spellcheck="false"
+                          placeholder="leave any special order instructions or notes about how you found us here"
+                          autocorrect="off"></textArea>
+        </div>
+    
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="fas fa-fingerprint"></i>
+            </span>
+            <input type="text" 
+                   class="form-control"
+                   asp-for="InvoiceModel.PoNumber"
+                   placeholder="optional customer reference or PO number"
+            />
+        </div>
+        
+
+        @if (wsApp.Configuration.Security.UseOrderFormRecaptcha)
+        {
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            <script>
+                captchaResponse = function(key) {
+                    $("#txtReCaptcha").val(key);
+                }
+            </script>
+
+            <div id="grc" class="g-recaptcha mt-3"
+                 data-sitekey="6LdyQtcUAAAAAMHqq1s25d4PpkbzTv_AHpBZkzNH"
+                 data-callback="captchaResponse">
+            </div>
+        }
+
+
+        <button id="btnSubmit" type="submit"
+                class="btn-primary btn btn-lg mt-4" >
+            <i class="fa fa-check-circle text-success"></i>
+            Place your Order
+        </button>
+    
+        <input type="hidden" asp-for="@Model.ReCaptchaResult" id="txtReCaptcha" />
+        <input type="hidden" asp-for="@Model.dtto" />
+    </form>
+</div>
+
+@section BottomOfBody
+{
+    
+    <partial name="ProgressWindowOverlay_Partial"  model="new ProgressWindowOverlayModel()"/>
+}
+
+@section Scripts {
+    <link href="/lib/toastr/build/toastr.min.css" rel="stylesheet"/>
+    <script src="/lib/toastr/build/toastr.min.js"></script>
+
+
+}

@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Version>0.1.2</Version>
+    <RestoreAdditionalProjectSources>.\_SupportPackages</RestoreAdditionalProjectSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\WebStoreBusinessResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>WebStoreBusinessResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\WebStoreBusinessResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>WebStoreBusinessResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Westwind.Data.EfCore" Version="4.0.4" />
+    <PackageReference Include="Westwind.Globalization" Version="3.1.5" />
+
+    <!-- private package in ./_SupportPackages folder -->
+    <PackageReference Include="Westwind.Licensing" Version="1.0.2" />
+   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing.csproj" />
+    
+    <!--    <Reference Include="Westwind.Licensing">-->
+    <!--      <HintPath>..\SupportAssemblies\Westwind.Licensing\Westwind.Licensing.dll</HintPath>-->
+    <!--    </Reference>-->
+
+    <!--  this is not a thing but would be nice! -->
+    <!--    <PackageReference Include="Westwind.Licensing" Version="1.0.1">-->
+    <!--      <HintPath>..\SupportAssemblies\Westwind.Licensing\Westwind.Licensing.nupkg</HintPath>-->
+    <!--    </PackageReference>-->
+
+    <!--    <ProjectReference Include="..\..\Libraries\Westwind.Globalization\src\Westwind.Globalization\Westwind.Globalization.csproj" />-->
+    <!--    <ProjectReference Include="..\..\LicenseManagerService\Westwind.Licensing\Westwind.Licensing.csproj" />-->
+  </ItemGroup>
+  
+</Project>

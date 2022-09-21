@@ -1,0 +1,157 @@
+﻿@model OrderFormViewModel
+@{
+    ViewBag.Title =  "Order Confirmation - " + wsApp.Configuration.ApplicationName;
+
+    // Full InvoiceModel Entity from View Model
+    var invoice = Model.InvoiceModel.Invoice;
+
+    bool hasShippingAddress = !(Model.InvoiceModel.Invoice?.ShippingAddress.IsEmpty() ?? true);
+}
+@section HeadersBottom {
+    <style>
+        #LineItemTable tbody tr:nth-child(odd) {
+            background: white;
+        }
+
+        .lineitem-delete {
+            font-size: 0.8em;
+        }
+        #LineItemTable tbody tr td { 
+            vertical-align: top;
+
+        }
+        .lineitem-description {
+            font-size: 1.09em;
+            font-weight: 500;
+            display: block;
+        }
+        #LineItemTable td:nth-child(2),
+        #LineItemTable th:nth-child(2),
+        #LineItemTable td:nth-child(2) input {
+            width: 4.5em;
+        }
+        #LineItemTable td:nth-child(2) input{
+            padding: 2px;
+        }
+        
+        .invoice-subtotal {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #444;
+            text-align: right;
+        }
+        .invoice-total {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: right;
+        }
+        .table-wrapper {
+            background: linear-gradient(to bottom, #eeeeee, White 100%);
+        }
+        .tiny-title {
+            font-size: 0.7em;
+            font-style: italic;
+            color: #999;
+        }
+        .right { text-align: right }
+        .highlighted { color:  firebrick; font-weight:  bold; }        
+    </style>
+}
+
+
+
+<div class="container">
+    @if (invoice.CreditCardResult.IsApproved())
+    {
+        <div class="tiny-title" style="float: right; margin-top: 1.7em;">
+            <a href="@(wsApp.Configuration.ApplicationHomeUrl + "invoice/" + invoice.InvoiceNumber)" target="WestwindInvoice">
+                printable invoice
+            </a>
+        </div>
+    }
+
+    <h2 class="page-header-text">
+        <i class="fad fa-credit-card-front"></i>
+        Order Confirmation #@invoice.InvoiceNumber
+    </h2>
+
+    <p>
+        Thank you for your order in the West Wind Web Store.
+        Your order number is <b>@Model.InvoiceModel.Invoice.InvoiceNumber</b> for a total of <b>@Model.InvoiceModel.Invoice.InvoiceTotal.ToString("c2")</b>.
+    </p>
+
+    <p>
+        Below is a summary of your order. This document serves as a record for your transaction.
+        You will receive this same confirmation via email. If you ordered software, a separate confirmation
+        with information on where to download the software will be sent once the order
+        has been processed successfully.
+    </p>
+
+    <blockquote>
+        <b>Important Note:</b><br/>
+        Please ensure that you can receive email at the address you specified.
+        To be on the safe side you might want to add <b><i>@wsApp.Configuration.Email.SenderEmail</i></b>
+        to your safe sender's list. If you don't get this confirmation email
+        within a couple of hours please check your Spam folder and
+        if you still can't find it <a href="mailto:@wsApp.Configuration.Email.SenderEmail">contact us</a>.
+    </blockquote>
+
+    <p>
+        Please note that on some orders and upgrades credit cards are not immediately processed.
+        This applies to upgrades and some foreign orders. These orders are typically processed within
+        a full business day. If you don't hear from us within two business days, it probably means
+        that there was a problem with sending the confirmation email to you, and you should
+        <a href="mailto:@wsApp.Configuration.Email.SenderEmail">contact us</a>.
+    </p>
+
+    <p>
+        Thank you again,
+    </p>
+
+    <p class="text-big mb-4"><b>The West Wind Technologies Team</b></p>
+    
+    
+    <table class="table table-bordered mt-5">
+        <thead>
+        <tr class="bg-light">
+            <th>Invoice <span class="hidable">Number</span></th>
+            <th>Sold on</th>
+            <th><span class="hidable">Customer</span> Reference</th>
+            <th>Paid By</th>
+            <th class="right">Total Sale</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="highlighted">@invoice.InvoiceNumber</td>
+            <td>@invoice.InvoiceDate.ToString("MMM dd, yyyy")</td>
+            <td>@invoice.PoNumber</td>
+            <td>@invoice.CreditCard.Type</td>
+            <td class="right highlighted">$@invoice.InvoiceTotal.ToString("n2")</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <partial name="OrderAddress_Partial" model="invoice"/>
+
+    <partial name="ShoppingCartItems_Partial" model="Model.InvoiceModel"/>
+
+    <div style="font-size: 36pt; color: #bbb; font-weight: 600">
+        @invoice.CreditCardResult.ToString()
+    </div>
+
+    
+    @if (!string.IsNullOrEmpty(invoice.Notes))
+    {
+        <div>
+            <label>Order Notes</label>:
+            <div>@Html.Raw(HtmlUtils.DisplayMemoEncoded(invoice.Notes))</div>
+        </div>
+    }
+
+    <a href="~/" class="btn-primary btn btn-lg mt-4" type="submit">
+        <i class="fa fa-check-circle text-success"></i>
+        Continue in the Store
+    </a>
+
+</div>

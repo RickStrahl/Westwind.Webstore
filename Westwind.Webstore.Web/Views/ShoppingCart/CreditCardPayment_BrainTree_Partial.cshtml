@@ -1,0 +1,49 @@
+﻿@using Westwind.CreditCardProcessing
+@model OrderFormViewModel
+@{
+    var invoiceModel = Model.InvoiceModel;
+    var invoice = invoiceModel.Invoice;
+    var customer = invoice.Customer;
+}
+<div class="well flex-fill" style="min-height: 205px">
+    
+    <div id="dropin-container" style="width: 100%; margin: 0 auto"></div>
+    
+
+    <div>
+        @* <button id="btnPreValidate"  *@
+        @*         class="btn btn-secondary btn-sm float-end"  *@
+        @*         type="button"> *@
+        @*     <i class="fas fa-credit-card"></i> *@
+        @*     Pre-Validate Card *@
+        @* </button> *@
+        <div class="mt-1" style="font-size: 0.65em">payment processing by <a href="https://www.braintreepayments.com/">BrainTree</a> (a PayPal company)</div>
+    </div>
+</div>
+
+<input id="Nonce" type="hidden" asp-for="@Model.InvoiceModel.Nonce" />
+<input id="Descriptor" type="hidden" asp-for="@Model.InvoiceModel.Descriptor" />
+<input id="DeviceData" type="hidden" asp-for="@Model.InvoiceModel.DeviceData" />
+
+
+@{
+    var cc = new BraintreeCreditCardProcessor();
+    cc.Merchant.MerchantId = wsApp.Configuration.Payment.MerchantId;
+    cc.Merchant.PrivateKey = wsApp.Configuration.Payment.PrivateKey;
+    cc.Merchant.PublicKey = wsApp.Configuration.Payment.PublicKey;
+    cc.Configuration.UseTestTransaction = wsApp.Configuration.Payment.TestMode;
+    
+    var clientToken = cc.GenerateClientToken();
+}
+
+<script src="https://js.braintreegateway.com/web/dropin/1.33.4/js/dropin.min.js"></script>
+<script>
+    var ccConfig = {
+        cardProcessor: "Braintree",
+        useClientProcessing: true,
+        amount: @invoice.InvoiceTotal.ToString("n2"),
+        clientToken: "@clientToken"
+    };
+</script>
+<script src="/scripts/cc_braintree_processing.js"></script>
+

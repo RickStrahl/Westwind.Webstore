@@ -1,0 +1,326 @@
+﻿@model InvoiceEditorViewModel
+
+@section Headers {
+    <style>
+    .payment-status {
+        font-size: 36pt; color: #bbb; font-weight: bold
+    }
+      @@media(min-width: 980px) {
+        .order-buttons-container 
+        {
+            float:  right;
+        }
+      }
+      @@media(max-width:  767px) {
+        #InvoiceHeaderTable, #InvoiceHeaderTable input {
+            font-size:  0.8em !important;
+        }
+         
+      }   
+    </style>
+}
+
+@{
+    ViewBag.Title = "Invoice #" + Model.Invoice.InvoiceNumber;    
+    Layout = "_Layout";
+
+    var invoice = Model.Invoice;
+    var customer = invoice.Customer;
+    var billingAddress = invoice.BillingAddress;
+    var lineItems = invoice.LineItems;
+
+    var invoiceModel = new InvoiceViewModel(invoice)
+    {
+        CanEditLineItems = true,
+        CanDeleteLineItems = true,
+        CanEditLineItemQuantity = false,
+        CanEditPromoCode = true
+    };
+}
+
+<div style="margin: 1em;">
+    
+<div class="float-end">
+    <a class="btn btn-secondary btn-sm" 
+       href="/admin/ordermanager?s=@Model.ListSearchTerm" title="back to invoice list">
+        <i class="fad fa-list fa-button"></i>
+    </a>
+    <a class="btn btn-secondary btn-sm" 
+       href="/invoice/@invoice.InvoiceNumber" title="print invoice">
+        <i class="fad  fa-print fa-button"></i>
+    </a>
+</div>
+<h1 class="page-header-text">
+    <i class="fad fa-receipt"></i>
+    Invoice #@Model.Invoice.InvoiceNumber
+</h1> 
+    
+<error-display error-display-model="Model.ErrorDisplay"></error-display>
+    
+<form id="InvoiceForm" method="post">
+
+<div class="form-group">
+    <div class="responsive-container">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fad fa-fw fa-user"></i></span>
+            <input type="text" class="form-control" 
+                   asp-for="Invoice.Customer.Firstname"
+                   placeholder="First name" title="First name" />
+        </div>
+    
+        <div class="input-group">
+            <span class="input-group-text"><i class="fad fa-fw fa-user "></i></span>
+            <input type="text" class="form-control" id="txtLastname" asp-for="Invoice.Customer.Lastname" 
+                   placeholder="Last name" title="Last name"/>
+        </div>
+    </div>
+    
+    <div class="form-group mt-3 mb-3">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fad fa-fw fa-users "></i></span>
+            <input type="text"
+                   class="form-control"
+                   placeholder="Enter your Company" title="Company"
+                   asp-for="Invoice.Customer.Company"
+                   autocapitalize="off"
+                   autocomplete="off"
+                   spellcheck="false"
+                   autocorrect="off"/>
+        </div>
+    </div>
+    
+    <div class="form-group mb-0">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-fw fa-envelope-open"></i></span>
+            <input type="text"
+                   class="form-control"
+                   placeholder="Enter your Email address"
+                   asp-for="Invoice.Customer.Email"
+                   aria-label="Email"
+                   title="Email address"
+                   autocapitalize="off"
+                   autocomplete="off"
+                   spellcheck="false"
+                   autocorrect="off" required/>
+        </div>
+    </div>
+</div>
+    
+        
+<table id="InvoiceHeaderTable" class="table table-bordered table-responsive-sm mt-3 mb-0" >
+    <thead>
+    <tr class="bg-light">
+        <th>Sold on</th>
+        <th>Completed</th>
+        <th><span class="hidable">Customer</span> Reference</th>
+        <th>Paid By</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+
+        <td>
+            <input type="text" class="form-control date"
+                   asp-for="Invoice.InvoiceDate"
+                   asp-format="{0:yyyy-MM-dd}"
+            />
+        </td>
+        <td>
+            <input type="text" class="form-control date"
+                   asp-for="Invoice.Completed"
+                   asp-format="{0:yyyy-MM-dd}"
+                   onkeydown="webstore.dateKeys(event)"
+            /></td>
+        <td>
+            <input type="text" class="form-control" asp-for="Invoice.PoNumber"/>
+        </td>
+        <td>
+            <input type="text" class="form-control" asp-for="Invoice.CreditCard.Type"/>
+        </td>
+    </tr>
+    </tbody>
+</table>
+    
+@{
+    var payClass = string.Empty;
+    var paymentStatus = invoice.CreditCardResult.ToString();
+    var rawPaymentStatus = invoice.CreditCardResult.ProcessingResult;
+    if (string.IsNullOrEmpty(paymentStatus))
+        payClass = string.Empty;
+    else if (paymentStatus == "APPROVED")
+        payClass = "text-success";
+    else if (paymentStatus == "AUTHENTICATED")
+        payClass = "text-danger";
+    else
+        payClass = "text-warning";
+}
+<div class="payment-status" class="@payClass mb-2">
+    <div class="order-buttons-container">
+        @if (paymentStatus != "APPROVED" && invoice.InvoiceTotal > 0.001M && invoice.CanProcessCreditCard())
+        {
+            <button type="submit" name="btnProcessPayment" id="btnProcessPayment"
+                    class="btn btn-warning btn-sm" onclick="return processPayment()">
+                <i class="fad fa-credit-card"></i>
+                Process Payment
+            </button>
+            <script>
+                    function processPayment() {
+                        if (!confirm("Are you sure you want to process this payment?")) {
+                            return false;
+                        }
+                        return true;
+                    }
+                </script>
+        }
+
+        @if (rawPaymentStatus == "APPROVED")
+        {
+            var buttonClass = "secondary";
+            if (invoice.Completed == null)
+            {
+                buttonClass = "warning";
+            }
+            <button type="submit" name="btnEmailProductConfirmations" id="btnEmailProductConfirmations"
+                    class="btn btn-@buttonClass btn-sm" title="Send item license confirmation emails">
+                <i class="fas fa-inbox-out"></i>
+                Product Confirmations
+            </button>
+        }
+
+        @* @if (rawPaymentStatus == "APPROVED" || *@
+        @*      rawPaymentStatus == "AUTHORIZED") *@
+        @* { *@
+        <button type="submit" name="btnEmailOrderConfirmation" id="btnEmailOrderConfirmation"
+                class="btn btn-secondary btn-sm" title="Send order summary confirmation email.">
+            <i class="fas fa-inbox-out"></i>
+            Order Confirmation
+        </button>
+        @* } *@
+    </div>
+
+    @{
+
+        string transactionLink = "#0";
+        if (!string.IsNullOrEmpty(invoice.CreditCardResult.TransactionId))
+        {
+            transactionLink = string.Format(wsApp.Configuration.Payment.TransactionHtmlLink, invoice.CreditCardResult.TransactionId, wsApp.Configuration.Payment.MerchantId);
+        }
+    }
+    <input type="text"
+           class="form-text"
+           ondblclick="location.href='@transactionLink'"
+           asp-for="Invoice.CreditCardResult.ProcessingResult"
+           style="border: none; color: inherit" 
+           title="Payment status - double click to lookup transaction"
+           placeholder="UNPROCESSED"/>
+</div>    
+    
+<partial name="../ShoppingCart/ShoppingCartItems_Partial" model="invoiceModel"/>
+        
+<div class=" float-end">
+    
+    <button id="btnAddLineItem" name="btnAddLineItem"
+            type="submit"
+            class="btn btn-secondary btn-sm">
+        <i class="fas fa-plus-circle text-success" Add Lineitem></i>
+        Add Lineitem
+    </button>
+</div>
+<h3 class="page-header-text mb-0 mt-5">
+    <i class="fad fa-credit-card"></i>
+    Billing Address
+</h3>
+    
+<div class="form-group mt-2">
+    <div class="input-group">
+        <textArea type="text"
+                                  class="form-control"
+                                  placeholder="Enter your Address"
+                                  asp-for="Invoice.BillingAddress.StreetAddress"
+                                  autocapitalize="off"
+                                  autocomplete="off"
+                                  spellcheck="false"
+                                  autocorrect="off"></textArea>
+    </div>
+</div>
+    
+    
+<div class="form-group mt-2">
+    <div class="responsive-container">
+        <input asp-for="Invoice.BillingAddress.City" class="form-control" style="min-width: 280px" placeholder="City" />
+        <select asp-for="Invoice.BillingAddress.State"
+                class="form-select"
+               style="max-width: 15em"
+                asp-items="@(new SelectList(wsApp.States,"StateCode","State"))">
+        </select>
+        <input asp-for="Invoice.BillingAddress.PostalCode" class="form-control"
+               style="max-width: 10em"
+               placeholder="Postal code" />
+        
+           <select asp-for="Invoice.BillingAddress.CountryCode"
+                    class="form-select"
+                    asp-items="@(new SelectList(wsApp.Countries,"CountryCode","Country"))">
+            </select>
+    </div>
+</div>
+    
+   
+<div class="form-group mt-2">
+    <input asp-for="Invoice.BillingAddress.Telephone"
+           class="form-control" placeholder="phone number" />
+</div>
+
+<h3 class="page-header-text mb-2">
+    <i class="fad fa-notes"></i>
+    Order Notes
+</h3>
+
+<textarea asp-for="Invoice.Notes" class="form-control" placeholder="Invoice notes"></textarea>
+      
+        
+<div class="mt-4">
+    <button id="btnDeleteInvoice" name="btnDeleteInvoice" class="btn btn-secondary btn-sm float-end">
+        <i class="fas fa-times text-danger"></i>
+        Delete Invoice
+    </button>
+                    
+            
+    <button id="btnSubmit" name="btnSubmit" class="btn btn-primary btn-lg" accesskey="s">
+        <i class="fas fa-check text-success"></i>
+        Save Invoice
+    </button>
+</div>
+
+ 
+        
+<div class="mt-4">
+    <a href="#0" onclick="$('#InvoiceDetail').toggle();">
+        <i class="fad fa-eye"></i>
+        Full invoice detail
+    </a>
+    <pre style="display: none" id="InvoiceDetail">@JsonSerializationUtils.Serialize(Model.Invoice, formatJsonOutput: true)</pre>
+</div>
+    
+<input type="hidden" asp-for="Invoice.Id" />
+<input type="hidden" asp-for="Invoice.CustomerId" />
+<input type="hidden" asp-for="Invoice.InvoiceNumber" />
+<input type="hidden" asp-for="ListSearchTerm" />
+</form>
+</div>
+@section BottomOfBody
+{
+    @{ var progressModel = new ProgressWindowOverlayModel() { Title = "Processing" }; }
+    <partial name="~/Views/ShoppingCart/ProgressWindowOverlay_Partial.cshtml" model="progressModel"/>
+
+    <script>
+        $("#InvoiceForm").submit( function () {
+            setTimeout( window.progressWindowShowProgress,580);
+        });
+    </script>
+}
+<script>
+window.globals = {
+    invoiceNumber: "@invoice.InvoiceNumber"
+};
+</script>
+<script src="/scripts/InvoiceEditor.js"></script>

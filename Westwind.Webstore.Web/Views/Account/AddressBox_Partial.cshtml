@@ -1,0 +1,36 @@
+﻿@model AddressBoxViewModel
+@{
+    string name = string.Empty;
+    string company = string.Empty;
+    if (!Model.dontShowNameAndCompany)
+    {
+        if (!string.IsNullOrEmpty(Model.Name))
+        {
+            name = Model.Name;
+        }
+        if (!string.IsNullOrEmpty(Model.Company))
+            company = Model.Company;
+
+        if (string.IsNullOrEmpty(name + company))
+        {
+            name = Model.Address.AddressFullname;
+            company = Model.Address.AddressCompany;
+        }
+    }
+}      
+
+<div class="well bg-light" style="min-width: 20em">
+    <div class="tiny-title">@Model.Title</div>
+
+    @if (!string.IsNullOrEmpty(name))
+    {
+        <div>@name</div>
+    }
+    @if (!string.IsNullOrEmpty(company))
+    {
+        <div>@company</div>
+    }
+    <div>
+        @Html.Raw(HtmlUtils.DisplayMemo(Model.Address?.ToString(true)?.Trim()))
+    </div>    
+</div>

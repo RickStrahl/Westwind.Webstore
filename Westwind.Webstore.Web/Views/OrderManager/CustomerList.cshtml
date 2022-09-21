@@ -1,0 +1,130 @@
+﻿@model CustomerListViewModel
+@{
+    ViewBag.Title = "Customer List";
+    //ViewData["NoSearchBar"] = true;
+    Layout = "_Layout";
+}
+
+<div style="margin: 1em">
+    
+    <h2 class="page-header-text">
+        <i class="fad fa-receipt"></i>
+        @wsApp.Configuration.ApplicationName Customers
+    </h2>    
+    
+    <error-display error-display-model="Model.ErrorDisplay"></error-display>
+    
+    <table class="table table-sm table-hover  table-striped table-dark-headers ">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th class="right">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan="3">
+                <form>
+              
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-text">
+                                <i class="fas fa-plus-circle text-success"></i>
+                            </div>
+                        
+                            <input id="CustomerSearch" name="s"
+                                   class="form-control" type="text"
+                                   value="@Model.SearchTerm"
+                                   placeholder="search customer... (last name, company)"
+                                   title="search customer... (last name, company)" autocomplete="off" autocorrect="off">
+                            <button type="submit"
+                                    class="input-group-text text-info"
+                                    title="search customers for a new invoice to create">
+                            <i class="fas fa-check text-success"></i>
+                            </button>
+                        </div>
+                        
+                    <div class="header-byline mt-2">
+                        <a class="btn btn-default btn-sm float-end d-block p-1" 
+                           href="/admin/ordermanager/customers?action=addinvoice&s=@Model.SearchTerm">
+                            <i class="fas fa-plus-circle fa-button  text-success"></i> New Customer
+                        </a>
+                        
+                        @if (Model.CustomerCount > 0)
+                        {
+                            <div><b>@Model.CustomerCount Customers</b></div>
+                        }
+                        else
+                        {
+                            <b>no matches</b>
+                        }
+
+                    </div>
+                </form>
+            </td>
+        </tr>
+        @foreach (CustomerListItem customer in Model.CustomerList)
+        {
+            <tr>
+                <td class="small">
+                    <b class="text-info">@customer.Id</b><br/>
+                </td>
+                <td>
+
+                    @if (!string.IsNullOrEmpty(customer.Company))
+                    {
+                        <b>@customer.Company -</b>
+                    }
+                    @customer.Name
+                </td>
+                <td class="right bold">
+                    <a href="/admin/ordermanager/customers?action=addinvoice&customerid=@customer.Id&s=@Model.SearchTerm"
+                       class="btn btn-default">
+                        <i class="fas fa-plus-circle text-success"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+</div>
+
+@section Scripts
+{
+    <script>
+    function onClickDelete(invNo, ev){        
+        if (confirm('Are you sure you want to delete invoice ' + invNo + '?')) 
+            window.location = '/admin/ordermanager?action=delete&ivno=' + invNo;
+        
+        ajaxJson("/admin/ordermanager/api/invoice/" + invNo,null,
+         function (result) {
+                if (result.isSuccess)
+                { 
+                       toastr.message("Invoice deleted.");
+                       $(ev.target).remove();  // remove the row
+                }
+                else {
+                       toastr.message("Invoice not deleted: " + result.message);
+               }                
+            },
+            function (error) {
+                toastr.error("Invoice not deleted.");
+            });
+
+        ev.preventDefault();
+        ev.cancelBubble = true;
+        
+        return false; // don't navigate
+    }
+    $(function () {
+        
+        setTimeout( ()=> {            
+            var el = document.getElementById("CustomerSearch");
+            el.select();
+            el.focus()
+        }, 200);
+        
+    });
+    </script>
+}

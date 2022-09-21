@@ -1,0 +1,433 @@
+﻿@using System.Net
+@model ProductEditorViewModel
+@{
+    ViewBag.Title = @Model.Product.Description + " - " + @wsApp.Configuration.ApplicationName + " Product Manager";
+    Layout = "_Layout";
+}
+@section Headers
+{
+<style>
+    #SkuContainer {
+        width:  25em;
+    }
+</style>
+}
+<div class="container">
+
+<h1 class="page-header-text">
+    <img id="TitleImage" src="/images/product-images/@Model.Product.ItemImage"
+         style="width: 3em; max-width: 1.75em;"/> &nbsp
+    @Model.Product.Description
+
+    <a href="/product/@Model.Product.Sku" class="btn btn-secondary btn-sm float-end"
+       title="Show product page">
+        <i class="fad fa-external-link text-warning"></i>
+    </a>
+</h1>
+
+<error-display error-display-model="Model.ErrorDisplay"></error-display>
+
+<form method="post" action="">
+<div class="responsive-container ">
+    <div id="SkuContainer">
+        <input type="text" class="form-control"
+               required
+               placeholder="Item sku"
+               asp-for="Product.Sku"/>
+    </div>
+    <div>
+        <input type="text" class="form-control "
+               placeholder="Item description" required
+               asp-for="Product.Description"/>
+    </div>
+</div>
+
+<textarea placeholder="Detailed product description using Markdown text" 
+                class="form-control mt-2"  asp-for="Product.LongDescription"
+                style="height: 8.2em;">
+        </textarea>
+
+
+<label class="mt-2">Manufacturer:</label>
+<input type="text" class="form-control "
+       asp-for="Product.Manufacturer"/>
+
+<div class="responsive-container ">
+    <div class="ms-3">
+        <label title="Inactive items aren't shown in public listings but can be manually added.">
+            <input type="checkbox" class="d-inline"
+                   asp-for="Product.InActive"/>
+            Inactive
+        </label>
+        <label class="ps-3 pe-3" title="This item is not an electronic item that has to be shipped or picked up.">
+            <input type="checkbox"
+                   asp-for="Product.IsPhysical"/>
+            Physical
+        </label>
+        <label title="This item supports fractional quantities when adding to an order.">
+            <input type="checkbox"
+                   asp-for="Product.IsFractional"/>
+            Partial Qty
+        </label>
+    </div>
+</div>
+
+<button type="submit" name="btnSubmit" id="btnSubmit"
+        class="btn btn-primary mt-3 mb-3 d-block" accesskey="S">
+    <i class="fas fa-check text-success"></i>
+    Save Product
+</button>
+
+
+<h3 class="page-header-text">
+    <i class="fad fa-barcode-read"></i>
+    Prices and Stock
+</h3>
+
+<div class="responsive-container mb-2">
+    <div>
+        <label>Price:</label>
+        <input type="number" step="0.01"
+               class="form-control text-danger bold"
+               asp-for="Product.Price"
+               asp-format="{0:0.00}"/>
+    </div>
+    <div>
+        <label>Cost:</label>
+        <input type="number"
+               step="any"
+               class="form-control right"
+               asp-for="Product.Cost"
+               asp-format="{0:0.00}"/>
+    </div>
+    <div>
+        <label>Comission:</label>
+        <input type="number"
+               step="any"
+               class="form-control right"
+               asp-for="Product.ListPrice"
+               asp-format="{0:0.00}"/>
+    </div>
+</div>
+
+<div class="responsive-container">
+    <div >
+        <label>Stock:</label>
+        <input type="number" step="any" class="form-control right"
+               asp-for="Product.Stock"
+               asp-format="{0:0.00}"/>
+    </div>
+    <div>
+        <label>On Order:</label>
+        <input type="number" step="any" class="form-control right"
+               asp-for="Product.OnOrder"
+               asp-format="{0:0.00}"/>
+    </div>
+    <div>
+        <label>Weight:</label>
+        <input type="number" step="any" class="form-control right"
+               asp-for="Product.Weight"
+               asp-format="{0:0.00}"/>
+    </div>
+</div>
+
+<button type="submit" name="btnSubmit" id="btnSubmit"
+        class="btn btn-primary mt-3 mb-3 d-block" accesskey="S">
+    <i class="fas fa-check text-success"></i>
+    Save Product
+</button>
+
+<h3 class="page-header-text">
+    <i class="fas fa-layer-group"></i>
+    Categories and Ordering
+</h3>
+
+<label>Categories:</label>
+<textarea class="form-control" style="height: 5.2em"
+           asp-for="Product.Categories">
+    </textarea>
+
+<div class="responsive-container">
+
+    <div>
+        <label>Type:</label>
+        <input type="text" class="form-control"
+               asp-for="Product.Type"/>
+    </div>
+    <div>
+        <label>Sort Order:</label>
+        <input type="number" step="any"
+               class="form-control"
+               title="Optional item sort order: Higher numbers sort to the top on selection lists."
+               asp-for="Product.SortOrder"
+               asp-format="{0:0}"/>
+    </div>
+
+</div>
+
+<h3 class="page-header-text">
+    <i class="fa-duotone fa-image"></i>
+    Product Image
+</h3>
+
+<div id="ImageContainer" class="responsive-container">
+    <img id="ItemImage"
+         src="/images/product-images/@(WebUtility.UrlEncode(Model.Product.ItemImage))"
+         style="width:175px;  height:  auto; max-width: min-content !important"
+         class="me-3"/>
+    <div>
+        <label>Item Image: <span class="label-note">(you can paste an image from the clipboard here)</span></label>
+        <input type="text" class="form-control"
+               onkeyup="itemImageChanged(this, event)"
+               asp-for="Product.ItemImage"/>
+        <style>
+                            /* Container*/
+                            	 .fileUpload {
+                            		  position: relative;
+                            		  overflow: hidden;
+                            	 }
+                            		  /* hide the actual file upload control by making it invisible */
+                            		  .fileUpload input.upload {
+                            				position: absolute;
+                            				top: 0;
+                            				right: 0;
+                            				margin: 0;
+                            				padding: 0;
+                            				font-size: 20px;
+                            				cursor: pointer;
+                            				opacity: 0;
+                            		  }
+                        </style>
+        <!-- wrap the file input into a div so we can style the button -->
+        <div class="fileUpload btn btn-secondary btn-sm mt-1">
+            <span>
+                <i class="fas fa-cloud-upload-alt"></i>
+                Upload Image
+                <i id="fileUploadProgress" class="fa fa-spinner fa-spin" style="display: none"></i>
+            </span>
+            <input type="file"
+                   id="FileUpload" name="FileUpload"
+                   class="upload"
+                   accept="image/*"/>
+        </div>
+        <script>
+                              // Catch the file selection
+                                     var files = null;  
+                                     var imageName = null;
+                                     
+                                     $("#FileUpload").change(function (event) {
+                                        var imageName = $("#Product_ItemImage").val();
+                                         files = event.target.files;
+        
+                                         // no further DOM processing
+                                         event.stopPropagation();
+                                         event.preventDefault();
+        
+                                         // show spinner
+                                         $("#fileUploadProgress").show();
+
+                                         var fileId = "Upload";
+                                         var uploadUrl = `/admin/productmanager/image/@Model.Product.Sku?imageName=${ encodeURIComponent(imageName)}`;
+
+                                         // Create a formdata object and add the files
+                                         var data = new FormData();                                         
+                                         $.each(files, function (key, value) {
+                                             data.append(fileId, value);
+                                         });
+        
+                                        fetch(uploadUrl, {
+                                              method: 'POST',
+                                              body: data
+                                         })
+                                        .then( async (response) => {   
+                                             $("#fileUploadProgress").hide();
+                                             
+                                             var result  = await response.json();
+                                             if (result.isError)
+                                                 toastr.error("Upload failed: " + result.message); 
+                                             else
+                                                toastr.success("Upload completed.");
+
+                                             $("#ItemImage,#TitleImage").prop("src","/images/product-images/" + encodeURIComponent(imageName) + "?" + new Date().getTime());
+                                         })
+                                        .catch((error) => {                                            
+                                            toastr.error("Upload failed.");
+                                            console.log(error)                                            
+                                        });                                    
+                                     })
+                                     function itemImageChanged(el, ev) {
+                                         var imgUrl = "/images/product-images/" + encodeURIComponent(el.value) + "?" + new Date().getTime();
+                                         $("#ItemImage,#TitleImage").prop("src",imgUrl);                                                                                  
+                                     }
+                                     document.onpaste = function (event) {
+                                         var imageName = $("#Product_ItemImage").val();
+                                         var items = (event.clipboardData || event.originalEvent.clipboardData).items;                                      
+                                         //console.log(JSON.stringify(items)); // will give you the mime types
+                                         for (var i in items) {
+                                             var item = items[i];
+                                             if (item.kind === 'file') {
+                                                 var blob = item.getAsFile();
+                                                 var reader = new FileReader();
+                                                 reader.onload = function (event) {
+                                                     var opt = {
+                                                         method: "POST",
+                                                         contentType: "raw/data",
+                                                         accepts: "application/json",
+                                                         noPostEncoding: true
+                                                     };                
+                                                     var http = new HttpClient(opt);
+                                                     http.evalResult = true;
+                                                     var uploadUrl = `/admin/productmanager/image/paste/@Model.Product.Sku?imageName=${ encodeURIComponent(imageName)}`;
+                                                     http.send(uploadUrl,
+                                                         event.target.result,
+                                                         function (result) {
+                                                             if (result.isError)
+                                                                 toastr.error("Pasted image upload failed: " + result.message);
+                                                             else {
+                                                                 toastr.success("Pasted image uploaded...");
+                                                                 $("#ItemImage,#TitleImage").prop("src","/images/product-images/" + encodeURIComponent(imageName) + "?" + new Date().getTime());
+                                                             }
+                                                         },
+                                                         function (error) {
+                                                             toastr.error("Image upload failed.");
+                                                         });
+                                                 
+                                                     //console.log(event.target.result);
+                                                 }; // data url!
+                                                 reader.readAsDataURL(blob);
+                                             }
+                                         }
+                                     }
+                             </script>
+    </div>
+</div>
+
+
+<h3 class="page-header-text">
+    <i class="fa-duotone fa-arrow-up-right-from-square"></i>
+    Web Links
+</h3>
+
+<label>Product Web Url: <span class="label-note">(product information Web url)</span></label>
+<input type="text" class="form-control" asp-for="Product.InfoUrl"/>
+
+<label>Redirect Url: <span class="label-note">(url to redirect to - use for mapping old items to new)</span></label>
+<input type="text" class="form-control" asp-for="Product.RedirectUrl" placeholder="Url to redirect to. Use for old items to redirect to new items. "/>
+
+<label>Abstract: <span class="label-note">(product abstract displayed in item lists)</span></label>
+<textarea asp-for="Product.Abstract" 
+                class="form-control"
+                style="height: 5.3em"></textarea>
+
+<button type="submit" name="btnSubmit" id="btnSubmit"
+        class="btn btn-primary mt-3 mb-3 d-block" accesskey="S">
+    <i class="fas fa-check text-success"></i>
+    Save Product
+</button>
+
+<h3 class="page-header-text">
+    <i class="fad fa-inbox-out"></i>
+    Product Registration and Licensing
+</h3>
+
+
+<label>Registration Text: <span class="label-note">(registration note sent when item is approved)</span></label>
+<textarea asp-for="Product.RegistrationItemConfirmation" 
+                        class="form-control"
+                        style="height: 15.3em"></textarea>
+
+<label>Fixed Registration Password:</label>
+<input type="text" class="form-control" asp-for="Product.RegistrationPassword" title="Fixed registration password for software that has a single password for a given release/version."/>
+
+<label class="d-block" title="Send automatic registration if item is approved and has registration text.">
+    <input type="checkbox" asp-for="Product.AutoRegister"/>
+    Allow auto-registration
+</label>
+
+<div >
+    <label>
+        <input type="checkbox" asp-for="Product.UseLicensing"/>
+        Use Licensing
+    </label>
+
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+    <label class="ml-4" style="display: inline"># of Uses per License: </label>
+    <input type="number" class="form-control d-inline " style="width: 5em; display: inline !important"
+           asp-for="Product.LicenseCount"
+           asp-format="{0:0}"/>
+
+</div>
+
+
+<h3 class="page-header-text">
+    <i class="fas fa-circle-star"></i>
+    Specials Display
+</h3>
+
+<div class="responsive-container">
+    <div>
+        <label>Specials Header <span class="label-note">(leave blank if no special should show)</span></label>
+        <input asp-for="Product.SpecialsHeader" class="form-control"/>
+    </div>
+
+    <div style="width: 8em" title="Special price that displays when displaying the special.">
+        <label>Price</label>
+        <input type="number" step="any" asp-for="Product.SpecialsPrice" asp-format="{0:0.00}"
+               class="form-control"/>
+    </div>
+    <div style="width: 5em" title="Sort order priority: Higher numbers sort to the top.">
+        <label>Priority</label>
+        <input type="number" asp-for="Product.SpecialsOrder" class="form-control"/>
+    </div>
+</div>
+
+
+<textarea asp-for="Product.SpecialsText" 
+                class="form-control mt-2" style="height: 6.3em" 
+                placeholder="Detailed specials text (optional)"></textarea>
+
+<hr/>
+
+<button type="submit" name="btnSubmit" id="btnSubmit"
+        class="btn btn-primary btn-lg" accesskey="S">
+    <i class="fas fa-check text-success"></i>
+    Save Product
+</button>
+
+<div class="float-end">
+    <button type="submit" name="btnDeleteInvoice" id="btnDeleteProduct"
+            title="Delete this product"
+            onclick="if(!confirm('Are you sure you want to delete this item?')) return false;"
+            class="btn btn-secondary btn-sm">
+        <i class="fas fa-times text-danger"></i>
+        Delete
+    </button>
+
+    <a href="/admin/productmanager"
+       class="btn btn-secondary btn-sm">
+        <i class="fas fa-times text-danger"></i>
+        Cancel
+    </a>
+</div>
+
+@{
+    var scriptVars = new ScriptVariables("globals");
+    scriptVars.Add("sku", Model.Product.Sku);
+}
+
+@scriptVars.ToHtmlString(true)
+
+<input type="hidden" asp-for="Product.Id"/>
+</form>
+
+
+<div class="mt-3">
+    <a href="#0" onclick="$('#ModelDisplay').removeClass('hidden'); $(this).hide(); return false;">
+        <i class="fad fa-eye"></i>
+        Show all product info
+    </a>
+    <pre id="ModelDisplay" class="hidden">@Model.Json</pre>
+</div>
+
+</div>

@@ -1,0 +1,209 @@
+﻿@using Braintree
+@using System.Net
+@using System.Globalization
+@model InvoiceViewModel
+@{
+    var invoice = Model.Invoice;
+
+    string path = Context.Request.Path.Value ?? string.Empty;
+    bool isInvoice = path.Contains("/invoice");
+
+    bool canEditQuantity = Model.CanEditLineItemQuantity;
+    bool canEditPromoCode = Model.CanEditPromoCode;
+    bool canEditLineItems = Model.CanEditLineItems;
+    bool canDeleteLineItems = Model.CanDeleteLineItems;
+}
+
+<style>
+</style>
+<script>
+ function lineitemRecalculate() {
+        $("#btnRecalculate").click();
+}
+</script>    
+<div class="table-wrapper">
+        @if (@invoice.LineItems.Count < 1)
+        {
+            <div class="text-info fs-4 fw-semibold pt-1 pb-2 border-bottom" style="text-align: center">
+                    @AppResources.ShoppingCart.ShoppingCartIsEmpty
+            </div>
+        }
+
+        @foreach (var item in invoice.LineItems)
+        {
+            var productRouteData = new Dictionary<string, string> { { "sku", item.Sku } };
+
+
+            <div class="x-responsive-container lineitem" style="clear: both;" >
+                @if (!Model.NoLineItemImages)
+                {
+                    <div class="lineitem-image-wrapper" style="float: left">
+                        <img src="@(wsApp.Configuration.ApplicationHomeUrl + "images/product-images/" + item.ItemImage)"
+                             class="lineitem-image"/>
+                    </div>
+                }
+                <div style="line-height: 1.8; margin: 0.1em">
+                    <a href="@(wsApp.Configuration.ApplicationHomeUrl + "product/" + item.Sku)"
+                       class="lineitem-description d-block" style="font-size: 1.2em">
+                        @item.Description
+                    </a>
+
+                    <div>
+
+                        @if (canEditQuantity)
+                        {
+                            var qty = item.Quantity.ToString("n2")
+                                .Replace(CultureInfo.CurrentCulture.NumberFormat.CurrencyGroupSeparator, "");
+                            <input name="item_@item.Sku"
+                                   type="number" 
+                                   onchange="lineitemRecalculate()"
+                                   value="@qty"
+                                   placeholder="Quantity" title="quantity to order"
+                                   class="quantity-textbox form-control form-control-sm d-inline number right"
+                            />
+                        }
+                        else
+                        {
+                            <b>Qty: @item.Quantity.ToString("N2")</b>
+                        }
+                        @if (item.Quantity > 1 || item.DiscountPercent > 0.0001M)
+                        {
+                            <span class="item-price ps-2reselle" title="per item price">@item.Price.ToString("c")</span>
+                        }
+                        @if (item.DiscountPercent > 0.0001M)
+                        {
+                            var discount = item.DiscountPercent * 100;
+                            <span class="item-price text-danger" title="item discount percentage">-@discount.ToString("n0")%</span>
+                        }
+                        <div class="text-secondary me-2" style="font-weight: 600; font-size:  1.3em; float:  right; margin-right:  0.2em">
+                            @item.ItemTotal.ToString("c")
+                        </div>
+                    </div>
+                    
+                    
+                    @if (!string.IsNullOrEmpty(item.LicenseSerial) &&
+                         invoice.CreditCardResult.IsApproved())
+                    {
+                        <div style="font-size: 0.8em">
+                            License Key: @item.LicenseSerial &nbsp;
+                            @if (item.UseLicensing)
+                            {
+                                <a class="manage-license-link" href="https://licensing.west-wind.com/licensemanagement?serialnumber=@item.LicenseSerial">Manage</a>
+                            }
+
+                        </div>
+                    }
+
+                    <div>
+                        @if (canDeleteLineItems)
+                        {
+                            if (Context.Request.Path.Value.Contains("/ordermanager/"))
+                            {
+                                <a class="lineitem-delete" onclick="deleteLineItem('@item.Id', this)" href="#0">
+                                    <i class="fas fa-times secondary-danger"></i>
+                                    Delete item
+                                </a>
+                                <script>
+                                        function deleteLineItem(lineItemId, el)  {                                          
+                                            var url = "/admin/ordermanager/api/lineitem/" + lineItemId;
+                                            ajaxJson(url,  null,
+                                            function (result) {
+                                                $("#btnRecalculate").click();                                                
+                                            },
+                                            function (error) {
+                                                toastr.error(error.message);
+                                            }, 
+                                            { method: "DELETE" });                                                                                            
+                                        }
+                                        </script>
+                            }
+                            else
+                            {
+                                <a class="lineitem-delete" href="~/shoppingcart/remove/@item.Id">
+                                    <i class="fas fa-times secondary-danger"></i>
+                                    Remove item
+                                </a>
+                            }
+                        }
+                        @if (canEditLineItems)
+                        {
+                            <a class="lineitem-delete" href="/admin/ordermanager/@invoice.InvoiceNumber/@item.Id">
+                                <i class="fas fa-edit secondary-danger ps-2"></i>
+                                Edit Item
+                            </a>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        }
+
+        <table id="TotalsTable" class="table table-borderless mb-0 text-secondary"  style="line-height: 0.8; border:  0 solid transparent; width:  100%">
+        @if (invoice.Tax > 0.001M || invoice.Shipping > 0.001M)
+        {
+            <tr>
+                <td  class="right">Subtotal:</td>
+                <td class="invoice-subtotal">
+                    @invoice.SubTotal.ToString("c")
+                </td>
+            </tr>
+
+            @if (invoice.Tax > 0.001M)
+            {
+                <tr>
+                    <td class="right">Tax:</td>
+                    <td class="invoice-subtotal">
+                        @invoice.Tax.ToString("c")
+                    </td>
+                </tr>
+            }
+
+            @if (invoice.Shipping > 0.001M)
+            {
+                <tr>
+                    <td class="right">Shipping:</td>
+                    <td class="invoice-subtotal">
+                        @invoice.Shipping.ToString("c")
+                    </td>
+                </tr>
+            }
+        }
+        <tr>
+            <td class="right">
+                @if (canEditPromoCode)
+                {
+                    <div class="input-group input-group-sm float-start" style="width: 12em; ">
+                        <span class="input-group-text"><i class="fad fa-fw fa-tag "></i></span>
+                        <input type="text"
+                               onchange="lineitemRecalculate()"
+                               class="form-control"
+                               placeholder="Promo Code"
+                               asp-for="Invoice.PromoCode"
+                               autocapitalize="off"
+                               autocomplete="off"
+                               spellcheck="false"
+                               autocorrect="off"
+                               title="If you have a promo code, enter it here"/>
+                        <button type="submit" name="btnRecalculate" id="btnRecalculate" 
+                                title="Recalculate order totals"
+                                class="btn btn-secondary"><i class="fas fa-fw fa-sync"></i></button>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(Model.Invoice.PromoCode))
+                {
+                    <div style="float: left; text-align: left; width: 14em;">
+                        <b>Promo</b>: @Model.Invoice.PromoCode
+                    </div>
+                }
+
+                <div class="hidable-xs text-danger" style="margin-top: 0.4em; font-size:  1.2em; font-weight:  700">
+                    Total:
+                </div>
+            </td>
+            <td class="right text-danger invoice-total" 
+                style="font-size: 1.6em; font-weight: bold;">
+                @invoice.InvoiceTotal.ToString("c")
+            </td>
+        </tr>
+        </table>
+</div>

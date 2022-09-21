@@ -1,0 +1,130 @@
+﻿@using Westwind.Webstore.Web.Views
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model  OrderHistoryViewModel
+@{
+    ViewData["Title"] = "Order History - " + wsApp.Configuration.ApplicationName;
+}
+
+<div class="container">
+
+    <h1 class="page-header-text mt-5">
+        <i class="fas fa-history"></i>
+        Order History<span class="badge bg-info badge-super rounded-pill badge" style="font-size: 0.41em !important">@Model.InvoiceList.Count</span>
+    </h1>
+    
+    <form id="form1" action="" method="post">
+        <select asp-for="@Model.DisplayMode" name="DisplayMode" onchange="$('#form1').submit()" class="form-select w-auto">
+            <option value="Recent">Recent Orders</option>
+            <option value="Open">Open Orders</option>
+            <option value="All">All Orders</option>
+        </select>
+    </form>
+
+    
+    <style>
+        .highlighted {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: firebrick;
+        }
+    </style>
+    @foreach (var inv in Model.InvoiceList)
+    {    
+        if (inv.InvoiceTotal == 0 && inv.LineItems.Count == 0) continue;
+        var vm = new InvoiceViewModel(inv);
+
+        var billingAddressModel = new AddressBoxViewModel
+        {
+            Address = inv.BillingAddress,
+            Name = Model.Customer?.Fullname,
+            Company = Model.Customer?.Company, 
+            Title = "billing address"
+        };
+
+        AddressBoxViewModel shippingAddressModel = null;
+        if (!inv.ShippingAddress.IsEmpty())
+        {
+            shippingAddressModel = new AddressBoxViewModel {Title = "shipping address", Address = inv.ShippingAddress};
+        }
+
+        <div class="mt-4">
+    
+            <table class="table table-bordered">
+                <thead>
+                <tr class="bg-light">
+                    <th>Invoice Number</th>
+                    <th>Sold on</th>
+                    <th>Reference</th>
+                    <th>Paid By</th>
+                    <th class="right">Total Sale</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td>
+                    <span class="highlighted">@inv.InvoiceNumber</span>&nbsp;
+                    <a stye="font-size: 0.7em" href="~/invoice/@inv.InvoiceNumber" target="InvoiceWindow" title="print invoice"><i class="fad fa-print"></i></a>
+                </td>
+                    <td>@inv.InvoiceDate.ToString("MMM dd, yyyy")</td>
+                    <td>@inv.PoNumber</td>
+                    <td>@inv.CreditCard.Type</td>
+                    <td class="highlighted right">@wsApp.Configuration.CurrencySymbol@inv.InvoiceTotal.ToString("n2")</td>
+                </tr>
+                </tbody>
+            </table>
+            
+        
+
+            <div class="d-flex flex-wrap">
+                <partial name="AddressBox_Partial"  model="billingAddressModel" />
+            
+                @if(shippingAddressModel != null) {
+                    <partial name="AddressBox_Partial"  model="shippingAddressModel" />
+                }
+            </div>
+
+            
+            @*
+            <div class="tiny-title">billing address</div>
+            @if (!string.IsNullOrEmpty(Model.Customer.Firstname) && !string.IsNullOrEmpty(Model.Customer.Lastname))
+            {
+                @(Model.Customer.Firstname + " " + Model.Customer.Lastname)
+                <br/>
+            }
+            @if (!string.IsNullOrEmpty(Model.Customer.Company))
+            {
+                @Model.Customer.Company
+                <br/>
+            }
+            @Html.Raw(HtmlUtils.DisplayMemo(Model.Customer.Addresses.FirstOrDefault()?.ToString(true).TrimEnd()))
+            <div class="mt-1">
+                <a href="mailto:@Model.Customer.Email">@Model.Customer.Email</a>
+            </div>*@
+        </div>
+    @*@if (hasShippingAddress)
+    {
+        <div class="right">
+            <div class="tiny-title">shipping address</div>
+            @Html.Raw(HtmlUtils.DisplayMemo(Model.Address.ToString()))
+        </div>
+    }
+</div>*@
+            
+            
+
+
+        <partial name="~/Views/ShoppingCart/ShoppingCartItems_Partial.cshtml" model="vm" />
+
+        <div class="mt-0 mb-2" style="font-size: 1.5em; color: #aaa; font-weight: bold">
+            @inv.CreditCardResult.ToString()
+        </div>
+
+     
+        @if (!string.IsNullOrEmpty(inv.Notes))
+        {
+            <div class="bg-gradient bg-light rounded p-2 small">@Html.Raw(HtmlUtils.DisplayMemoEncoded(inv.Notes?.Trim()))</div>
+        }
+
+        <div class="mb-5">&nbsp;</div>
+    } 
+</div>

@@ -1,0 +1,291 @@
+﻿
+@using Westwind.Webstore.Web.Views
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model  ProfileViewModel
+@inject BusinessFactory BusinessFactory
+@{
+    ViewData["Title"] = "My Profile";
+
+    bool isOrderProfile = Context.Request.Path.Value.Contains("/shoppingcart/");
+    if (isOrderProfile)
+        Model.ReturnUrl = "/shoppingcart/orderform";
+}
+
+<div class="container">
+
+    <h1 class="page-header-text">
+        <i class="fad fa-user-alt"></i>
+        @if (Model.IsNewUser)
+        {
+            <text>Create a new Profile</text>
+        }
+        else
+        {
+            <text>@Model.AppUserState.Name: Your Profile</text>
+        }
+
+    </h1>
+
+    <error-display error-display-model="Model.ErrorDisplay">
+    </error-display>
+
+    <div class="input-container margin-top">
+
+        <form href="" method="post">
+        
+            <div class="float-end" style="margin-top: -0.5em" >
+                @if (@Model.AppUserState.IsAuthenticated())
+                {
+                    <a href="~/account/signout"
+                       class="btn btn-warning btn-sm">
+                        <i class="fad fa-sign-out-alt"></i>
+                        Sign out
+                    </a>
+                }
+                else
+                {
+                    
+                    <a href="~/account/signin?ReturnUrl=@Context.Request.Path"
+                       class="btn btn-warning btn-sm">
+                        <i class="fad fa-sign-in-alt"></i>
+                        Sign in
+                    </a>
+                }
+            </div>
+
+            <h3 class="page-header-text mt-0 mb-0">
+                
+                <i class="fad fa-address-card"></i>
+                Name and Email
+                
+            </h3>
+            
+            <div class="header-byline mb-3">as it appears on your credit card statement</div>
+
+
+            <div class="responsive-container mb-2">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fad fa-fw fa-user"></i></span>
+                    <input type="text" class="form-control" placeholder="First name" asp-for="Customer.Firstname"/>
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fad fa-fw fa-user "></i></span>
+                    <input type="text" class="form-control" id="txtLastname" asp-for="Customer.Lastname" placeholder="Last name"/>
+                </div>
+            </div>
+
+
+            <div class="input-group mb-2">
+                <span class="input-group-text"><i class="fad fa-fw fa-users "></i></span>
+                <input type="text"
+                       class="form-control"
+                       placeholder="Enter your Company"
+                       asp-for="Customer.Company"
+                       autocapitalize="off"
+                       autocomplete="off"
+                       spellcheck="false"
+                       autocorrect="off"/>
+            </div>
+    <div class="form-group mb-0">
+            <div class="input-group mb-0">
+                <span class="input-group-text"><i class="fas fa-envelope-open fa-fw"></i></span>
+                <input type="email"
+                       id="txtEmail"
+                       class="form-control"
+                       placeholder="Enter your Email address"
+                       asp-for="Customer.Email"
+                       aria-label="Email"
+                       title="Please enter a valid email address "
+                       autocapitalize="off"
+                       autocomplete="off"
+                       spellcheck="false"
+                       autocorrect="off" required/>
+                <button id="btnSendValidationEmail"
+                        type="button"
+                        class="btn btn-sm btn-secondary"
+                        title="Validate the email address. Re-sends an email with a confirmation code.">
+                    <i class="fas fa-rotate text-warning"></i>
+                </button>
+            </div>
+
+            <div class="float-end header-byline" style="display: @(!Model.IsNewUser ? "block" : "none")">
+                <i class="fad fa-sign-in"></i>
+                <a href="@Url.Action("PasswordRecoverySendEmail")">Change your password</a>
+            </div>
+            <div class="header-byline ">used to verify your email address</div>
+</div>
+
+            <div class="password-fields mt-3" style="display: @(Model.IsNewUser ? "block" : "none")">
+
+                <div class="input-group mb-2">
+                    <span class="input-group-text"><i class="fad fa-fw fa-unlock-alt "></i></span>
+                    <input class="form-control" type="password"
+                           asp-for="Password" placeholder="Enter a Password"/>
+                </div>
+
+
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fad fa-fw fa-unlock-alt"></i></span>
+                    <input class="form-control" type="password"
+                           asp-for="PasswordConfirm" novalidate
+                           placeholder="Confirm Password"/>
+                </div>
+
+            </div>
+
+
+
+
+            <h3 class="page-header-text mb-0">
+                <i class="fad fa-credit-card"></i>
+                Billing Address
+            </h3>
+            <div class="header-byline">as it appears on your credit card statement</div>
+
+            <div class="form-group mt-2">
+                <label>Address<sup>*</sup></label>
+                <div class="input-group">
+                    <textArea type="text"
+                              class="form-control"
+                              placeholder="Enter your Address"
+                              asp-for="BillingAddress.StreetAddress"
+                              autocapitalize="off"
+                              autocomplete="off"
+                              spellcheck="false"
+                              autocorrect="off"></textArea>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label" for="City">City<sup>*</sup>, State, Postalcode<sup>*</sup></label>
+                <div class="responsive-container">
+                    <input asp-for="BillingAddress.City" class="form-control" style="min-width: 280px" placeholder="City"/>
+                    <select asp-for="BillingAddress.State"
+                            class="form-select"
+                            title="US State or Candian Province - all others can leave this unset."
+                            asp-items="@(new SelectList(wsApp.States, "StateCode", "State"))">
+                    </select>
+                    <input asp-for="BillingAddress.PostalCode" class="form-control" placeholder="Postal code"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" for="CountryCode">@AppResources.Account.Country<sup>*</sup></label>
+                <select asp-for="BillingAddress.CountryCode"
+                        class="form-select"
+                        title="Country - if not listed use 'Other' at the end of the list"
+                        asp-items="@(new SelectList(wsApp.Countries, "CountryCode", "Country"))">
+                </select>
+            </div>
+
+            @* <div class="form-group"> *@
+            @*     <label class="control-label" for="Telephone">Telephone</label> *@
+            @*     <input asp-for="BillingAddress.Telephone" *@
+            @*            class="form-control"/> *@
+            @* *@
+            @* </div> *@
+
+
+
+            <button class="btn-primary btn btn-lg mt-4" type="submit">
+                <i class="fa fa-check-circle text-success"></i>
+                @if (isOrderProfile)
+                {
+                    <text>Continue to Payment</text>
+                }
+                else
+                {
+                    <text>Save your Profile</text>
+                }
+            </button>
+
+            <input type="hidden" asp-for="Customer.Id"/>
+            <input type="hidden" asp-for="BillingAddress.Id"/>
+            <input type="hidden" asp-for="BillingAddress.CustomerId"/>
+            <input type="hidden" asp-for="ReturnUrl"/>
+            <input type="hidden" asp-for="Evc"/>
+        </form>
+
+    </div>
+
+@{
+    var invoice = BusinessFactory.GetInvoiceBusiness();
+    var invList = await invoice.GetRecentInvoices(Model.Customer.Id, 2);
+}
+    @if (!isOrderProfile && invList.Count > 0)
+    {
+        <h2 class="page-header-text mt-5">
+            <i class="fad fa-credit-card"></i>
+            Recent Orders
+            <div class="float-end">
+                <a class="btn btn-sm btn-secondary" href="~/account/OrderHistory" title="See your detailed order history">
+                    <i class="fad fa-history"></i>
+                    Order History
+                </a>
+            </div>
+        </h2>
+        
+    
+        <style>
+            .highlighted {
+                font-size: 1.2em;
+                font-weight: bold;
+                color: firebrick;
+            }
+        </style>
+        foreach (var inv in invList)
+        {
+            if (inv.InvoiceTotal == 0 && inv.LineItems.Count == 0) continue;
+
+            var vm = new InvoiceViewModel(inv);
+
+            <div class="mt-4 border-danger mb-5 small">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr class="bg-light">
+                        <th>Invoice Number</th>
+                        <th>Sold on</th>
+                        <th>Reference</th>
+                        <th>Paid By</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <span class="highlighted">@inv.InvoiceNumber</span>&nbsp;
+                            <a stye="font-size: 0.7em" href="~/invoice/@inv.InvoiceNumber" target="InvoiceWindow" title="print invoice"><i class="fad fa-print"></i></a>
+                        </td>
+                        <td>@inv.InvoiceDate.ToString("MMM dd, yyyy")</td>
+                        <td>@inv.PoNumber</td>
+                        <td>@inv.CreditCard.Type</td>
+                    </tr>
+                    </tbody>
+                </table>
+                
+                <div>
+                    <partial name="~/Views/ShoppingCart/ShoppingCartItems_Partial.cshtml" model="vm"/>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+
+@section BottomOfBody
+{
+    @if (wsApp.Configuration.Security.ValidateEmailAddresses)
+    {
+        <partial name="EmailValidationForm_Partial" id="EmailValidationForm"/>
+    }
+}
+
+@section Scripts {
+@if (wsApp.Configuration.Security.ValidateEmailAddresses)
+{
+ 
+    <link href="/lib/toastr/build/toastr.css" rel="stylesheet"/>
+    <script src="~/lib/toastr/build/toastr.min.js" ></script>
+}
+}

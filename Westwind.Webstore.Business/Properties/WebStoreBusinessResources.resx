@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AllCategories" xml:space="preserve">
+    <value>All Categories</value>
+  </data>
+  <data name="CardIsExpired" xml:space="preserve">
+    <value>This card is expired</value>
+  </data>
+  <data name="CardProcessingFailed" xml:space="preserve">
+    <value>Card Processing failed.</value>
+  </data>
+  <data name="CC_Approved" xml:space="preserve">
+    <value>APPROVED</value>
+  </data>
+  <data name="CC_Authorized" xml:space="preserve">
+    <value>AUTHORIZED</value>
+  </data>
+  <data name="CC_Declined" xml:space="preserve">
+    <value>DECLINED</value>
+  </data>
+  <data name="CC_Failed" xml:space="preserve">
+    <value>FAILED</value>
+  </data>
+  <data name="CouldntDeleteLineItem" xml:space="preserve">
+    <value>Couldn't delete lineitem.</value>
+  </data>
+  <data name="DescriptionCantBeEmpty" xml:space="preserve">
+    <value>Description can't be left empty</value>
+  </data>
+  <data name="DetailDescriptionMustBe20CharactersLong" xml:space="preserve">
+    <value>Detail Description must be at least 20 characters long</value>
+  </data>
+  <data name="Email address doesn't exist" xml:space="preserve">
+    <value>Email address doesn't exist</value>
+  </data>
+  <data name="EmailAddressAlreadyInUse" xml:space="preserve">
+    <value>Email address is already in use. Please log into your existing account.</value>
+  </data>
+  <data name="EmailAddressIsInvalid" xml:space="preserve">
+    <value>Invalid email address</value>
+  </data>
+  <data name="EmailAddressRequired" xml:space="preserve">
+    <value>An email address is required</value>
+  </data>
+  <data name="EmailConfirmationSent" xml:space="preserve">
+    <value>Email Confirmation sent</value>
+  </data>
+  <data name="EmailDoesntExist" xml:space="preserve">
+    <value>EmailDoesntExist</value>
+  </data>
+  <data name="EmailFailure" xml:space="preserve">
+    <value>Email failure</value>
+  </data>
+  <data name="FailedToResetPassword" xml:space="preserve">
+    <value>Failed to reset password</value>
+  </data>
+  <data name="InsufficientInventory" xml:space="preserve">
+    <value>Inventory is insufficient for item {0}. Available: {1}</value>
+  </data>
+  <data name="InvalidCreditCardNumber" xml:space="preserve">
+    <value>Invalid Credit Card Number</value>
+  </data>
+  <data name="InvalidCreditCardProcessor" xml:space="preserve">
+    <value>Invalid Credit Card CardProcessor or CardProcessor not supported</value>
+  </data>
+  <data name="InvalidExpirationDate" xml:space="preserve">
+    <value>Invalid Expiration Date</value>
+  </data>
+  <data name="InvalidLoginInformation" xml:space="preserve">
+    <value>Invalid login information.</value>
+  </data>
+  <data name="InvalidPasswordFormat" xml:space="preserve">
+    <value>Invalid Password format: Minimum of 8 characters, 1 upper, 1 lower and 1 digit are required.</value>
+  </data>
+  <data name="InvalidSkuSkuExistsAlready" xml:space="preserve">
+    <value>Invalid Sku - this Sku exists already. Please pick another.</value>
+  </data>
+  <data name="ItemFailedToConfirm" xml:space="preserve">
+    <value>Item {0} failed to confirm. Email Failure.</value>
+  </data>
+  <data name="NameOrCompanyMustBeEntered" xml:space="preserve">
+    <value>Either Company or Name must be entered</value>
+  </data>
+  <data name="NoLineItemsToConfirm" xml:space="preserve">
+    <value>No lineitems to send confirmations to.</value>
+  </data>
+  <data name="NoPartialQuantitiesAllowed" xml:space="preserve">
+    <value>No partial quantities are allowed. Please use a whole number.</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="OrderAlreadyProcessed" xml:space="preserve">
+    <value>This order was already processed.</value>
+  </data>
+  <data name="OrderAmountCantBeZero" xml:space="preserve">
+    <value>Order amount can't be zero.</value>
+  </data>
+  <data name="OrderConfirmation" xml:space="preserve">
+    <value>Order Confirmation</value>
+  </data>
+  <data name="PleaseChooseYourPrimaryDevelopmentEnvironment" xml:space="preserve">
+    <value>Please choose your primary development environment</value>
+  </data>
+  <data name="PleaseSelectACountry" xml:space="preserve">
+    <value>Please select a country</value>
+  </data>
+  <data name="PleaseSelectAState" xml:space="preserve">
+    <value>US and Canada - Please select a state</value>
+  </data>
+  <data name="PleaseSelectHowYouFoundUs" xml:space="preserve">
+    <value>Please select how you found us</value>
+  </data>
+  <data name="PostalCodeCantBeEmpty" xml:space="preserve">
+    <value>Postal Code can't be empty</value>
+  </data>
+  <data name="ProcessingError" xml:space="preserve">
+    <value>Processing error</value>
+  </data>
+  <data name="ShippingAddressRequired" xml:space="preserve">
+    <value>A shipping address is required</value>
+  </data>
+  <data name="ShippingCityRequired" xml:space="preserve">
+    <value>A Shipping City is required</value>
+  </data>
+  <data name="ShippingCountryRequired" xml:space="preserve">
+    <value>A shipping country is required</value>
+  </data>
+  <data name="ShippingNameOrCompanyRequired" xml:space="preserve">
+    <value>A Shipping Name or Company is required</value>
+  </data>
+  <data name="ShippingPostalCodeRequired" xml:space="preserve">
+    <value>A Shipping Postal Code is required</value>
+  </data>
+  <data name="ShippingStateRequired" xml:space="preserve">
+    <value>A Shipping State is required</value>
+  </data>
+  <data name="SkuCannotContainAmpersand" xml:space="preserve">
+    <value>Skus cannot contain an &amp; character.</value>
+  </data>
+  <data name="SkuMustBeFilledIn" xml:space="preserve">
+    <value>Sku must be filled in.</value>
+  </data>
+  <data name="StateCodeMustBeProvided" xml:space="preserve">
+    <value>State must be provided</value>
+  </data>
+  <data name="Test" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="UnableToConfirmItemWithVendor" xml:space="preserve">
+    <value>Unable to confirm item with vendor</value>
+  </data>
+  <data name="VendorConfirmationFor" xml:space="preserve">
+    <value>Vendor Confirmation for</value>
+  </data>
+  <data name="YouMustProvideAValidPostalCode" xml:space="preserve">
+    <value>You have to provide a valid billing postal or zip code.</value>
+  </data>
+</root>

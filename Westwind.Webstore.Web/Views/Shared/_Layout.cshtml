@@ -1,0 +1,339 @@
+﻿@using Westwind.AspNetCore.Security
+@using Westwind.Webstore.Business
+@using Braintree
+@model WebStoreBaseViewModel
+@{
+    var config = wsApp.Configuration;
+    var title = ViewData["Title"] ?? config.ApplicationName;
+    bool noSearchBar = false;
+    var vd = ViewData["NoSearchBar"];
+    if (vd != null)
+    {
+        noSearchBar = true;
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@title</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="/touch-icon.png" type="image/x-icon" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" href="/touch-icon.png" />
+    <link rel="icon" href="/touch-icon.png" />
+    <meta name="msapplication-TileImage" content="touch-icon.png">
+    
+    <link href="/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    @* <script src="https://kit.fontawesome.com/5d2c82e4f2.js" crossorigin="anonymous"></script> *@
+    <link href="/lib/fontawesome/css/all.min.css" rel="stylesheet" />
+    
+    @RenderSection("HeadersTop", required: false)
+    
+    <link href="/css/application.css?v=@wsApp.Version" rel="stylesheet" />
+    <link href="/css/store.css?v=@wsApp.Version" rel="stylesheet" />
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+
+    @RenderSection("Headers", required: false)
+    <link href="/css/themes/@config.Theme/theme.css" rel="stylesheet" />
+    <style>
+       .slide-menu .header {
+           color: rgb(121, 169, 210);
+           font-weight: 600;
+           font-size: 1.2em;
+           margin-top: 1em;
+           margin-bottom: 0.3em;
+           padding-left: 10px;
+           padding-bottom: 5px;
+           border-bottom: 1px solid #999;
+       }
+       .main-view-container {
+           position: absolute;
+           top: 60px;
+           left: 0;
+           right: 0;
+           bottom: 0;
+           display: flex;
+       }
+       .badge-super {
+           font-size: 0.6em !important;
+       }
+       .banner .dropdown-menu .active {
+           background: steelblue;  
+       }
+       .banner .dropdown-menu { 
+            background:  #444;                
+            padding: 0;
+       }        
+       .banner .dropdown-item, .banner .dropdown-item strong {
+          color:  #eee;          
+       }       
+       .banner .dropdown-item strong
+       {
+            font-weight:  700;
+            color:  white;
+       }
+   </style>
+    
+    @RenderSection("HeadersBottom", required: false)
+</head>
+<body>
+
+    <div class="banner">
+        <a class="slide-menu-toggle-open"
+           title="Web Store Menu">
+            <i class="fas fa-bars"></i>
+        </a>
+
+
+        <div class="title-bar">
+
+            <a href="/">
+                <img src="/images/icon.png"
+                     style="height: 45px; float: left"/>
+                <div style="float: left; margin: 4px 5px; line-height: 1.0">
+                    <i style="color: #0092d0; font-size: 0.9em; font-weight: bold;">@config.TitleTop</i><br/>
+                    <i style="color: whitesmoke; font-size: 1.5em; font-weight: 600;">
+                        @config.TitleBottom
+                    </i>
+                </div>
+            </a>
+        </div>
+
+        <nav class="banner-menu-top float-end">
+            <a href="@Url.Action("Products","Products")" class="hidable">
+                <i class="fad fa-list-alt"></i>
+                Products
+            </a>
+            
+            @if (Model.AppUserState.CartItemCount > 0)
+            {
+                <a href="/shoppingcart">
+                    <i class="fad fa-shopping-cart"></i>
+                    <span class="badge bg-info badge-pill badge-super">@Model.AppUserState.CartItemCount</span>
+                </a>
+            }
+            
+            @if (!Model.AppUserState.IsAuthenticated())
+            {
+                <a href="/account/signin">
+                    <i class="fad fa-sign-in"></i>
+                    Sign in
+                </a>
+            }
+            else
+            {
+                <div class="dropdown" style="display: inline-block;"
+                     id="ProfileMenuLink">
+                    <span role="button"  data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fad fa-user"></i>
+                        @Model.AppUserState.Name
+                        <i class="fas fa-caret-down ps-1"></i>
+                    </span>
+               
+                    <ul class="dropdown-menu" aria-labelledby="ProfileMenuLink" style="margin-top: 0">
+                        <li><a class="dropdown-item" href="/account/profile">My Profile</a></li>
+                        <li><a class="dropdown-item" href="/account/signout">Sign out</a></li>
+                        @if (Model.AppUserState.IsAdmin)
+                        {
+                            <li class="separator"></li>
+                            <li><a class="dropdown-item" href="/admin">Administration</a></li>
+                            <li><a class="dropdown-item" href="/admin/ordermanager">Order Manager</a></li>
+                            <li><a class="dropdown-item" href="/admin/productmanager">Product Manager</a></li>
+                        }
+                    </ul>
+                </div>
+            }
+        </nav>
+        
+        
+        <style>
+
+        </style>
+        <div style="clear: both"></div>
+        
+        @if(!noSearchBar) {
+            <div class="search-bar clearfix">
+                <div class="input-group input-group-sm">
+                    <div class="input-group-text">
+                        <i class="far fa-search"></i>
+                    </div>
+                    <input id="ProductSearchBox" 
+                           class="form-control" type="text"
+                           placeholder="search products..."
+                           autocomplete="off"
+                           autocorrect="off"/>
+
+                    <button type="button" class="input-group-text text-info" onclick="webstore.clearSearchProducts()" title="clear search text">
+                        <i class="fas fa-times fa-fw"></i>
+                    </button>
+                </div>
+            </div>
+        }
+        
+    </div>
+
+<div style="display: flex; flex-direction: column;">
+
+
+    <div class="main-view-container" style="flex: 1; flex-grow: initial">
+
+
+        <nav class="slide-menu">
+            <div style="padding: 10px 0 10px 0;">
+
+                <a href="/">
+                    <i class="fad fa-home-lg fa-fw"></i>
+                    Home
+                </a>
+
+                <a href="/products">
+                    <i class="fad fa-box fa-fw"></i>
+                    Products
+                </a>
+                <a href="/shoppingcart">
+                    <i class="fad fa-shopping-cart fa-fw"></i>
+                    Shopping Cart
+                    @if (Model.AppUserState.CartItemCount > 0)
+                    {
+                        <span class="badge bg-info badge-pill badge-super">
+                            @Model.AppUserState.CartItemCount
+                        </span>
+                    }
+                </a>
+
+
+
+                @if (!Model.AppUserState.IsAuthenticated())
+                {
+                    <a href="/account/signin">
+                        <i class="fad fa-sign-in fa-fw"></i>
+                        Sign in
+                    </a>
+                }
+                else
+                {
+                    <a href="/account/profile">
+                        <i class="fad fa-user fa-fw"></i>
+                        @Model.AppUserState.Name
+                    </a>
+                    <a href="/account/signout">
+                        <i class="fad fa-sign-out fa-fw"></i>
+                        Sign out
+                    </a>
+
+                }
+
+                @if (wsApp.FeaturedItems is {Count: > 0 })
+                {
+                    <div class="header">Featured Items</div>
+                    foreach (var featured in wsApp.FeaturedItems)
+                    {
+                        <a href="/product/@featured.Sku">
+
+                            <i class="fas fa-angle-right"></i>
+                            @featured.Description
+                        </a>
+                    }
+                }
+
+
+
+
+                <div class="header">Product Categories</div>
+
+                <a href="/products">
+                    <i class="fad fa-boxes-stacked fa-fw"></i>
+                    All Products
+                </a>
+                
+                @foreach (var cat in wsApp.Categories)
+                {
+                    <a href="/products/@cat.Key">
+                        <i class="fas fa-angle-right fa-right-padding"></i>
+                        @cat.Value
+                    </a>    
+                }
+
+                @* <a href="/products/.net"> *@
+                @*     <i class="fas fa-angle-right fa-right-padding"></i> *@
+                @*     .NET *@
+                @* </a> *@
+                @* <a href="/products/foxpro"> *@
+                @*     <i class="fas fa-angle-right fa-right-padding"></i> *@
+                @*     FoxPro *@
+                @* </a> *@
+                @* <a href="/products/web%20connection"> *@
+                @*     <i class="fas fa-angle-right fa-right-padding"></i> *@
+                @*     Web Connection *@
+                @* </a> *@
+                @* <a href="/products/web%20connection"> *@
+                @*     <i class="fas fa-angle-right fa-right-padding"></i> *@
+                @*     Documentation *@
+                @* </a> *@
+                @* <a href="/products/network tools"> *@
+                @*     <i class="fas fa-angle-right fa-right-padding"></i> *@
+                @*     Network Tools *@
+                @* </a> *@
+
+                @if (Model.AppUserState.IsAdmin)
+                {
+                    <div class="header">Administration</div>
+                    
+                    <a href="/admin/OrderManager">
+                        <i class="far fa-file-invoice-dollar fa-fw"></i>
+                        Order Manager
+                    </a>
+
+                    <a href="/admin/ProductManager">
+                        <i class="fas fa-boxes-alt fa-fw"></i>
+                        Product Manager
+                    </a>
+                    
+                    <a href="/LocalizationAdmin/index.html" target="LocalizationAdministration">
+                        <i class="fad fa-flag fa-fw"></i>
+                        Localization
+                    </a>
+                    
+                    <a href="/admin">
+                        <i class="fad fa-gears fa-fw"></i>
+                        Administration
+                    </a>
+
+                }
+            </div>
+        </nav>
+        <div id="MainView">
+            @RenderBody()
+
+            <footer>
+                <a href="http://www.west-wind.com/" class="float-end">
+                    <img src="/images/WestwindText.png"/>
+                </a>
+                <div class="hidable-xs">
+                    &copy; @wsApp.Configuration.ApplicationCompany, @DateTime.Now.Year
+                </div>
+            </footer>
+        </div> <!-- #MainView -->
+    </div>
+</div>
+
+@RenderSection("BottomOfBody", required: false);
+
+<script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/lib/bootstrap3-typeahead/bootstrap3-typeahead.js" ></script>
+<script src="/lib/westwind.jquery.js"></script>
+<script src="/scripts/webstore.js"></script>
+<script src="/lib/toastr/build/toastr.min.js"></script>
+<link href="/lib/toastr/build/toastr.css" rel="stylesheet" />
+<script>
+    
+</script>
+@RenderSection("Scripts", required: false)
+</body>
+</html>`

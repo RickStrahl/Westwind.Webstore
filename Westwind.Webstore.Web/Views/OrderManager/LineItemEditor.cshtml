@@ -1,0 +1,153 @@
+﻿@model LineItemEditorViewModel
+
+@{
+    ViewBag.Title = "Invoice #" + Model.Invoice.InvoiceNumber + " Line Item";    
+    Layout = "_Layout";
+}
+<style>
+                 #ItemImage {
+                    display:  block;
+                     width:  6em;
+                     height:  min-content;
+                     margin-top:-2.3em; margin-right:1em                
+                }
+                @@media(max-width: 768px) {
+                    #ItemImage {
+                        width: min-content !important; 
+                        height: 7em !important;
+                    }
+                }
+                .typeahead .dropdown-item:hover, .typeahead .active {
+                    background: lightsteelblue;
+                    color: white !important;                    
+                }
+                .typeahead .dropdown:hover, .typeahead .active {
+                    color: white
+                }                
+    </style>
+<div id="app" style="margin: 1em;">
+    <div class="responsive-container">
+        <img v-if="lineItem.itemImage && lineItem.itemImage != '.png'" id="ItemImage" v-bind:src="'/images/product-images/' + lineItem.itemImage"/>
+
+        <h1 class="page-header-text">
+            {{lineItem.description || 'New Line Item'}}
+        </h1>
+    </div>
+    
+    <form method="post" style="clear:both">
+        <div class="responsive-container mb-4" >
+            <div class="w-100">
+                 <label>Sku</label>
+                <input type="text" id="Sku"
+                       class="form-control"
+                              v-model="lineItem.sku"
+                              autocomplete="off"
+                              autocorrect="off"
+                              asp-for="LineItem.Sku" 
+                              placeholder="line item sku"
+                       />
+            </div>
+            <div class="w-100">
+                <label>Quantity</label>
+                <input type="number" id="Quantity"
+                       class="number form-control" 
+                       v-on:change="recalculate"
+                       v-model="lineItem.quantity"
+                       asp-for="LineItem.Quantity" class="form-control"
+                       asp-format="{0:n2}"/>
+            </div>
+        
+            <div class="w-100">
+                <label>Price</label>
+                <input type="text" id="Price"
+                       class="number form-control" 
+                       v-model="lineItem.price" required
+                       asp-for="LineItem.Price"  v-on:change="recalculate"
+                       asp-format="{0:n2}"/>
+            </div>
+        
+            <div class="w-100">
+                <label>Discount</label>
+                <input type="text" id="DiscountPercent"
+                       class="number form-control" 
+                       v-model="lineItem.discountPercent"
+                       v-on:change="recalculate" required
+                       asp-for="LineItem.DiscountPercent" 
+                       asp-format="{0:n2}"/>
+            </div>
+        </div>
+        
+        <label for="LineItem_Description">Description</label>
+        <textarea class="form-control" style="height:5em;"
+            id="Description"
+            v-model="lineItem.description"
+             asp-for="LineItem.Description" 
+            placeholder="description">
+        </textarea>
+
+        <div class="invoice-total ps-3 pt-3 fs-2 w-100 right">
+            <span id="ItemTotalLabel">Item Total: </span>
+            <span id="ItemTotal"> ${{ lineItem.itemTotal.formatNumber("n2") }}</span>
+        </div>
+        
+        <div v-if="lineItem.useLicensing">
+            <h3 class="page-header-text">
+                <i class="fas fa-home"></i>
+                Software License Information
+            </h3>
+
+            <div>
+                <input class="form-control bold d-inline" 
+                       style="width: 16em" 
+                       v-model="lineItem.licenseSerial"
+                       asp-for="LineItem.LicenseSerial"/>
+                <br/>
+                <a class="btn btn-link" 
+                   target="ws_license"
+                   v-bind:href="'https://licensing.west-wind.com/administration/license/' + lineItem.licenseSerial">Web</a>
+                <a class="btn btn-link" v-on:click="createLicense()">Create</a>
+                <a class="btn btn-link" target="ws_license" v-on:click="revokeLicense()">Revoke</a>
+                <a class="btn btn-link" target="ws_license" v-on:click="reissueLicense()">Reissue</a>
+            </div>
+        </div>
+    
+        
+        
+        <button type="button" class="btn btn-primary"
+                v-on:click="saveLineItem">
+            <i class="fas fa-check text-success"></i>
+            Save Lineitem
+        </button>
+        
+        <a class="btn btn-secondary ms-2" href="/admin/ordermanager/@Model.Invoice.InvoiceNumber">
+            <i class="fas fa-times text-danger"></i>
+            Cancel
+        </a>
+
+
+        <input type="hidden" asp-for="LineItem.Id" />
+        <input type="hidden" asp-for="LineItem.InvoiceId" />
+        <input type="hidden" asp-for="LineItem.CustomerId" />
+    </form>
+    
+    <pre>
+    {{lineItem}}
+    </pre>
+</div>
+
+
+
+@{
+    var scriptVars = new ScriptVariables() { useCamelCase = true };
+    scriptVars.Add("lineItem", Model.LineItem);
+    scriptVars.ClientObjectName = "globals";
+}
+@section Scripts
+{
+    <script>
+     // globals object (globals.lineItem)
+     @scriptVars.ToHtmlString()
+    </script>
+    
+    <script src="/scripts/LineItemEditor.js" type="module"></script>
+}

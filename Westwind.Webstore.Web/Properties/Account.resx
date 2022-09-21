@@ -1,0 +1,127 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<root>
+   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+      <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+      <xsd:element name="root" msdata:IsDataSet="true">
+         <xsd:complexType>
+            <xsd:choice maxOccurs="unbounded">
+               <xsd:element name="metadata">
+                  <xsd:complexType>
+                     <xsd:sequence>
+                        <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                     </xsd:sequence>
+                     <xsd:attribute name="name" use="required" type="xsd:string" />
+                     <xsd:attribute name="type" type="xsd:string" />
+                     <xsd:attribute name="mimetype" type="xsd:string" />
+                     <xsd:attribute ref="xml:space" />
+                  </xsd:complexType>
+               </xsd:element>
+               <xsd:element name="assembly">
+                  <xsd:complexType>
+                     <xsd:attribute name="alias" type="xsd:string" />
+                     <xsd:attribute name="name" type="xsd:string" />
+                  </xsd:complexType>
+               </xsd:element>
+               <xsd:element name="data">
+                  <xsd:complexType>
+                     <xsd:sequence>
+                        <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                        <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                     </xsd:sequence>
+                     <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+                     <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                     <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                     <xsd:attribute ref="xml:space" />
+                  </xsd:complexType>
+               </xsd:element>
+               <xsd:element name="resheader">
+                  <xsd:complexType>
+                     <xsd:sequence>
+                        <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                     </xsd:sequence>
+                     <xsd:attribute name="name" type="xsd:string" use="required" />
+                  </xsd:complexType>
+               </xsd:element>
+            </xsd:choice>
+         </xsd:complexType>
+      </xsd:element>
+   </xsd:schema>
+   <resheader name="resmimetype">
+      <value>text/microsoft-resx</value>
+   </resheader>
+   <resheader name="version">
+      <value>2.0</value>
+   </resheader>
+   <resheader name="reader">
+      <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+   </resheader>
+   <resheader name="writer">
+      <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+   </resheader>
+   <data name="CouldntSaveYourProfile" xml:space="preserve">
+      <value>Couldn't save your Profile information:</value>
+   </data>
+   <data name="Country" xml:space="preserve">
+      <value>Country</value>
+   </data>
+   <data name="CreateANewAccount" xml:space="preserve">
+      <value>Create a new account</value>
+   </data>
+   <data name="DontHaveAnAccount" xml:space="preserve">
+      <value>Don't have an account yet? No problem, create one - it's FREE and easy.</value>
+   </data>
+   <data name="EmailAddressRequired" xml:space="preserve">
+      <value>An email address is required</value>
+   </data>
+   <data name="EnterYourEmailAddress" xml:space="preserve">
+      <value>Enter your email address</value>
+   </data>
+   <data name="EnterYourPassword" xml:space="preserve">
+      <value>Enter your password</value>
+   </data>
+   <data name="IForgotMyPassword" xml:space="preserve">
+      <value>I forgot my password</value>
+   </data>
+   <data name="NameOrCompanyMustBeEntered" xml:space="preserve">
+      <value>A name or company must be entered</value>
+   </data>
+   <data name="PasswordMissingOrdontMatch" xml:space="preserve">
+      <value>Passwords are missing or don't match</value>
+   </data>
+   <data name="PasswordRecovery" xml:space="preserve">
+      <value>Password Recovery</value>
+   </data>
+   <data name="PasswordRecoveryMessageWithEmail" xml:space="preserve">
+      <value>Please enter the email address you want to recover. We'll send you a confirmation email with a link where you can reset your password.</value>
+   </data>
+   <data name="PleaseEnterANewPassword" xml:space="preserve">
+      <value>Please enter a new password, twice for verification.</value>
+   </data>
+   <data name="PleaseSignInToYourAccount" xml:space="preserve">
+      <value>Please sign into your account with your email address to access your customer account profile.</value>
+   </data>
+   <data name="ProfileInformationSaved" xml:space="preserve">
+      <value>Your profile has been successfully updated.</value>
+   </data>
+   <data name="SendRecoveryEmail" xml:space="preserve">
+      <value>Send recovery email</value>
+   </data>
+   <data name="SignIn" xml:space="preserve">
+      <value>Sign In</value>
+   </data>
+   <data name="SignInButton" xml:space="preserve">
+      <value>Sign into your account</value>
+   </data>
+   <data name="SignInToYourAccount" xml:space="preserve">
+      <value>Sign into your existing account</value>
+   </data>
+   <data name="SignOut" xml:space="preserve">
+      <value>Sign out</value>
+   </data>
+   <data name="ThankYouForVerifyingYourEmail" xml:space="preserve">
+      <value>Thank you for verifying your email address</value>
+   </data>
+   <data name="VerifyYourPassword" xml:space="preserve">
+      <value>Verify your password</value>
+   </data>
+</root>

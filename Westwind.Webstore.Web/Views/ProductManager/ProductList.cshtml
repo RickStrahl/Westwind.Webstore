@@ -1,0 +1,88 @@
+﻿@using System.Net
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProductEditorListViewModel
+@{
+    ViewBag.Title = "Product List";   
+    Layout = "_Layout";
+}
+
+<div style="margin: 1em;">
+
+    <h1 class="page-header-text">
+        <i class="fad fa-receipt"></i>
+        Product List
+    </h1> 
+    
+    <error-display error-display-model="Model.ErrorDisplay"></error-display>
+    
+    <table class="table table-sm table-hover table-striped table-dark-headers">
+        <tbody>
+           <tr class="bg-light mt-2">
+                    <td colspan="4">
+                        <form>
+                            <div class="responsive-container">
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-text">
+                                        <i class="far fa-search"></i>
+                                    </div>
+        
+                                    <input id="ProductSearch" name="s"
+                                           class="form-control" type="text"
+                                           value="@Model.SearchTerm"
+                                           placeholder="search products... (Sku, Description, Web)" autocomplete="off" autocorrect="off"
+                                           title="search invoices... (order #, email, name, company, 'recent', '30 days', '60 days', '90 days','this month', 'this year')" autocomplete="off" autocorrect="off">
+                                    <button type="submit"
+                                            class="input-group-text text-info"
+                                            title="Go">
+                                        <i class="fas fa-check text-success"></i>
+                                    </button>
+                                </div>
+                               
+                                <a href="/admin/ordermanager/customers"
+                                   class="btn btn-secondary btn-sm" style="width: 5em" title="Add new invoice" >
+                                    <span>
+                                        <i class="fas fa-plus-circle text-success"></i> Add
+                                    </span>
+                                </a>
+                            </div>
+                       
+                            <div class="pt-1">
+                                <span class="header-byline mt-2">
+                                    <span class="text-info bold">@Model.ProductList.Count.ToString("n0")</span> products
+                                </span>
+                                <div class="float-end">
+                                    <span class="small" style="font-style: italic">
+                                        <input type="checkbox" id="NonActive" name="NonActive"
+                                               asp-for="ShowNonActive"/>
+                                        Show non-active products
+                                    </span>
+                                </div>
+                            </div>
+                       
+                        </form>
+                    </td>
+                </tr>
+        
+        @foreach (var product in Model.ProductList)
+        {
+            var productEditUrl = $"/admin/productmanager/{WebUtility.UrlEncode(product.Sku)}";
+            
+            <tr onclick="location.href='@productEditUrl'"> 
+                <td>
+                    @{
+                        var icon = product.InActive ? "fa-times text-danger" : "fa-check text-success";
+                    }
+                    <i class="fas fa-fw @icon"></i>
+                    @product.Sku
+                </td>
+                <td><b><a href="@productEditUrl">@product.Description</a></b></td>
+                <td class="right error">$@product.Price.ToString("n2")</td>
+            </tr>
+        }
+        </tbody>
+        
+        
+        
+    </table>
+    
+</div>

@@ -1,0 +1,368 @@
+﻿@using Westwind.Webstore.Web.App
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.ComponentModel.DataAnnotations
+@model Westwind.Webstore.Web.Views.OrderFormFastViewModel
+
+@{
+    ViewBag.Title =  Model.Product.Description + " - Purchase - " + wsApp.Configuration.ApplicationName;
+
+    // Full InvoiceModel Entity from View Model
+    var invoice = Model.InvoiceModel.Invoice;
+    var product = Model.Product;
+}
+@section HeadersBottom {
+    <style>
+        #LineItemTable tbody tr:nth-child(odd) {
+            background: white;
+        }
+
+        .lineitem-delete {
+            font-size: 0.8em;
+        }
+        #LineItemTable tbody tr td {
+            vertical-align: top;
+
+        }
+        .lineitem-description {
+            font-size: 1.02em;
+            font-weight: 500;
+            display: block;
+        }
+        #LineItemTable td:nth-child(2),
+        #LineItemTable th:nth-child(2),
+        #LineItemTable td:nth-child(2) input {
+            width: 4.5em;
+        }
+        #LineItemTable td:nth-child(2) input {
+            padding: 2px;
+        }
+
+        .table-wrapper {
+            background: linear-gradient(to bottom, #eeeeee, White 100%);
+        }
+        .tiny-title {
+            font-size: 0.7em;
+            font-style: italic;
+            color: #999;
+        }
+        .well {
+            min-width: 250px;
+            margin: 0.1em 0.8em 0.5em 0;
+        }
+        @@media (max-width: 500px) {
+            .well {
+                width: 100%;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            #CCCardImage {
+                display: none;
+            }
+        }
+    </style>
+}
+
+
+<div class="container">
+<form id="OrderForm" asp-action="OrderFormFast" method="post">
+        
+        
+<h2 class="page-header-text">
+    <i class="fad fa-credit-card-front"></i>
+    Purchase @Model.Product.Description
+</h2>
+        
+<error-display error-display-model="Model.ErrorDisplay">
+</error-display>
+        
+<div id="ProductInfoHeader" class="responsive-container" style="align-items: flex-start;">
+    <div style="margin-right: 10px; width: 40%;  vertical-align: top;" >
+        <img src="/images/product-images/@Model.Product.ItemImage"  
+             style="max-width: 300px; border-radius: 6px;"/>				
+    </div>
+            
+
+    <div class="ms-3">				
+        <div style="margin-bottom: 0.4em; border-bottom: 1px solid #ddd">					
+            @Html.Raw(AppUtils.MarkdownToHtml(product.Abstract))
+        </div>
+
+        <div class="float-end">					
+            <b style="font-size: 1.3em; padding-right: 2em;">Price:</b>
+            <span class="price-label" style="font-size: 1.5em; text-align: right;">		
+					    
+                @if (product.ListPrice > 0 && product.ListPrice > product.Price) {
+                    <s style="font-size: 0.8em;font-style: italic">$@product.ListPrice.ToString("n2")</s>
+                }
+                <b class="fs-3 text-danger">$@product.Price.ToString("n2")</b>
+            </span>					
+        </div>
+
+        <div><small>
+            <a href="/product/@Model.Product.Sku)">more info...</a>
+        </small></div>
+        
+                
+    </div>
+</div>
+
+        
+<div id="Customer Information">
+
+    <h3 class="page-header-text mt-4">
+        <i class="fad fa-user"></i> 
+        Your Billing Info
+    </h3>
+    
+    @if (Model.InvoiceModel.Invoice.Customer.IsNew)
+    {
+        <a class="btn btn-primary btn-sm mb-1"
+           href="/account/signin?returnurl=@this.Context.Request.Path">
+            <i class="fad fa-sign-in"></i>
+            Sign into existing account
+        </a>
+        <div class="small">or fill out the form below to create one</div>
+    }
+
+    <div class="responsive-container mt-3">
+        <div class="input-group me-1">
+            <span class="input-group-text"><i class="fad fa-fw fa-user"></i></span>
+            <input type="text" class="form-control" 
+                   title="First Name (required)"
+                   placeholder="First name*" asp-for="Firstname"/>
+        </div>
+
+        <div class="input-group ms-1">
+            <span class="input-group-text"><i class="fad fa-fw fa-user "></i></span>
+            <input type="text" class="form-control" id="txtLastname"
+                   title="Last Name (required)"
+                   asp-for="Lastname" placeholder="Last name*"/>
+        </div>
+    </div>
+            
+     
+
+    <div class="form-group mt-3 mb-3">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fad fa-fw fa-users "></i></span>
+            <input type="text"
+                   class="form-control"
+                   placeholder="Enter your Company"
+                   asp-for="Company"
+                   title="Company (optional)"
+                   autocapitalize="off"
+                   autocomplete="off"
+                   spellcheck="false"
+                   autocorrect="off"/>
+        </div>
+    </div>
+            
+    <div class="form-group mb-0">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-fw fa-envelope-open"></i></span>
+            <input type="email"
+                   id="txtEmail"
+                   class="form-control"
+                   placeholder="Enter your Email address*"
+                   title="Email address (required)"
+                   asp-for="Email"
+                   aria-label="Email"
+                   title="Please enter a valid email address."
+                   autocapitalize="off"
+                   autocomplete="off"
+                   spellcheck="false"
+                   autocorrect="off" required/>
+            <button id="btnSendValidationEmail"
+                    type="button"
+                    class="btn btn-sm btn-secondary"
+                    title="Validate the email address. Re-sends an email with a confirmation code.">
+                <i class="fas fa-check fa-sync text-warning"></i>
+            </button>
+        </div>
+                
+        <div class="header-byline ">used to verify your account and order confirmations</div>
+    </div>
+            
+    <div class="responsive-container mt-3">
+                
+                
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="fas fa-fw fa-map-marker-alt"></i>
+            </span>
+            <input type="text"
+                   class="form-control"
+                   placeholder="First line of street address (required for credit cards/optional for PayPal)"
+                   asp-for="StreetAddress"
+                   autocapitalize="off"
+                   autocomplete="off"
+                   spellcheck="false"
+                   autocorrect="off"/>
+        </div>
+                
+               
+
+        <div class="input-group ms-2" style="width: 27em">
+            <span class="input-group-text">
+                <i class="fad fa-fw fa-flag"></i>
+            </span>
+            <select asp-for="CountryCode" 
+                    class="form-select"
+                    asp-items="@(new SelectList(wsApp.Countries,"CountryCode","Country"))">
+            </select>
+        </div>
+        
+    </div>
+    <div class="header-byline">required for credit card transactions, optional for paypal</div>
+
+    @if (Model.InvoiceModel.Invoice.Customer.IsNew)
+    {
+        <div class="input-group mt-3">
+            <span class="input-group-text"><i class="fas fa-fw fa-user-secret"></i></span>
+            <input type="password"
+                   class="form-control"
+                   placeholder="Enter a password (8 chars minimum)*"
+                   asp-for="Password"
+                   aria-label="Password"
+                   title="Enter a password for this account. Used to access your account in the future."
+                   autocapitalize="off"
+                   autocomplete="off"
+                   spellcheck="false"
+                   autocorrect="off" required/>
+        </div>
+        <div class="header-byline ">used to access your account. 8 chars minimum, must include: upper case, lower case, and a number</div>
+    }
+</div>
+
+
+<h3 class="page-header-text mt-4">
+    <i class="fad fa-credit-card"></i>
+    @AppResources.ShoppingCart.PaymentInformation
+    <span class="header-byline" style="font-family: sans-serif; font-weight: normal; font-size: 0.7em; color: #222;">(<a href="http://www.west-wind.com/westwindwebstore/docs/index.htm?page=_5et00i5q1.htm" target="_blank"><i class="fa fa-info-circle"></i> not working?</a>)</span>
+    
+    <img id="CCCardImage" src="~/images/ccCards.png" class="float-end" alt="Credit Cards">
+</h3>
+
+    
+
+<partial name="CreditCardPayment_BrainTree_Partial" model="Model"/>
+        
+<div class="responsive-container mt-2">
+    <div class="input-group">
+        <span class="input-group-text">
+            <i class="fas fa-fingerprint"></i>
+        </span>
+        <input type="text" 
+               class="form-control"
+               asp-for="InvoiceModel.PoNumber"
+               placeholder="optional customer reference or PO number"
+        />
+    </div>
+    <div id="PromoCodeControl" class="input-group input-group-sm">
+        <span class="input-group-text"><i class="fad fa-fw fa-tag "></i></span>
+        <input type="text"
+               class="form-control"
+               placeholder="Promo Code"
+               asp-for="InvoiceModel.PromoCode"
+               autocapitalize="off"
+               autocomplete="off"
+               spellcheck="false"
+               autocorrect="off"
+               title="If you have a promo code, enter it here"/>
+        <button type="submit" name="btnRecalculate" id="btnRecalculate" 
+                class="btn btn-secondary"><i class="fas fa-fw fa-sync"></i></button>
+    </div>
+</div>
+
+<h3 class="page-header-text mb-0">
+    <i class="fad fa-info-circle"></i>
+    @AppResources.ShoppingCart.NotesAndInformation
+</h3>
+
+<div class="header-byline ">special instructions and referral information</div>
+
+<textArea type="text"
+              class="form-control"
+              asp-for="InvoiceModel.Notes"
+              autocapitalize="off"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="leave any special order instructions or comments  or notes about how you found us here (optional)"
+              autocorrect="off"></textArea>
+
+
+        
+    
+@if (wsApp.Configuration.Security.UseOrderFormRecaptcha)
+{
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        captchaResponse = function(key) {
+            $("#txtReCaptcha").val(key);
+        }
+    </script>
+
+    <div id="grc" class="g-recaptcha mt-3"
+         data-sitekey="6LdyQtcUAAAAAMHqq1s25d4PpkbzTv_AHpBZkzNH"
+         data-callback="captchaResponse">
+    </div>
+}
+    
+
+<div class="h-75 mt-2">
+    
+    <button id="btnSubmit" name="btnSubmit" type="submit" 
+
+            class="btn-primary btn btn-lg mt-4" >
+        <i class="fa fa-check-circle"></i>
+        Place your Order
+    </button>
+
+    <div class="float-end mt-4 invoice-subtotal"
+         style="width: 11em;">
+        @if (@invoice.Tax > 0M)
+        {
+            var invoiceSubTotal = (invoice.InvoiceTotal - invoice.Tax).ToString("n2");
+            
+            <div class="d-flex justify-content-between text-secondary">
+                <div>Tax:</div>
+                <div>$@invoice.Tax.ToString("n2")</div>
+            </div>
+        }
+        <div class="d-flex justify-content-between">
+            <div style="margin-top: 0.5em">Order Total:</div>
+            <div class="text-danger fs-3" style="font-weight: 700">$@invoice.InvoiceTotal.ToString("n2")</div>
+        </div>
+
+    </div>
+
+</div>
+        
+
+<input type="hidden" asp-for="@Model.ReCaptchaResult" id="txtReCaptcha" />
+<input type="hidden" asp-for="@Model.dtto" />
+<input type="hidden" asp-for="@Model.Evc" />
+    
+</form>
+</div>
+
+@section BottomOfBody
+{
+    <partial name="ProgressWindowOverlay_Partial" model="new ProgressWindowOverlayModel()"/>
+
+    @if (wsApp.Configuration.Security.ValidateEmailAddresses)
+    {
+        var model = new ProfileViewModel();
+        model.Customer.Email = Model.Email;
+        
+        <partial name="/Views/Account/EmailValidationForm_Partial.cshtml" id="EmailValidationForm" model="model"/>
+    }
+}
+
+
+
+@section Scripts {
+    <link href="/lib/toastr/build/toastr.min.css" rel="stylesheet" />
+    <script src="/lib/toastr/build/toastr.min.js"></script>
+}

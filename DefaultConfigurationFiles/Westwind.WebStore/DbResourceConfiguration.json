@@ -1,0 +1,15 @@
+﻿{
+  "ResourceAccessMode": "Resx",
+  "xResourceAccessMode": "DbResourceManager",
+  "ConnectionString": "server=.;database=WebStoreNew_Localizations; integrated security=true; encrypt=false;",
+  "DataProvider": "SqlServer",
+  "ResourceTableName": "localizations",
+  "ResxExportProjectType": "Project",
+  "ResxBaseFolder": "~/Properties/",
+  "StronglyTypedGlobalResource": "~/Properties/Resources.cs",
+  "ResourceBaseNamespace": "AppResources",
+  "AddMissingResources": true,
+  "LocalizationFormWebPath": "~/LocalizationAdmin/",
+  "GoogleApiKey": "",
+  "BingClientId": ""
+}

@@ -1,0 +1,173 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model OrderFormViewModel
+@{
+    Layout = null;
+    var config = wsApp.Configuration;
+
+    // Full InvoiceModel Entity from View Model
+    var invoice = Model.InvoiceModel.Invoice;
+    string title = "InvoiceModel # " + invoice.InvoiceNumber;
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="@wsApp.Configuration.ApplicationHomeUrl" />
+    <title>@(title)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- application.css references bootstrap and font-awesome -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/fontawesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/css/application.css" rel="stylesheet" />
+    <link href="~/css/store.css" rel="stylesheet" />
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0.75em 0.55em;
+            box-sizing: border-box;
+        }
+        footer {
+            text-align: center
+        }
+        .highlighted {
+            color: firebrick; font-size: 1.2em; font-weight: bold;
+        }
+        #CompanyLogo {
+            height: 6em;
+            display: block;
+        }
+        #CompanyLogoByLine {
+            font-size: 0.8em;
+            color: #333;
+            margin-left: 7em;
+        }
+        #ButtonBar {
+            position: absolute;
+            right: 0.1em;
+            top: 0;
+            font-size: 1em;
+        }
+        #InvoiceContent {
+            margin-top: 3em;
+        }
+
+        
+        
+        @@media print {
+            body, html {
+                margin: 0.75em;
+                width: 8.5in;
+                height: 11in;
+            }
+            #InvoiceContent {
+                margin-top: 3em;
+            }
+            footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: auto;
+                text-align: center;
+                margin-top: 0;
+            }
+            #ButtonBar {
+                display: none;
+            }
+            .manage-license-link {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="ButtonBar">
+    <button type="button" 
+            title="Open the print dialog to print this invoice to a printer or Save to a PDF file."
+            class="btn btn-primary btn-sm"
+            onclick=" window.print();return false;">
+        <i class="fad fa-print"></i>
+        print invoice
+    </button>
+    <button class="btn btn-secondary btn-sm" 
+            title="Go back to site home"
+            onclick="window.location = '/'">
+        <i class="fas fa-home-alt"></i>
+    </button>
+</div>
+
+<div style="max-width: 1080px; margin:  0 auto">
+    <img id="CompanyLogo" 
+         src="@config.Company.ReportCompanyLogoImage" 
+         alt="@config.ApplicationName Logo" />
+    <div id="CompanyLogoByLine">
+        @if (config.Company.Address != null)
+        {
+            @Html.Raw(config.Company.Address.Trim().Replace("\n", " &bull; "))
+        }
+    </div>
+
+    <div id="InvoiceContent">
+    
+        <table class="table table-bordered">
+            <thead>
+            <tr class="bg-light">
+                <th>Invoice <span class="hidable">Number</span></th>
+                <th>Sold on</th>
+                <th><span class="hidable">Customer</span> Reference</th>
+                <th>Paid By</th>
+                <th class="right">Total Sale</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="highlighted">@invoice.InvoiceNumber</td>
+                <td>@invoice.InvoiceDate.ToString("MMM d, yyyy")</td>
+                <td>@invoice.PoNumber</td>
+                <td>@invoice.CreditCard.Type</td>
+                <td class="right highlighted">$@invoice.InvoiceTotal.ToString("n2")</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <partial name="OrderAddress_Partial" model="invoice" />
+        
+        <h3 class="page-header-text mt-2">
+            <i class="fad fa-list"></i>
+            Items purchased
+        </h3>
+
+        @{
+            Model.InvoiceModel.NoLineItemImages = false;
+        }
+    
+        <partial name="ShoppingCartItems_Partial" model="Model.InvoiceModel"/>
+    
+        <div style="font-size: 36pt; color: #bbb; font-weight: bold;margin-top: 0">
+            @invoice.CreditCardResult.ToString()
+        </div>
+
+        @if (!string.IsNullOrEmpty(invoice.Notes))
+        {
+            <div>
+                <label>Order Notes</label>:
+                <div class="bg-gradient bg-light rounded p-2 small">@Html.Raw(HtmlUtils.DisplayMemoEncoded(invoice.Notes?.Trim()))</div>
+            </div>
+        }
+
+
+        <footer style="margin-top: 10em">
+            @config.Company.CompanyName
+            &bull;
+            @config.Company.WebSite
+            &bull;
+            @config.Company.Email
+        </footer>
+    
+    </div>
+</div>
+
+</body>
+</html>

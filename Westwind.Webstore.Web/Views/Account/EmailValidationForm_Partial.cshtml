@@ -1,0 +1,56 @@
+﻿@model ProfileViewModel
+
+<div class="modal fade" id="EmailValidatorModal" style="width: 90%"
+     tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Validate your Email Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                 <div class="alert alert-info">
+                     <i class="fa fa-info-circle fa-2x" style="padding: 0 10px 20px 0; display: block; float: left;"></i>
+                 <small id="helpId" class="text-muted">We've sent you an email with a validation code to verify your email address. Please enter the validation code in the field field below.</small>
+                </div>
+                <div class="form-group">
+                  <label for="">Enter the Validation Code</label>
+                  <input type="text" name="email-validation-code" id="email-validation-code" placeholder="validation code" class="form-control" placeholder="" aria-describedby="helpId">                 
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+
+                <div class="float-start">
+                    
+                    <a href="#0" id="lnkNoEmail">                    
+                    
+                    <i class="fa fa-warning" style="color: goldenrod"></i>
+                    Didn't get an email?
+                </a>
+                </div>
+                <button id="btnEmailValidation" type="button" class="btn btn-primary">Validate</button>
+            </div>
+            
+            <div class="alert alert-warning hidden" id="NoEmailMessage" style="border-radius: 0; margin-bottom: 0;">
+                <small>
+                    <p>
+                        If you didn't receive a validation email, please make sure to check your SPAM folder
+                        and/or add an exception for <b>@wsApp.Configuration.Email.SenderEmail</b> 
+                        to your email rules. If that doesn't work please consider using a different email address.
+                    </p>
+                    <p>
+                        To resend the validation email, click the <b><i class="fa fa-refresh"></i> Refresh</b> button next to the email address.
+                    </p>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    var email = @Model.Customer.Email;
+}
+
+
+<script src="~/scripts/EmailValidationForm_Partial.js"></script>

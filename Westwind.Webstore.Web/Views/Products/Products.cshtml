@@ -1,0 +1,58 @@
+﻿@model ProductListViewModel;
+
+
+@{
+    ViewBag.Title = "Products - " + wsApp.Configuration.ApplicationName;
+}
+<div class="container">
+    <div class="page-header-text">
+        <input type="text"
+               id="ResultSearchBox"
+               class="form-control-sm form-control search-box float-end"
+               placeholder="search results"
+               style="width: 10em; font-size: 0.55em"
+               aria-label="Search"
+               aria-describedby="basic-addon1">
+
+        <i class="fad fa-list-alt"></i>
+        @(Model.SelectedCategory ?? "All Products")
+        <span id="ProductCountBadge" 
+              class="badge bg-secondary rounded-pill badge-super"  style="font-size: 0.45em !important"
+              >@Model.ItemList.Count</span>
+
+    </div>
+    <error-display error-display-model="Model.ErrorDisplay"  ></error-display>
+    
+    <partial name="ProductList_Partial" model="Model" />
+
+</div> <!-- .container-->
+
+@section Scripts {
+    <script src="/lib/westwind.jquery.js"></script>
+
+    <script>
+        $(function() {
+            setTimeout( function () {
+            $("#ResultSearchBox")            
+            .keyup( function() {
+                    var $el = $(this);                    
+                    var searchText = $el.val().toLowerCase(); // we use no case and SKU is lowercase
+
+                    if (searchText && searchText.length > 1) {
+                        $(".item-container").addClass("hidden");
+                    } else {
+                        $(".item-container").removeClass("hidden");
+                        return;
+                    }
+
+                    $(`.item-container a:containsNoCase("${searchText}"), .item-container a[data-sku*="${searchText}"]`).each(function() {
+                        var $parent = $(this).parents(".item-container");
+                        $parent.removeClass("hidden");
+                    });
+                })
+               .focus();
+            },500);
+        });
+    </script>
+}
+

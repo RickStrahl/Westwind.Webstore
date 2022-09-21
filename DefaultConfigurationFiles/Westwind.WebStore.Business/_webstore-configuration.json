@@ -1,0 +1,22 @@
+﻿{
+  "ApplicationCompany": "West Wind Technologies",
+  "ApplicationDomain": "west-wind.com",
+  "ApplicationHomeUrl": "https://localhost:5201/",
+  "ApplicationName": "West Wind Web Store",
+  "ConnectionString": "server=.;database=WebStoreNew; integrated security=true; encrypt=false;",
+  "Email": {
+    "AdminSenderEmail": null,
+    "MailServer": null,
+    "MailServerPassword": null,
+    "MailServerUsername": null,
+    "SenderEmail": null,
+    "SenderName": null,
+    "UseSsl": false
+  },
+  "Payment": {},
+  "ProductImageUploadFilePath": "/images/product-images/",
+  "ProductImageWebPath": "~/images/product-images/",
+  "Theme": "default",
+  "TitleBottom": "Web Store",
+  "TitleTop": "West Wind"
+}

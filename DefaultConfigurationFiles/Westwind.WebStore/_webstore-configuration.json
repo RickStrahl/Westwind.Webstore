@@ -1,0 +1,70 @@
+﻿{
+  "ApplicationCompany": "My WebStore Company",
+  "ApplicationDomain": "mywebstore.com",
+  "ApplicationHomeUrl": "https://localhost:5001/",
+  "ApplicationName": "My Web Store",
+  "ConnectionString": "server=.;database=WebStoreNew;integrated security=yes;encrypt=false;",
+  "ProductImageUploadFilePath": "wwwroot\\images\\product-images\\",
+  "ProductImageWebPath": "/images/product-images/",
+  "Theme": "default",
+  "TitleBottom": "Web Store",
+  "TitleTop": "West Wind",
+  "DefaultCountryCode": "US",
+  "CurrencySymbol": "$",
+  "Email": {
+    "AdminSenderEmail": "admin@mywebstore.com",
+    "MailServer": "localhost",
+    "MailServerUsername": "",
+    "MailServerPassword": "",
+    "SenderEmail": "sales@mywebstore.com",
+    "SenderName": "West Wind Technologies",
+    "UseSsl": false,
+    "CcList": null,
+    "AdminCcList": null,
+    "SendAdminEmails": true
+  },
+  "Payment": {
+    "MerchantId": "",
+    "PublicKey": "",
+    "PrivateKey": "",
+    "MerchantPassword": "",
+    "TestMode": true,
+    "ProcessCardsOnline": true,
+    "DefaultCardProcessType": "Sale",
+    "ProcessConnectionTimeoutSeconds": 20,
+    "LogFile": "wwwroot\\admin\\cclog.txt",
+    "ReferingOrderUrl": null,
+    "ClearCardInfoAfterApproval": true,
+    "TaxState": "HI",
+    "TaxRate": 0.04,
+    "TransactionHtmlLink": "https://www.braintreegateway.com/merchants/{1}/transactions/{0}"
+  },
+  "Company": {
+    "ReportCompanyLogoImage": "/images/WestWindLogo.png",
+    "CompanyName": "",
+    "Address": "",
+    "Telephone": "",
+    "Email": "",
+    "WebSite": ""
+  },
+  "Licensing": {
+    "IsLicensingEnabled": false,
+    "ServerUrl": "",
+    "Username": "",
+    "Password": ""
+  },
+  "Security": {
+    "ValidateEmailAddresses": true,
+    "UseOrderFormRecaptcha": false,
+    "GoogleRecaptureSecret": "",
+    "UseOrderFormTimeout": false,
+    "OrderFormMinimumSecondsTimeout": 10,
+    "OrderFormMaximumMinutesTimeout": 15
+  },
+  "System": {
+    "LiveReloadEnabled": true,
+    "RedirectToHttps": false,
+    "ErrorDisplayMode": "Application",
+    "CookieTimeoutDays": 1
+  }
+}

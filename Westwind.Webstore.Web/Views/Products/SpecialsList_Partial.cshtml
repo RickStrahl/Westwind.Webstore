@@ -1,0 +1,43 @@
+﻿@model ProductListViewModel
+
+@foreach (var item in Model.ItemList)
+{
+
+    if (string.IsNullOrEmpty(item.Description) || item.InActive || string.IsNullOrEmpty(item.Abstract))
+    {
+        continue;
+    }
+
+
+    <div class="item-container responsive-container">
+        <div class="item-image">
+            @if (!string.IsNullOrEmpty(item.ItemImage))
+            {
+                <img src="@(Url.Content(wsApp.Configuration.ProductImageWebPath)  + item.ItemImage)"
+                     alt="@item.Description" />
+            }
+        </div>
+        <div class="item-abstract">
+            <h3><a href="@Url.Action("Product","Products", new {sku = item.Sku})" data-sku="@item.Sku">@(item.SpecialsHeader ?? item.Description)</a></h3>
+
+            @*<div class="mt-2 mb-2">
+                <button class="btn btn-primary btn-sm pr-3 pl-3">
+                    <i class="fad fa-cart-arrow-down"></i>
+                    Purchase
+                </button>
+
+                <b class="text-red text-larger pl-4">@item.Price.ToString("c")</b>
+                @{
+                    if (item.ListPrice > item.Price)
+                    {
+                        <s class="text-lowlight pl-2 hidable-xs">@item.ListPrice.ToString("c")</s>
+                    }
+                }
+            </div>*@
+
+            <div>
+                @item.SpecialsText
+            </div>
+        </div>
+    </div>
+}

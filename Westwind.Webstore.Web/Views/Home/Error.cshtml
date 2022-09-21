@@ -1,0 +1,88 @@
+﻿@model ErrorViewModel
+
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
+@using System.Net
+@inject IWebHostEnvironment env;
+
+<div class="container" style="max-width: 670px">
+    @if (Model.StatusCode == 404)
+    {
+    
+        <h1 class="page-header-text">
+            <i class="fas fa-warning text-warning"></i>
+            Oops - We're in the Weeds. Page not Found.
+        </h1>
+
+        <div class="responsive-container">
+            <div style="max-width: 12em">
+                <img src="/images/404Image.jpg" style="width: 100%; display:  block; padding-right:  1em;" />
+            </div>
+            <div>
+                <p>
+                    <b>Uh oh!</b> 
+                    
+                    Looks like you've accessed a **page that no longer exists**,
+                    or you used a link that is not valid for this site.
+                </p>
+                <p>
+                    If you typed in or copied this link directly, please double check 
+                    to make sure the link is correct and a valid link to a page on this site.
+                </p>
+                <p>
+                    <a class="bold" href="/">
+                        <i class="fa-duotone fa-up-right-from-square"></i>
+                        Back to Site Home
+                    </a>
+                </p>
+            </div>
+        </div>
+    }
+    else
+    {
+
+        <h1 class="page-header-text">
+            <i class="fad fa-warning text-warning"></i>
+            Oops - An unhandled error occurred in the application
+        </h1>
+
+        <div class="responsive-container">
+            <div style="width: 100px">
+                <a class="fas fa-warning fa-5x text-danger"></a>
+            </div>
+            <div>
+                <p>
+                    Uh oh! An unexpected error occurred, and we've ended up
+                    in a dead-end alley of the Web Store. The error has been
+                    recorded and the authorities have been notified, but don't
+                    fret we're on the case.
+                </p>
+                <p>
+                    <a class="bold" href="/">
+                        <i class="fa-duotone fa-up-right-from-square"></i>
+                        Back to Site Home
+                    </a>
+                </p>
+
+            </div>
+        </div>
+
+
+        @if (env.IsDevelopment() || wsApp.Configuration.System.ErrorDisplayMode != ErrorDisplayModes.Application)
+        {
+            <h2 class="page-header-text mt-5">
+                <i class="fad-fa-warning"></i>
+                More information
+            </h2>
+
+            <error-display alert-class="warning" message="@Model.Error.Message" icon="warning"></error-display>
+        }
+        
+        @if (env.IsDevelopment() || wsApp.Configuration.System.ErrorDisplayMode != ErrorDisplayModes.ApplicationPlusDetail)
+        {
+            <label>Debug Info:</label>
+            <pre style="font-size: 0.7em !important;">@Model.Error.StackTrace</pre>
+        }
+    }
+
+</div>

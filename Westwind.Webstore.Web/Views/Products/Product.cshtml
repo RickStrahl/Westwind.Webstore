@@ -1,0 +1,100 @@
+﻿@using Westwind.AspNetCore.Markdown
+@model ProductViewModel;
+@{
+    ViewBag.Title = @Model.Item.Description + " - " + wsApp.Configuration.ApplicationName;
+}
+
+<div class="container">
+            @if (Model.UserState.IsAdmin)
+            {
+                <div class="float-end">
+                    <a class="btn  btn-link btn-light"  title="Edit product information."
+                       href="/admin/productmanager/@Model.Sku">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                </div>
+            }
+    <div class="page-header-text">
+        @Model.Item.Description
+    </div>
+    
+    <style>
+        #ItemGrid  {
+        }
+        #ItemGrid div table tr td {
+            padding:  5px 20px 5px 10px;
+            font-weight:  600;
+            font-size:  1.05em;
+        }
+    </style>
+    <div id="ItemGrid" class="responsive-container">
+        <div style="margin-right: 3em;max-width:  370px; width:  auto;" >
+            @if (!string.IsNullOrEmpty(Model.Item.ItemImage))
+            {
+                <img src="@(Url.Content(wsApp.Configuration.ProductImageWebPath) + Model.Item.ItemImage)"
+                     alt="@Model.Item.Description" 
+                     style="max-width: 350px; width:  auto; max-height: 175px"/>
+            }
+        </div>
+        <div>
+                
+            <form name="form1" asp-action="AddItem" asp-controller="ShoppingCart">
+                <table>
+                    <tbody>
+                    <tr style="font-size: 1.2em">
+                        <td>Our Price:</td>
+                        <td class="text-danger">@Model.Item.Price.ToString("c")</td>
+                    </tr>
+                    @if (!string.IsNullOrEmpty(Model.YouSavePercent))
+                    {
+                        <tr>
+                            <td>List Price:</td>
+                            <td><s>@Model.Item.ListPrice.ToString("c")</s></td>
+                        </tr>
+                        <tr>
+                            <td>You save:</td>
+                            <td >$@Model.YouSave.ToString("n2") <small>(@Model.YouSavePercent)</small></td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>Quantity</td>
+                        <td>
+                            <input asp-for="StringQuantity" name="Quantity" id="Quantity"
+                                   class="form-control number"
+                                   style="width: 5.4em"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fad fa-cart-arrow-down"></i>&nbsp;
+                                Add to shopping cart &nbsp;
+                            </button>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+                <input type="hidden" asp-for="Sku" name="Sku" id="Sku" />
+            </form>
+        </div>
+
+    </div>
+
+    <p class="mt-4">
+        @Markdown.ParseHtmlString(Model.Item.LongDescription)
+    </p>
+    
+    @if (!string.IsNullOrEmpty(Model.Item.InfoUrl))
+    {
+        <p>
+            <a href="@Model.Item.InfoUrl" target="_blank">More information...</a>
+        </p>
+    }
+    
+    
+    
+    
+        
+</div> <!-- .container-->
+
+

@@ -1,0 +1,23 @@
+﻿@model Invoice
+@{
+    var invoice = Model;
+    bool hasShippingAddress = !(invoice.ShippingAddress?.IsEmpty() ?? true);
+}
+<div class="d-flex flex-row" style="width: 100%; font-size: 0.875em">
+    <div class="well bg-light ms-0">
+        <div class="tiny-title">billing address</div>
+            
+        @if (invoice.BillingAddress != null)
+        {
+            @Html.Raw(HtmlUtils.DisplayMemo(invoice.BillingAddress.ToString().Trim()))
+        }
+        <a href="mailto:@invoice.Customer.Email" style="display: block; margin-top: 0.3em">@invoice.Customer.Email</a>
+    </div>
+    @if (hasShippingAddress)
+    {
+        <div class="well">
+            <div class="tiny-title">shipping address</div>
+            @Html.Raw(HtmlUtils.DisplayMemo(invoice.ShippingAddress.ToString().Trim()))
+        </div>
+    }
+</div>
