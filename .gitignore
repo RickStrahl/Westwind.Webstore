@@ -6,6 +6,7 @@ appsettings.*.json
 DbResourceConfiguration.json
 CreditCardTestConfiguration.config
 _PaymentProcessing.config
+*Credential.xml
 
 SavedConfigurationFiles/
 *.pubxml
@@ -56,6 +57,7 @@ bld/
 .idea
 .vscode
 .vs
+.config
 
 
 # Uncomment if you have tasks that create the project's static files in wwwroot
