@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Westwind.AspNetCore.Extensions;
@@ -358,7 +359,6 @@ namespace Westwind.Webstore.Web.Controllers
         public ActionResult OrderFormFast(string sku)
         {
             var model = CreateViewModel<OrderFormFastViewModel>();
-            model.dtto = OrderValidation.EncodeCurrentDate();
 
             var busProduct = BusinessFactory.GetProductBusiness();
             model.Product = busProduct.LoadBySku(sku);
@@ -370,12 +370,7 @@ namespace Westwind.Webstore.Web.Controllers
             if (customer == null)
                 customer = busCustomer.Create();
 
-            var busInvoice = BusinessFactory.GetInvoiceBusiness(busProduct.Context);
-            var invoice = busInvoice.Create();
-            invoice.IsTemporary = true;
-            model.InvoiceModel = new InvoiceViewModel(invoice);
-
-            invoice.Customer = customer;
+            model.Customer = customer;
 
             model.Firstname = customer.Firstname;
             model.Lastname = customer.Lastname;
@@ -385,12 +380,8 @@ namespace Westwind.Webstore.Web.Controllers
 
             var address = CustomerBusiness.GetBillingAddress(customer);
             model.StreetAddress = address?.StreetAddress.GetLines().FirstOrDefault();
+            model.PostalCode = address?.PostalCode;
             model.CountryCode = address?.CountryCode;
-
-            busInvoice.AddLineItem(sku);
-
-            // ensure customer and address are linked
-            busInvoice.UpdateCustomerReferences(customer);
 
             return View("OrderFormFast", model);
         }
@@ -417,13 +408,9 @@ namespace Westwind.Webstore.Web.Controllers
             if (customer == null)
                 customer = customerBusiness.Create();
 
-            string oldEmail = customer.Email;
+            model.Customer = customer;
 
-            var invoiceBusiness = BusinessFactory.GetInvoiceBusiness(productBusiness.Context);
-            var invoice = invoiceBusiness.Create();
-            invoice.PoNumber = model.InvoiceModel.PoNumber;
-            invoice.Notes = model.InvoiceModel.Notes;
-            invoice.InvoiceDate = DateTime.Now;
+            string oldEmail = customer.Email;
 
             customer.Firstname = model.Firstname;
             customer.Lastname = model.Lastname;
@@ -438,46 +425,16 @@ namespace Westwind.Webstore.Web.Controllers
                 customer.Addresses.Add(address);
 
             address.StreetAddress = model.StreetAddress;
+            address.PostalCode = model.PostalCode;
             address.CountryCode = model.CountryCode;
-
-            // ensure customer and address are linked
-            invoiceBusiness.UpdateCustomerReferences(customer);
-
-            model.InvoiceModel.Invoice = invoice;
-
-            invoiceBusiness.AddLineItem(sku);
-
-            // Update from form inputs from this form
-            if (invoice.PromoCode != model.InvoiceModel.PromoCode)
-            {
-                invoice.PromoCode = model.InvoiceModel.PromoCode;
-                invoiceBusiness.ApplyPromoCodes(invoice.PromoCode);
-            }
-
-            invoiceBusiness.CalculateTotals();
-
-            if (Request.IsFormVar("btnRecalculate"))
-            {
-                return View(model);
-            }
-
-            // Validate Invoice/Customer/Security and set error display.
-            // If false exit here and redisplay order form
-            if (!ValidateOrderForm(model, invoiceBusiness, customerBusiness))
-                return View(model);
 
             bool validationResult = true;
             if (customer.IsNew)
             {
                 if (string.IsNullOrEmpty(model.Password))
                 {
-                    model.ErrorDisplay.AddMessage(AppResources.Account.PasswordMissingOrdontMatch, "Password");
                     customer.Password = null;
-                    validationResult = false;
-                }
-                else
-                {
-                    validationResult =   customerBusiness.ValidatePassword(model.Password);
+                    customerBusiness.ValidationErrors.Add(AppResources.Account.PasswordMissingOrdontMatch, "password");
                 }
             }
 
@@ -500,26 +457,36 @@ namespace Westwind.Webstore.Web.Controllers
                 }
             }
 
+
+            if (!customerBusiness.Validate(customer))
+            {
+                model.ErrorDisplay.AddMessages(customerBusiness.ValidationErrors);
+                model.ErrorDisplay.ShowError("Please fix the following errors:");
+                return View("OrderFormFast",model);
+            }
+
+            var invoiceBusiness = BusinessFactory.GetInvoiceBusiness(customerBusiness.Context);
+
+            // create a new invoice
+            var invoice = invoiceBusiness.Create();
+
+            // ensure customer and address are linked
+            invoiceBusiness.UpdateCustomerReferences(customer);
+            invoiceBusiness.AddLineItem(sku);
+            invoiceBusiness.CalculateTotals();
+
+            invoiceBusiness.Save();
+
+
+
             if (!validationResult)
             {
                 ErrorDisplay.ShowError("Please fix the following issues:");
                 return View(model);
             }
 
-
             invoiceBusiness.CalculateTotals();
 
-            if (!ProcessCreditCard(model, invoiceBusiness))
-            {
-                ModelState.Clear();
-                model.ErrorDisplay.AddMessage(invoiceBusiness.ErrorMessage, "dropin-container");
-                model.ErrorDisplay.ShowError("Please fix the following issues:");
-                return View(model);
-            }
-
-            invoice.IsTemporary = false;
-            invoice.InvoiceDate = DateTime.Now;
-            invoice.BillingAddress = CustomerBusiness.GetBillingAddress(customer);
 
 
             if (!invoiceBusiness.Save())
@@ -529,19 +496,12 @@ namespace Westwind.Webstore.Web.Controllers
                 return View(model);
             }
 
-            // update licenses only
-            invoiceBusiness.UpdateLineItemsLicenses(saveInvoice: true);;
-
-            invoiceBusiness.DeleteExpiredTemporaryInvoices();
-
-            ClearInvoiceAppUserState();
+            AppUserState.InvoiceId = invoice.Id;
 
             // log in the user
             SetAppUserFromCustomer(customer);
 
-
-
-            return Redirect("/shoppingcart/orderconfirmation/" + invoice.InvoiceNumber);
+            return Redirect("/shoppingcart/orderform");
         }
 
 
@@ -565,18 +525,6 @@ namespace Westwind.Webstore.Web.Controllers
             var customer = customerBusiness.Entity;
 
             var hasValidationErrors = !invoiceBusiness.Validate(invoice);
-
-            // OrderFormFast only
-            if (model is OrderFormFastViewModel)
-            {
-                var modelOf = model as OrderFormFastViewModel;
-                if (!string.IsNullOrEmpty(modelOf.Password))
-                {
-                    hasValidationErrors = !customerBusiness.ValidatePassword(modelOf.Password);
-                    if (!hasValidationErrors)
-                        customer.Password = modelOf.Password;
-                }
-            }
 
             if (wsApp.Configuration.Security.UseOrderFormTimeout)
             {

@@ -115,7 +115,7 @@ namespace Westwind.Webstore.Business
                         new CountryListItem() {CountryCode = "DE", Country = "Germany"},
                         new CountryListItem() {CountryCode = "CH", Country = "Switzerland"},
                         new CountryListItem() {CountryCode = "AU", Country = "Australia"},
-                        new CountryListItem() {CountryCode = "UK", Country = "United Kingdom"},
+                        new CountryListItem() {CountryCode = "GB", Country = "United Kingdom"},
                         new CountryListItem() { Country = "----------------"}
                     });
 

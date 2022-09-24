@@ -26,10 +26,11 @@ namespace Westwind.Webstore.Web.Views
         public string Evc { get; set; }
     }
 
-    public class OrderFormFastViewModel : OrderFormViewModel
+    public class OrderFormFastViewModel : WebStoreBaseViewModel
     {
         public Product Product { get; set; }
 
+        public Customer Customer { get; set; }
 
         public string Sku { get; set; }
 
@@ -39,15 +40,20 @@ namespace Westwind.Webstore.Web.Views
 
         public string Email { get; set; }
 
+        public string PostalCode { get; set; }
         public string StreetAddress { get; set; }
         public string CountryCode { get; set; }
         public string Country { get; set; }
 
         public string Password { get; set; }
 
-
         public decimal OrderTotal { get; set; }
         public decimal Tax { get; set; }
+
+        /// <summary>
+        /// Email Validation code
+        /// </summary>
+        public string Evc { get; set; }
     }
 
 

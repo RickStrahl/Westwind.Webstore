@@ -7,8 +7,9 @@
     ViewBag.Title =  Model.Product.Description + " - Purchase - " + wsApp.Configuration.ApplicationName;
 
     // Full InvoiceModel Entity from View Model
-    var invoice = Model.InvoiceModel.Invoice;
     var product = Model.Product;
+    var customer = Model.Customer;
+    
 }
 @section HeadersBottom {
     <style>
@@ -110,19 +111,24 @@
         
 <div id="Customer Information">
 
-    <h3 class="page-header-text mt-4">
+    <h3 class="page-header-text mt-4 mb-0">
         <i class="fad fa-user"></i> 
         Your Billing Info
     </h3>
     
-    @if (Model.InvoiceModel.Invoice.Customer.IsNew)
+    
+    @if (Model.Customer.IsNew)
     {
-        <a class="btn btn-primary btn-sm mb-1"
+        <a class="btn btn-primary btn-sm mb-1 mt-2"
            href="/account/signin?returnurl=@this.Context.Request.Path">
             <i class="fad fa-sign-in"></i>
-            Sign into existing account
+            Sign into your existing account
         </a>
-        <div class="small">or fill out the form below to create one</div>
+        <div class="small"><i>or fill out the form below to create one</i></div>
+    }
+    else
+    {
+        <div class="header-byline">as it appears on your billing statement</div>
     }
 
     <div class="responsive-container mt-3">
@@ -193,7 +199,8 @@
             </span>
             <input type="text"
                    class="form-control"
-                   placeholder="First line of street address (required for credit cards/optional for PayPal)"
+                   title="First line of your street address (required for Credit Cards, optional for PayPal)"
+                   placeholder="First line of street address (required for credit cards, optional for PayPal)"
                    asp-for="StreetAddress"
                    autocapitalize="off"
                    autocomplete="off"
@@ -201,9 +208,22 @@
                    autocorrect="off"/>
         </div>
                 
-               
+        <div class="input-group" style="width: 22em">
+                   <span class="input-group-text">
+                       <i class="far fa-fw fa-map-marker-alt"></i>
+                   </span>
+            <input type="text"
+                   class="form-control" 
+                   title="Zip or Postal Code"
+                   placeholder="Zip or Postal Code*"
+                   asp-for="PostalCode"
+                   autocapitalize="off"
+                   autocomplete="off"
+                   spellcheck="false"
+                   autocorrect="off" />
+        </div>
 
-        <div class="input-group ms-2" style="width: 27em">
+        <div class="input-group" style="width: 27em">
             <span class="input-group-text">
                 <i class="fad fa-fw fa-flag"></i>
             </span>
@@ -214,9 +234,9 @@
         </div>
         
     </div>
-    <div class="header-byline">required for credit card transactions, optional for paypal</div>
+    
 
-    @if (Model.InvoiceModel.Invoice.Customer.IsNew)
+    @if (Model.Customer.IsNew)
     {
         <div class="input-group mt-3">
             <span class="input-group-text"><i class="fas fa-fw fa-user-secret"></i></span>
@@ -236,114 +256,19 @@
 </div>
 
 
-<h3 class="page-header-text mt-4">
-    <i class="fad fa-credit-card"></i>
-    @AppResources.ShoppingCart.PaymentInformation
-    <span class="header-byline" style="font-family: sans-serif; font-weight: normal; font-size: 0.7em; color: #222;">(<a href="http://www.west-wind.com/westwindwebstore/docs/index.htm?page=_5et00i5q1.htm" target="_blank"><i class="fa fa-info-circle"></i> not working?</a>)</span>
-    
-    <img id="CCCardImage" src="~/images/ccCards.png" class="float-end" alt="Credit Cards">
-</h3>
 
-    
-
-<partial name="CreditCardPayment_BrainTree_Partial" model="Model"/>
-        
-<div class="responsive-container mt-2">
-    <div class="input-group">
-        <span class="input-group-text">
-            <i class="fas fa-fingerprint"></i>
-        </span>
-        <input type="text" 
-               class="form-control"
-               asp-for="InvoiceModel.PoNumber"
-               placeholder="optional customer reference or PO number"
-        />
-    </div>
-    <div id="PromoCodeControl" class="input-group input-group-sm">
-        <span class="input-group-text"><i class="fad fa-fw fa-tag "></i></span>
-        <input type="text"
-               class="form-control"
-               placeholder="Promo Code"
-               asp-for="InvoiceModel.PromoCode"
-               autocapitalize="off"
-               autocomplete="off"
-               spellcheck="false"
-               autocorrect="off"
-               title="If you have a promo code, enter it here"/>
-        <button type="submit" name="btnRecalculate" id="btnRecalculate" 
-                class="btn btn-secondary"><i class="fas fa-fw fa-sync"></i></button>
-    </div>
-</div>
-
-<h3 class="page-header-text mb-0">
-    <i class="fad fa-info-circle"></i>
-    @AppResources.ShoppingCart.NotesAndInformation
-</h3>
-
-<div class="header-byline ">special instructions and referral information</div>
-
-<textArea type="text"
-              class="form-control"
-              asp-for="InvoiceModel.Notes"
-              autocapitalize="off"
-              autocomplete="off"
-              spellcheck="false"
-              placeholder="leave any special order instructions or comments  or notes about how you found us here (optional)"
-              autocorrect="off"></textArea>
-
-
-        
-    
-@if (wsApp.Configuration.Security.UseOrderFormRecaptcha)
-{
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>
-        captchaResponse = function(key) {
-            $("#txtReCaptcha").val(key);
-        }
-    </script>
-
-    <div id="grc" class="g-recaptcha mt-3"
-         data-sitekey="6LdyQtcUAAAAAMHqq1s25d4PpkbzTv_AHpBZkzNH"
-         data-callback="captchaResponse">
-    </div>
-}
-    
-
-<div class="h-75 mt-2">
-    
-    <button id="btnSubmit" name="btnSubmit" type="submit" 
-
+    <button id="btnSubmit" name="btnSubmit" type="submit"
             class="btn-primary btn btn-lg mt-4" >
-        <i class="fa fa-check-circle"></i>
-        Place your Order
+        <i class="fa fa-check-circle text-success"></i>
+        Continue to Payment
     </button>
-
-    <div class="float-end mt-4 invoice-subtotal"
-         style="width: 11em;">
-        @if (@invoice.Tax > 0M)
-        {
-            var invoiceSubTotal = (invoice.InvoiceTotal - invoice.Tax).ToString("n2");
-            
-            <div class="d-flex justify-content-between text-secondary">
-                <div>Tax:</div>
-                <div>$@invoice.Tax.ToString("n2")</div>
-            </div>
-        }
-        <div class="d-flex justify-content-between">
-            <div style="margin-top: 0.5em">Order Total:</div>
-            <div class="text-danger fs-3" style="font-weight: 700">$@invoice.InvoiceTotal.ToString("n2")</div>
-        </div>
-
-    </div>
-
-</div>
-        
-
-<input type="hidden" asp-for="@Model.ReCaptchaResult" id="txtReCaptcha" />
-<input type="hidden" asp-for="@Model.dtto" />
-<input type="hidden" asp-for="@Model.Evc" />
     
+    <img src="/images/ccCards.png" class="d-block mt-3" alt="Credit Cards" />
+    
+    
+        
+    <input type="hidden" asp-for="@Model.Evc" />
+   
 </form>
 </div>
 

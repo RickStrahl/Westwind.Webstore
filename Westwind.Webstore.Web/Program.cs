@@ -329,7 +329,6 @@ if (!System.IO.File.Exists("_webstore-configuration.json"))
 app.Run();
 
 
-
 /// <summary>
 /// Add custom View Locations:
 /// * ShoppingCart folder - so Confirmations can render
