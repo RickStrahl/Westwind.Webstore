@@ -23,6 +23,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing.csproj" />
     <ProjectReference Include="..\Westwind.Webstore.Business\Westwind.Webstore.Business.csproj" />
+    
+    <!-- LOCAL PROJECT REFERENCES -->
     <!--    <ProjectReference Include="..\..\Libraries\Westwind.Globalization\src\NetCore\Westwind.Globalization.AspnetCore\Westwind.Globalization.AspnetCore.csproj" />-->
     <!--    <ProjectReference Include="..\..\Libraries\Westwind.Globalization\src\Westwind.Globalization\Westwind.Globalization.csproj" />-->
     <!--    <ProjectReference Include="..\..\Westwind.AspNetCore\Westwind.AspNetCore\Westwind.AspNetCore.csproj" />-->
