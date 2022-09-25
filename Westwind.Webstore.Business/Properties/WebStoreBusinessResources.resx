@@ -220,10 +220,10 @@
     <value>Please choose your primary development environment</value>
   </data>
   <data name="PleaseSelectACountry" xml:space="preserve">
-    <value>Please select a country</value>
+    <value>Select a country</value>
   </data>
   <data name="PleaseSelectAState" xml:space="preserve">
-    <value>US and Canada - Please select a state</value>
+    <value>US and Canada -Select a state</value>
   </data>
   <data name="PleaseSelectHowYouFoundUs" xml:space="preserve">
     <value>Please select how you found us</value>
@@ -272,5 +272,8 @@
   </data>
   <data name="YouMustProvideAValidPostalCode" xml:space="preserve">
     <value>You have to provide a valid billing postal or zip code.</value>
+  </data>
+  <data name="YouMustProvideAStreetAddress" xml:space="preserve">
+    <value>A street address is required</value>
   </data>
 </root>

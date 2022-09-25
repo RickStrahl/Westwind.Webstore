@@ -1,6 +1,7 @@
-# robots.txt for http://www.west-wind.com/
+# robots.txt for http://store.west-wind.com/
 #
 
 User-agent: *
-#Disallow: /account/*
-#Disallow /shoppingcart/*
+Disallow: /account/*
+Disallow /shoppingcart/*
+Disallow /**/*.aspx

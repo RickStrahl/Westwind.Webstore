@@ -261,4 +261,7 @@
   <data name="InvalidPasswordFormat" xml:space="preserve">
     <value>Ungültiges Passwortformat: Mindestens 8 Zeichen, 1 Großbuchstabe, 1 Kleinbuchstabe und 1 Ziffer.</value>
   </data>
+  <data name="YouMustProvideAValidPostalCode" xml:space="preserve">
+    <value>Eine Postleitzahl muss angegeben werden</value>
+  </data>
 </root>

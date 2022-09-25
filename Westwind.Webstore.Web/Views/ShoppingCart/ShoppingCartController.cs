@@ -1,24 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Logging;
 using Westwind.AspNetCore.Extensions;
-using Westwind.AspNetCore.Views;
 using Westwind.Utilities;
-using Westwind.WebStore.App;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 using Westwind.Webstore.Web.Models;
-using Westwind.Webstore.Business.Utilities;
 using Westwind.Webstore.Web.App;
 using Westwind.Webstore.Web.Utilities;
 using Westwind.Webstore.Web.Views;
@@ -108,7 +97,8 @@ namespace Westwind.Webstore.Web.Controllers
         /// <summary>
         /// Manually parse the line items and
         /// </summary>
-        /// <param name="modelInvoice"></param>
+        /// <param name="invoice">invoice to recalculate</param>
+        /// <param name="noSave">don't save the invoice</param>
         /// <returns></returns>
         private bool Recalculate(InvoiceBusiness invoice, bool noSave = false)
         {
@@ -116,8 +106,6 @@ namespace Westwind.Webstore.Web.Controllers
 
             var req = HttpContext.Request;
             inv.PromoCode = req.Form["invoice.PromoCode"].FirstOrDefault();
-
-            var busProduct = BusinessFactory.Current.GetProductBusiness(invoice.Context);
 
             foreach (var itemVar in req.Form)
             {
@@ -128,7 +116,6 @@ namespace Westwind.Webstore.Web.Controllers
                 if (lineItem == null) continue;
 
                 decimal qty = StringUtils.ParseDecimal(itemVar.Value.FirstOrDefault(), 0);
-
 
                 qty = invoice.FixLineItemQuantityForFractionalItem(sku, qty);
 
@@ -428,7 +415,8 @@ namespace Westwind.Webstore.Web.Controllers
             address.PostalCode = model.PostalCode;
             address.CountryCode = model.CountryCode;
 
-            bool validationResult = true;
+
+
             if (customer.IsNew)
             {
                 if (string.IsNullOrEmpty(model.Password))
@@ -436,6 +424,8 @@ namespace Westwind.Webstore.Web.Controllers
                     customer.Password = null;
                     customerBusiness.ValidationErrors.Add(AppResources.Account.PasswordMissingOrdontMatch, "password");
                 }
+
+                customerBusiness.ValidatePassword(model.Password);
             }
 
             // email has changed - validate it
@@ -453,12 +443,12 @@ namespace Westwind.Webstore.Web.Controllers
                 else
                 {
                     ErrorDisplay.AddMessage("Your email address has not been validated.", "Email");
-                    validationResult = false;
                 }
             }
 
+            customerBusiness.Validate(customer, true);
 
-            if (!customerBusiness.Validate(customer))
+            if (customerBusiness.HasValidationErrors)
             {
                 model.ErrorDisplay.AddMessages(customerBusiness.ValidationErrors);
                 model.ErrorDisplay.ShowError("Please fix the following errors:");
@@ -469,25 +459,12 @@ namespace Westwind.Webstore.Web.Controllers
 
             // create a new invoice
             var invoice = invoiceBusiness.Create();
+            invoice.IsTemporary = true;
 
             // ensure customer and address are linked
             invoiceBusiness.UpdateCustomerReferences(customer);
             invoiceBusiness.AddLineItem(sku);
             invoiceBusiness.CalculateTotals();
-
-            invoiceBusiness.Save();
-
-
-
-            if (!validationResult)
-            {
-                ErrorDisplay.ShowError("Please fix the following issues:");
-                return View(model);
-            }
-
-            invoiceBusiness.CalculateTotals();
-
-
 
             if (!invoiceBusiness.Save())
             {
@@ -496,10 +473,9 @@ namespace Westwind.Webstore.Web.Controllers
                 return View(model);
             }
 
-            AppUserState.InvoiceId = invoice.Id;
-
-            // log in the user
+            // log in the user (if new and update if changed)
             SetAppUserFromCustomer(customer);
+            AppUserState.InvoiceId = invoice.Id;
 
             return Redirect("/shoppingcart/orderform");
         }
@@ -574,8 +550,6 @@ namespace Westwind.Webstore.Web.Controllers
             invoice.CreditCard.Nonce = invoiceModel.Nonce;
             invoice.CreditCard.Descriptor = invoiceModel.Descriptor;
             invoice.CreditCard.IpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
-            var data = invoiceModel.DeviceData;
-
 
             if (invoice.CreditCard.IpAddress == "::1")
                 invoice.CreditCard.IpAddress = "127.0.0.1";
@@ -630,14 +604,15 @@ Nonce:      {inv.CreditCard.Nonce}";
             var invoiceBusiness = BusinessFactory.GetInvoiceBusiness();
             var invoice = invoiceBusiness.LoadByInvNo(invoiceNo);
 
+            if(invoice == null)return RedirectToAction("Index");
+
             if (invoice.IsTemporary)
             {
                 return Redirect("/shoppingcart");
             }
 
             // Only allow access for user who created this invoice - or admin
-            if (invoice == null ||
-                (!AppUserState.IsAdmin && invoice.CustomerId != userId))
+            if (!AppUserState.IsAdmin && invoice.CustomerId != userId)
             {
                 if (isPrintInvoice)
                 {

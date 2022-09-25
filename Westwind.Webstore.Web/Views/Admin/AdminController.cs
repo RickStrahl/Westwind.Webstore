@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Hosting;
 using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Web.Controllers;
@@ -22,9 +23,12 @@ namespace Westwind.Webstore.Web.Views.Admin
     {
         private BusinessFactory BusinessFactory { get;  }
 
-        public AdminController(BusinessFactory businessFactory)
+        private IHostApplicationLifetime AppLifeTime { get; }
+
+        public AdminController(BusinessFactory businessFactory, IHostApplicationLifetime lifetime)
         {
             BusinessFactory = businessFactory;
+            AppLifeTime = lifetime;
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -160,6 +164,30 @@ namespace Westwind.Webstore.Web.Views.Admin
             }
 
             return View("Index",model);
+        }
+
+        [Route("/admin/reloadapp")]
+        public IActionResult ReloadApp()
+        {
+            var model = CreateViewModel<AdminViewModel>();
+
+            // touch web.config - pending permissions
+            var webconfig = Path.Combine(wsApp.Constants.StartupFolder, "web.config");
+
+            try
+            {
+                AppLifeTime.StopApplication();
+                // var fi = new FileInfo(webconfig);
+                // fi.LastWriteTime = DateTime.Now;
+                ErrorDisplay.ShowSuccess("IIS Application Pool has been reloaded.");
+                Response.Headers["Refresh"] = "1.5; url=/admin";
+            }
+            catch(Exception ex)
+            {
+                ErrorDisplay.ShowError(ex.Message, "IIS App reloading failed");
+            }
+
+            return View("Index", model);
         }
 
         [Route("/admin/throw")]

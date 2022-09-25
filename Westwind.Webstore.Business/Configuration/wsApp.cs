@@ -153,13 +153,14 @@ namespace Westwind.Webstore.Business
     {
         public DateTime EmptyDate { get; } = TimeUtils.MIN_DATE_VALUE;
 
+        public DateTime AppStartedOn { get; set; }
+
         public string DefaultConnectionString { get; set; } = "server=.;database=WebStoreNew; integrated security=true; encrypt=false;";
 
         public string StartupFolder { get; set; }
         public string WebRootFolder { get; set; }
 
         public string CreditCardLogPath { get;  } =  "./wwwroot/admin/cclog.txt";
-
 
         public string EncKey { get; set; } = "WebStore89#15$212";
     }

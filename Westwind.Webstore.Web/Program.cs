@@ -19,14 +19,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Serilog;
-using Serilog.Events;
 using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.LiveReload;
 using Westwind.AspNetCore.Middleware;
-using Westwind.AspNetCore.Security;
 using Westwind.Globalization;
 using Westwind.Globalization.AspnetCore;
 using Westwind.Webstore.Business;
@@ -190,8 +187,8 @@ Task.Run(() =>
     Console.WriteLine("Lookup retrieved.");
 });
 
-app.UseLiveReload();
-
+if(wsApp.Configuration.System.LiveReloadEnabled)
+    app.UseLiveReload();
 
 if (config.System.ErrorDisplayMode == ErrorDisplayModes.Developer)
 {
@@ -290,6 +287,8 @@ app.UseAuthorization();
 app.UseCors("CorsPolicy");
 
 
+
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
@@ -325,6 +324,8 @@ if (!System.IO.File.Exists("_webstore-configuration.json"))
         wsApp.Configuration.Write(); // write out full configuration
     }catch { }
 }
+
+wsApp.Constants.AppStartedOn = DateTime.Now;
 
 app.Run();
 

@@ -109,30 +109,45 @@
                 </button>
             </div>
 
+        @if (!Model.IsNewUser)
+        {
             <div class="float-end header-byline" style="display: @(!Model.IsNewUser ? "block" : "none")">
                 <i class="fad fa-sign-in"></i>
                 <a href="@Url.Action("PasswordRecoverySendEmail")">Change your password</a>
             </div>
+        }
+        
             <div class="header-byline ">used to verify your email address</div>
-</div>
+        </div>
 
-            <div class="password-fields mt-3" style="display: @(Model.IsNewUser ? "block" : "none")">
+            @if (Model.IsNewUser)
+            {
+                <div class="password-fields mt-3" >
 
-                <div class="input-group mb-2">
-                    <span class="input-group-text"><i class="fad fa-fw fa-unlock-alt "></i></span>
-                    <input class="form-control" type="password"
-                           asp-for="Password" placeholder="Enter a Password"/>
+                    <h3 class="page-header-text mb-0">
+                        <i class="fad fa-shield-alt"></i>
+                        Account Password
+                    </h3>
+                    <div class="header-byline mb-3">
+                        Create a password for account access. 8 chars minimum, must include: upper case, lower case, and a number
+                    </div>
+
+                    <div class="input-group mb-2">
+                        <span class="input-group-text"><i class="fad fa-fw fa-user-lock "></i></span>
+                        <input class="form-control" type="password"
+                               asp-for="Password" placeholder="Enter a Password"/>
+                    </div>
+
+
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="far fa-fw fa-user-lock"></i></span>
+                        <input class="form-control" type="password"
+                               asp-for="PasswordConfirm" novalidate
+                               placeholder="Confirm Password"/>
+                    </div>
+
                 </div>
-
-
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fad fa-fw fa-unlock-alt"></i></span>
-                    <input class="form-control" type="password"
-                           asp-for="PasswordConfirm" novalidate
-                           placeholder="Confirm Password"/>
-                </div>
-
-            </div>
+            }
 
 
 

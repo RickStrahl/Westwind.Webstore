@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Westwind.AspNetCore.Security;
 using System.Security.Claims;
@@ -129,7 +131,8 @@ namespace Westwind.Webstore.Web.Views
         [Route("account/profile")]
         public ActionResult Profile([FromQuery] string returnUrl = null)
         {
-            var id = AppUserState.UserId;
+            var userId = AppUserState.UserId;
+
             var model = CreateViewModel<ProfileViewModel>();
             model.IsOrderProfile =
                 HttpContext.Request.Path.Value.Contains("/orderprofile", StringComparison.OrdinalIgnoreCase);
@@ -143,7 +146,7 @@ namespace Westwind.Webstore.Web.Views
                 model.IsNewUser = true;
             }
             else
-                customer = customerBusiness.Load(id);
+                customer = customerBusiness.Load(userId);
 
             if (customer == null)
             {
@@ -235,12 +238,13 @@ namespace Westwind.Webstore.Web.Views
 
                 customerBusiness.Attach(customer, true);
             }
-            else if (model.Password != model.PasswordConfirm)
-            {
-                model.ErrorDisplay.AddMessage(AppResources.Account.PasswordMissingOrdontMatch, "Password");
-                customer.Password = null;
-                validationResult = false;
-            }
+            // // password can't be changed on this form
+            // else if (model.Password != model.PasswordConfirm)
+            // {
+            //     model.ErrorDisplay.AddMessage(AppResources.Account.PasswordMissingOrdontMatch, "Password");
+            //     customer.Password = null;
+            //     validationResult = false;
+            // }
 
 
             // email has changed - validate it

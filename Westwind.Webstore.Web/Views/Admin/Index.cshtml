@@ -18,8 +18,7 @@
     </h1>
     <div class="mt-1 mb-3 header-byline">v@(Model.ApplicationVersion) &nbsp;<small style="font-size: 0.75em">(@Model.ApplicationDate)</small> &bull;
         @Environment.EnvironmentName &bull;
-        @RuntimeInformation.FrameworkDescription &bull;
-        @RuntimeInformation.OSDescription
+        @RuntimeInformation.FrameworkDescription 
     </div>
 
     <error-display class="mt-3 mb-4" error-display-model="@Model.ErrorDisplay">
@@ -37,7 +36,7 @@
                 <a href="/admin/productmanager" class="list-group-item list-group-item-action">Product Manager</a>
                 <a href="/admin/configuration"
                    class="list-group-item list-group-item-action">
-                   View and Edit Configuration
+                    View and Edit Configuration
                 </a>
             </div>
         </div>
@@ -49,11 +48,28 @@
             </div>
             <div class="list-group list-group-flush">
                 <a href="/admin/applicationlog.txt" class="list-group-item list-group-item-action">Show Error Log</a>
+                <a href="/admin/cclog.txt" class="list-group-item list-group-item-action">Card Processing Activity Log</a>
                 <a href="" class="list-group-item list-group-item-action">Compact Database (not implemented yet)</a>
                 <a href="/admin/backup" class="list-group-item list-group-item-action">Backup and Download Database</a>
             </div>
 
         </div>
 
+    </div>
+    
+    <div class="mt-3">
+        <h3 class="page-header-text">
+            <i class="fad fa-gear"></i>
+            Additional Application Info
+        </h3>
+        
+        <div class="header-byline mb-2">
+        os: @RuntimeInformation.OSDescription &bull;
+        user: @System.Environment.UserName &bull;
+        started: @wsApp.Constants.AppStartedOn
+        </div>
+        
+        
+        <a class="btn btn-primary btn-sm"  href="/admin/reloadapp">Reload IIS Application</a>
     </div>
 </div>

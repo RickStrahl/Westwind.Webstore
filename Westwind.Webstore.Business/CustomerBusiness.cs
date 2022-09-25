@@ -417,9 +417,6 @@ namespace Westwind.Webstore.Business
 
         protected override bool OnValidate(Customer customer)
         {
-            if (!base.OnValidate(customer))
-                return false;
-
             if (string.IsNullOrEmpty(customer.Lastname) && string.IsNullOrEmpty(customer.Company))
                 ValidationErrors.Add(WebStoreBusinessResources.NameOrCompanyMustBeEntered, "Lastname");
 
@@ -451,7 +448,11 @@ namespace Westwind.Webstore.Business
         /// <returns></returns>
         public bool ValidatePassword(string password)
         {
-            if (string.IsNullOrEmpty(password) || password.Length < 8) return false;
+            if (string.IsNullOrEmpty(password) || password.Length < 8)
+            {
+                ValidationErrors.Add(WebStoreBusinessResources.InvalidPasswordFormat,"Password");
+                return false;
+            }
 
             bool hasLower = false,
                 hasUpper = false,
@@ -470,7 +471,7 @@ namespace Westwind.Webstore.Business
             var result = hasLower && hasUpper && hasDigit;
 
             if (!result)
-                ValidationErrors.Add(WebStoreBusinessResources.InvalidPasswordFormat);
+                ValidationErrors.Add(WebStoreBusinessResources.InvalidPasswordFormat,"Password");
 
             return result;
         }
