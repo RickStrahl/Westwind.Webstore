@@ -14,11 +14,11 @@ SavedConfigurationFiles/
 compilerconfig.json
 compilerconfig.json.defaults
 product-images/
-temp/
-wwwroot/**/*.bak
-wwwroot/**/*.zip
-wwwroot/**/*.txt
-wwwroot/**/*.log
+Westwind.Webstore.Web/wwwroot/temp/
+Westwind.Webstore.Web/wwwroot/**/*.bak
+Westwind.Webstore.Web/wwwroot/**/*.zip
+Westwind.Webstore.Web/wwwroot/**/*.txt
+Westwind.Webstore.Web/wwwroot/**/*.log
 
 # Explicitly Include
 !DefaultConfigurationFiles/**/*.*
@@ -150,3 +150,4 @@ node_modules/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
