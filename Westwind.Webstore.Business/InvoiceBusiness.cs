@@ -138,6 +138,7 @@ namespace Westwind.Webstore.Business
                 else
                 {
                     invBase = invBase.Where(i => i.InvoiceNumber.Contains(search) ||
+                                                 i.CustomerId == search ||
                                                  i.Customer.Lastname.Contains(search) ||
                                                  i.Customer.Company.Contains(search) ||
                                                  i.Customer.Email.Contains(search) ||

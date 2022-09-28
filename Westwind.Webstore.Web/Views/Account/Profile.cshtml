@@ -225,66 +225,129 @@
 
     </div>
 
+
 @{
-    var invoice = BusinessFactory.GetInvoiceBusiness();
-    var invList = await invoice.GetRecentInvoices(Model.Customer.Id, 2);
-}
-    @if (!isOrderProfile && invList.Count > 0)
+    var invoiceBus = BusinessFactory.GetInvoiceBusiness();
+    List<InvoiceListItem> invoiceList = null;
+    if (Model.IsNewUser)
     {
-        <h2 class="page-header-text mt-5">
-            <i class="fad fa-credit-card"></i>
-            Recent Orders
-            <div class="float-end">
-                <a class="btn btn-sm btn-secondary" href="~/account/OrderHistory" title="See your detailed order history">
-                    <i class="fad fa-history"></i>
-                    Order History
-                </a>
-            </div>
-        </h2>
-        
-    
-        <style>
-            .highlighted {
-                font-size: 1.2em;
-                font-weight: bold;
-                color: firebrick;
-            }
-        </style>
-        foreach (var inv in invList)
-        {
-            if (inv.InvoiceTotal == 0 && inv.LineItems.Count == 0) continue;
-
-            var vm = new InvoiceViewModel(inv);
-
-            <div class="mt-4 border-danger mb-5 small">
-                <table class="table table-bordered">
-                    <thead>
-                    <tr class="bg-light">
-                        <th>Invoice Number</th>
-                        <th>Sold on</th>
-                        <th>Reference</th>
-                        <th>Paid By</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <span class="highlighted">@inv.InvoiceNumber</span>&nbsp;
-                            <a stye="font-size: 0.7em" href="~/invoice/@inv.InvoiceNumber" target="InvoiceWindow" title="print invoice"><i class="fad fa-print"></i></a>
-                        </td>
-                        <td>@inv.InvoiceDate.ToString("MMM dd, yyyy")</td>
-                        <td>@inv.PoNumber</td>
-                        <td>@inv.CreditCard.Type</td>
-                    </tr>
-                    </tbody>
-                </table>
-                
-                <div>
-                    <partial name="~/Views/ShoppingCart/ShoppingCartItems_Partial.cshtml" model="vm"/>
-                </div>
-            </div>
-        }
+        invoiceList = new List<InvoiceListItem>();
     }
+    else
+    {
+        invoiceList = invoiceBus.GetInvoices(Model.Customer.Id, 15000).ToList();
+    }
+}
+
+@if (invoiceList.Count > 0)
+{
+    <h3 class="page-header-text mt-5">
+        <i class="fad fa-credit-card"></i>
+        Your Orders
+    </h3>
+
+
+    <style>
+                    .highlighted {
+                        font-size: 1.2em;
+                        font-weight: bold;
+                        color: firebrick;
+                    }
+    </style>
+
+    <table class="table table-hover">
+        <tbody>
+        @foreach (InvoiceListItem invoice in invoiceList)
+        {
+            var color = string.Empty;
+            if (@invoice.Status == "AUTHORIZED")
+                color = "background: cornsilk;";
+            else if(invoice.Status == "UNPROCESSED" || string.IsNullOrEmpty(invoice.Status))
+                color = "background:  #f9f9f9;";
+            else if( invoice.Status == "DUE AND PAYABLE")
+                color = "background:   #ffeeee;";
+            else if(invoice.Status == "APPROVED")
+                color = "background: #effffa";
+            else if (invoice.Status == "REFUNDED" || invoice.Status == "VOID" || invoice.Status == "VOIDED")
+                color = "background: #e9e1ff";
+            <script>
+                function invoiceClick() {                    
+                   location.href='/invoice/@invoice.InvoiceNumber';
+                }
+            </script>
+            <tr style="@color">
+                <div style="background: #e9e1ff"></div>
+                @* <tr onclick="window.open('/admin/ordermanager/@invoice.InvoiceNumber','','width=1020,height=1220'); return false;"> *@
+                <td class="small" onclick="invoiceClick()">
+                    <b class="text-info">@invoice.InvoiceNumber</b><br/>
+                    <i style="font-size: 0.7em">@TimeUtils.FriendlyDateString(invoice.InvoiceDate)</i>
+                </td>
+                <td onclick="invoiceClick()">
+                    @if (!string.IsNullOrEmpty(invoice.Company))
+                    {
+                        <b>@invoice.Company -</b>
+                    }
+                    @invoice.Name<br/>
+                    <div class="lh-1">
+                        @foreach (var lineItem in invoice.LineItems)
+                        {
+                            <div>
+                                <i style="font-size: 0.7em; padding-right: 1.2em">@lineItem.Quantity.ToString("n2").Replace(".00", "") - <span class="text-info">@lineItem.Sku</span> - @lineItem.ItemTotal.ToString("c2")</i>
+                            </div>
+                        }
+                    </div>
+        
+                </td>
+                <td class="right bold">
+                    @{
+                        var total = invoice.InvoiceTotal.ToString("c2");
+                    }
+        
+        
+                    @if (invoice.Status == "APPROVED")
+                    {
+                        <span class="text-success">
+                            @total
+                            <i class="fas fa-check-circle text-success hidable-xs" title="APPROVED"></i>
+                        </span>
+                    }
+                    else if (invoice.Status == "AUTHORIZED")
+                    {
+                        <span class="text-warning">
+                            @total
+                            <i class="fas fa-check-circle text-warning hidable-xs" title="AUTHORIZED"></i>
+                        </span>
+                    }
+                    else if (string.IsNullOrEmpty(invoice.Status) || invoice.Status == "UNPROCESSED")
+                    {
+                        <span class="text-info">
+                            @total
+                            <i class="fas fa-wait text-info hidable-xs" title="UNPROCESSED"></i>
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">
+                            @total
+                            <i class="fas fa-times-circle text-danger hidable-xs" title="@invoice.Status"></i>
+                        </span>
+                    }
+                </td>
+                <td class="right bold">
+                    <span>
+                        <a href="/invoice/@invoice.InvoiceNumber"
+                           class="invoice-link btn btn-sm btn-default hidable" title="show/print/export invoice">
+                            <i class="fas fa-print text-info"></i>
+        
+                        </a>
+                    </span>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
 </div>
 
 

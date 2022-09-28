@@ -69,6 +69,7 @@ public class OrderManagerController : WebStoreBaseController
         return View("InvoiceList", model);
     }
 
+    #region Customer Editor
     [HttpGet]
     [Route("/admin/ordermanager/customers")]
     public IActionResult CustomerList([FromQuery] string s=null, [FromQuery] string action = null, [FromQuery] string customerid = null)
@@ -95,6 +96,24 @@ public class OrderManagerController : WebStoreBaseController
 
         return View("CustomerList", model);
     }
+
+    [Route("/admin/ordermanager/customers/{id}")]
+    public IActionResult CustomerEditor(string id,[FromQuery] string listSearchTerm)
+    {
+        var model = CreateViewModel<CustomerEditorViewModel>();
+
+        var customerBus = BusinessFactory.GetCustomerBusiness();
+        model.Customer = customerBus.Load(id);
+        if (model.Customer == null)
+            model.Customer = customerBus.Create();
+
+        model.BillingAddress = CustomerBusiness.GetShippingAddress(model.Customer);
+        model.SearchTerm = listSearchTerm;
+
+        return View("CustomerEditor",model);
+    }
+
+    #endregion
 
     private IActionResult NewInvoiceFromCustomer(CustomerListViewModel model)
     {
@@ -403,13 +422,13 @@ public class InvoiceListViewModel : WebStoreBaseViewModel
 {
     public IQueryable<InvoiceListItem> InvoiceList { get; set; }
 
-        public string SearchTerm { get; set; } = "recent";
+    public string SearchTerm { get; set; } = "recent";
 
-        public object SearchCustomer { get; set;  }
+    public object SearchCustomer { get; set; }
 
-        public int InvoiceCount { get; set; }
+    public int InvoiceCount { get; set; }
 
-        public decimal InvoiceTotal { get; set; }
+    public decimal InvoiceTotal { get; set; }
 }
 
 public class InvoiceEditorViewModel : WebStoreBaseViewModel

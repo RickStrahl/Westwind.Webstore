@@ -70,12 +70,14 @@
                     <b class="text-info">@customer.Id</b><br/>
                 </td>
                 <td>
-
-                    @if (!string.IsNullOrEmpty(customer.Company))
-                    {
-                        <b>@customer.Company -</b>
-                    }
-                    @customer.Name
+                    <a class="btn btn-link text-decoration-none" 
+                       href="/admin/ordermanager/customers/@customer.Id">
+                        @if (!string.IsNullOrEmpty(customer.Company))
+                        {
+                            <b>@customer.Company -</b>
+                        }
+                        @customer.Name
+                    </a>
                 </td>
                 <td class="right bold">
                     <a href="/admin/ordermanager/customers?action=addinvoice&customerid=@customer.Id&s=@Model.SearchTerm"

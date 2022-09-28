@@ -1,0 +1,254 @@
+﻿@model CustomerEditorViewModel
+@inject BusinessFactory BusinessFactory
+
+@{
+    if (Model.Customer.IsNew)
+    {
+        ViewBag.Title = "New Customer - Customer Manager";
+    }
+    else
+    {
+        ViewBag.Title = Model.Customer.Company  + " " +  Model .Customer.Fullname  + " - Customer Manager";
+    }
+    Layout = "_Layout";
+}
+
+<div style="margin: 1em;">
+    
+<div class="float-end">
+    <a class="btn btn-secondary btn-sm" 
+       href="/admin/ordermanager/customers" title="back to customer list">
+        <i class="fad fa-list fa-button"></i>
+    </a>
+        
+</div>
+    
+    
+<h1 class="page-header-text">
+    <i class="fad fa-user"></i>
+    @if (Model.Customer.IsNew)
+    {
+        @ViewBag.Title
+    }
+    else
+    {
+        if (!string.IsNullOrEmpty(Model.Customer.Company))
+        {
+            <text>@Model.Customer.Company - </text>
+            <span style="font-weight: normal; font-size:  1em;padding-left: ">@Model.Customer.Fullname</span>
+        }
+        else
+        {
+            <text>@Model.Customer.Fullname</text>
+        }
+    }
+</h1>
+
+
+<div class="form-group">
+    <div class="responsive-container">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fad fa-fw fa-user"></i></span>
+            <input type="text" class="form-control" 
+                   asp-for="Customer.Firstname"
+                   placeholder="First name" title="First name" />
+        </div>
+    
+        <div class="input-group">
+            <span class="input-group-text"><i class="fad fa-fw fa-user "></i></span>
+            <input type="text" class="form-control" id="txtLastname" asp-for="Customer.Lastname" 
+                   placeholder="Last name" title="Last name"/>
+        </div>
+    </div>
+    
+    <div class="form-group mt-3 mb-3">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fad fa-fw fa-users "></i></span>
+            <input type="text"
+                   class="form-control"
+                   placeholder="Enter your Company" title="Company"
+                   asp-for="Customer.Company"
+                   autocapitalize="off"
+                   autocomplete="off"
+                   spellcheck="false"
+                   autocorrect="off"/>
+        </div>
+    </div>
+    
+    <div class="form-group mb-0">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-fw fa-envelope-open"></i></span>
+            <input type="text"
+                   class="form-control"
+                   placeholder="Enter your Email address"
+                   asp-for="Customer.Email"
+                   aria-label="Email"
+                   title="Email address"
+                   autocapitalize="off"
+                   autocomplete="off"
+                   spellcheck="false"
+                   autocorrect="off" required/>
+        </div>
+    </div>
+</div>
+
+<h3 class="page-header-text mb-0 mt-4">
+    <i class="fad fa-credit-card"></i>
+    Billing Address
+</h3>
+       
+<div class="form-group mt-2">
+    <div class="input-group">
+        <textArea type="text"
+                                      class="form-control"
+                                      placeholder="Enter your Address"
+                                      asp-for="BillingAddress.StreetAddress"
+                                      autocapitalize="off"
+                                      autocomplete="off"
+                                      spellcheck="false"
+                                      autocorrect="off"></textArea>
+    </div>
+</div>
+    
+<div class="form-group mt-2">
+    <div class="responsive-container">
+        <input asp-for="BillingAddress.City" class="form-control" style="min-width: 280px" placeholder="City" />
+        <select asp-for="BillingAddress.State"
+                class="form-select"
+                style="max-width: 15em"
+                asp-items="@(new SelectList(wsApp.States,"StateCode","State"))">
+        </select>
+        <input asp-for="BillingAddress.PostalCode" class="form-control"
+               style="max-width: 10em"
+               placeholder="Postal code" />
+        
+        <select asp-for="BillingAddress.CountryCode"
+                class="form-select"
+                asp-items="@(new SelectList(wsApp.Countries,"CountryCode","Country"))">
+        </select>
+    </div>
+        
+    <div class="form-group mt-2">
+        <input asp-for="BillingAddress.Telephone"
+               class="form-control" placeholder="phone number" />
+    </div>
+    
+    <h3 class="page-header-text">
+        <i class="fad fa-notes"></i>
+        Customer Notes
+    </h3>
+    <textarea asp-for="Customer.Notes" class="form-control" placeholder="Customer notes"></textarea>
+</div>
+        
+@{
+    var invoiceBus = BusinessFactory.GetInvoiceBusiness();
+    var invoiceList = invoiceBus.GetInvoices(Model.Customer.Id, 15000).ToList();
+}
+
+@if (invoiceList.Count > 0)
+{
+    <h2 class="page-header-text mt-5">
+        <i class="fad fa-credit-card"></i>
+        Customer Orders
+    </h2>
+
+
+    <style>
+                    .highlighted {
+                        font-size: 1.2em;
+                        font-weight: bold;
+                        color: firebrick;
+                    }
+                </style>
+
+    <table class="table">
+        <tbody>
+        @foreach (InvoiceListItem invoice in invoiceList)
+        {
+            var color = string.Empty;
+            if (@invoice.Status == "AUTHORIZED")
+                color = "background: cornsilk;";
+            else if(invoice.Status == "UNPROCESSED" || string.IsNullOrEmpty(invoice.Status))
+                color = "background:  #f9f9f9;";
+            else if( invoice.Status == "DUE AND PAYABLE")
+                color = "background:   #ffeeee;";
+            else if(invoice.Status == "APPROVED")
+                color = "background: #effffa";
+            else if (invoice.Status == "REFUNDED" || invoice.Status == "VOID" || invoice.Status == "VOIDED")
+                color = "background: #e9e1ff";
+        
+            <tr onclick="location.href = '/admin/ordermanager/@invoice.InvoiceNumber?listsearchterm=@Model.SearchTerm'; return false;"
+                style="@color">
+                <div style="background: #e9e1ff"></div>
+                @* <tr onclick="window.open('/admin/ordermanager/@invoice.InvoiceNumber','','width=1020,height=1220'); return false;"> *@
+                <td class="small">
+                    <b class="text-info">@invoice.InvoiceNumber</b><br/>
+                    <i style="font-size: 0.7em">@TimeUtils.FriendlyDateString(invoice.InvoiceDate)</i>
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(invoice.Company))
+                    {
+                        <b>@invoice.Company -</b>
+                    }
+                    @invoice.Name<br/>
+                    <div class="lh-1">
+                        @foreach (var lineItem in invoice.LineItems)
+                        {
+                            <div>
+                                <i style="font-size: 0.7em; padding-right: 1.2em">@lineItem.Quantity.ToString("n2").Replace(".00", "") - <span class="text-info">@lineItem.Sku</span> - @lineItem.ItemTotal.ToString("c2")</i>
+                            </div>
+                        }
+                    </div>
+        
+                </td>
+                <td class="right bold">
+                    @{
+                        var total = invoice.InvoiceTotal.ToString("c2");
+                    }
+        
+        
+                    @if (invoice.Status == "APPROVED")
+                    {
+                        <span class="text-success">
+                            @total
+                            <i class="fas fa-check-circle text-success hidable-xs" title="APPROVED"></i>
+                        </span>
+                    }
+                    else if (invoice.Status == "AUTHORIZED")
+                    {
+                        <span class="text-warning">
+                            @total
+                            <i class="fas fa-check-circle text-warning hidable-xs" title="AUTHORIZED"></i>
+                        </span>
+                    }
+                    else if (string.IsNullOrEmpty(invoice.Status) || invoice.Status == "UNPROCESSED")
+                    {
+                        <span class="text-info">
+                            @total
+                            <i class="fas fa-wait text-info hidable-xs" title="UNPROCESSED"></i>
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">
+                            @total
+                            <i class="fas fa-times-circle text-danger hidable-xs" title="@invoice.Status"></i>
+                        </span>
+                    }
+                </td>
+                <td class="right bold">
+                    <span >
+        
+                        <a href="/admin/ordermanager/invoice/@invoice.InvoiceNumber"
+                           class="btn btn-sm btn-default hidable">
+                            <i class="fas fa-edit text-info"></i>
+        
+                        </a>
+                    </span>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+</div>      

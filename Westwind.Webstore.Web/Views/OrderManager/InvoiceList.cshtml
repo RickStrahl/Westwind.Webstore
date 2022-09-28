@@ -74,9 +74,12 @@
                 color = "background:   #ffeeee;";
             else if(invoice.Status == "APPROVED")
                 color = "background: #effffa";
+            else if (invoice.Status == "REFUNDED" || invoice.Status == "VOID" || invoice.Status == "VOIDED")
+                color = "background: #e9e1ff";
             
-            <tr onclick="location.href = '/admin/ordermanager/@invoice.InvoiceNumber?listsearchterm=@Model.SearchTerm'; return false;" 
+            <tr onclick="location.href = '/admin/ordermanager/@invoice.InvoiceNumber?listsearchterm=@Model.SearchTerm'; return false;"
                 style="@color">
+                <div style="background: #e9e1ff"></div>
                 @* <tr onclick="window.open('/admin/ordermanager/@invoice.InvoiceNumber','','width=1020,height=1220'); return false;"> *@
                 <td class="small">
                     <b class="text-info">@invoice.InvoiceNumber</b><br/>
@@ -96,13 +99,13 @@
                             </div>
                         }
                     </div>
-                    
+
                 </td>
                 <td class="right bold">
                     @{
                         var total = invoice.InvoiceTotal.ToString("c2");
                     }
-               
+
 
                     @if (invoice.Status == "APPROVED")
                     {
@@ -134,20 +137,20 @@
                     }
                 </td>
                 <td class="right bold">
-                    <span  >
+                    <span >
 
                         <a href="/admin/ordermanager/invoice/@invoice.InvoiceNumber"
                            class="btn btn-sm btn-default hidable">
                             <i class="fas fa-edit text-info"></i>
 
                         </a>
-                        <a href="#0" 
+                        <a href="#0"
                            title="Add new invoice for this customer"
                            onclick="addNewInvoiceForCustomer('@invoice.CustId', '@invoice.Name')"
-                            class="btn btn-sm btn-default">
+                           class="btn btn-sm btn-default">
                             <i class="fas fa-plus-circle text-success"></i>
                         </a>
-                                                
+
                         <a href="#0"
                            class="btn btn-sm btn-default me-0 hidable"
                            onclick="onClickDelete('@invoice.InvoiceNumber', event); return false;">
