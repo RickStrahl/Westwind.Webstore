@@ -100,12 +100,6 @@ namespace Westwind.Webstore.Web.Views
         }
 
 
-        [AllowAnonymous]
-        public ActionResult PasswordRecovery()
-        {
-            var model = CreateViewModel<PasswordRecoveryModel>();
-            return View(model);
-        }
 
         [AllowAnonymous]
         [HttpGet]
@@ -238,14 +232,6 @@ namespace Westwind.Webstore.Web.Views
 
                 customerBusiness.Attach(customer, true);
             }
-            // // password can't be changed on this form
-            // else if (model.Password != model.PasswordConfirm)
-            // {
-            //     model.ErrorDisplay.AddMessage(AppResources.Account.PasswordMissingOrdontMatch, "Password");
-            //     customer.Password = null;
-            //     validationResult = false;
-            // }
-
 
             // email has changed - validate it
             if (wsApp.Configuration.Security.ValidateEmailAddresses &&
@@ -330,6 +316,13 @@ namespace Westwind.Webstore.Web.Views
 
         #region Email Validation and Recovery
 
+        [AllowAnonymous]
+        public ActionResult PasswordRecovery()
+        {
+            var model = CreateViewModel<PasswordRecoveryModel>();
+            return View(model);
+        }
+
         [Route("/account/recover")]
         [AllowAnonymous]
         [HttpGet]
@@ -374,7 +367,8 @@ Regards,
             bool success = AppUtils.SendEmail(
                 email, title,
                 AppUtils.GetEmbeddedHtmlDocument(AppUtils.MarkdownToHtml(body)),
-                out string error);
+                out string error, noCCs: true);
+
             if (!success)
                 model.ErrorDisplay.ShowError("Unable to send email: " + error);
             else
