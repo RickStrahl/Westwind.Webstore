@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using Westwind.Utilities.Data;
 using Westwind.Webstore.Business.Entities;
 
 namespace Westwind.Webstore.Business
 {
-
     public class AdminBusiness : WebStoreBusinessObject<Customer>
     {
 
@@ -16,6 +17,50 @@ namespace Westwind.Webstore.Business
             var ctx = context;
         }
 
+        #region Reports
+
+        /// <summary>
+        /// returns a list of email addresses for a given sku and a duration
+        /// </summary>
+        /// <param name="sku"></param>
+        /// <param name="days"></param>
+        /// <returns></returns>
+        public List<EmailResult> EmailListFromSkus(string sku, int days = 90)
+        {
+            var sql = @"
+select sku, email, invoiceDate, CreditCardResult_ProcessingResult
+            from lineitems, invoices, customers
+            where lineitems.InvoiceId = invoices.id and
+                  invoices.CustomerId = customers.id and
+                  invoices.InvoiceDate > @date and
+                  (invoices.CreditCardResult_ProcessingResult = 'APPROVED' OR invoices.CreditCardResult_ProcessingResult = 'PAID IN FULL')
+order by Sku, InvoiceDate Desc
+";
+
+            var result = Db.Query<EmailResult>(sql, this.Db.CreateParameter("@date", DateTime.Now.AddDays((days+1) * -1)));
+            if (result == null)
+            {
+                SetError(Db.ErrorMessage);
+                return new List<EmailResult>();
+            }
+
+            if (!string.IsNullOrEmpty(sku))
+            {
+                return result.Where(res => res.Sku.Equals(sku,StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            return result.ToList();
+        }
+
+        public class EmailResult
+        {
+            public string Sku { get; set; }
+            public string Email { get; set; }
+        }
+
+        #endregion
+
+        #region Database Cleanup
 
         /// <summary>
         /// Backs up the current Database to a specific path
@@ -91,5 +136,7 @@ namespace Westwind.Webstore.Business
             return zipFile;
         }
 
+
+        #endregion
     }
 }

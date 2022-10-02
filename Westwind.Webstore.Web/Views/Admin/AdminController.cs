@@ -132,6 +132,29 @@ namespace Westwind.Webstore.Web.Views.Admin
             return View("Configuration",model);
         }
 
+        [Route("/admin/SkuEmailList"), HttpGet, HttpPost]
+        public ActionResult SkuEmailList(SkuEmailListViewModel model)
+        {
+            if (model == null || model.Days == 0)
+            {
+                model = CreateViewModel<SkuEmailListViewModel>();
+                model.Days = 90;
+            }
+            else
+            {
+                InitializeViewModel(model);
+            }
+
+            var adminBus = BusinessFactory.GetAdminBusiness();
+            model.EmailList = adminBus.EmailListFromSkus(model.Sku, model.Days);
+            if (!string.IsNullOrEmpty(adminBus.ErrorMessage))
+            {
+                model.ErrorDisplay.ShowError(adminBus.ErrorMessage,"An error occurred");
+            }
+
+            return View("SkuEmailList", model);
+        }
+
 
 
         [Route("/admin/backup"), HttpGet]
@@ -210,5 +233,16 @@ namespace Westwind.Webstore.Web.Views.Admin
     {
         public string ConfigurationJson { get; set; }
 
+    }
+
+    public class SkuEmailListViewModel : WebStoreBaseViewModel
+    {
+        public List<AdminBusiness.EmailResult> EmailList { get; set; } = new List<AdminBusiness.EmailResult>();
+
+        public int Days { get; set;  }
+
+        public string Sku { get; set;  }
+
+        public string Separator { get; set; } = ";";
     }
 }
