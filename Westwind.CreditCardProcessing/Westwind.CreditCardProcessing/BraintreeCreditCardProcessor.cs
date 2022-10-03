@@ -14,12 +14,12 @@ namespace Westwind.CreditCardProcessing
     /// BrainTree is a flat rate credit card processor meaning that each transaction
     /// is charged a flat rate of 2.9% (currently). There are no additional monthly
     /// or transaction fees - just the flat rate percentage. Although the rates
-    /// may seem high, given that you don't pay per transaction and no gateway and 
-    /// other processing fees, this rate works out very well especially if your 
+    /// may seem high, given that you don't pay per transaction and no gateway and
+    /// other processing fees, this rate works out very well especially if your
     /// volume is relatively low or you're processing lots of high end business
-    /// or reward or AMEX cards which tend to have higher merchant percentages per 
+    /// or reward or AMEX cards which tend to have higher merchant percentages per
     /// charge anyway.
-    /// 
+    ///
     /// https://www.braintreepayments.com/
     /// </summary>
     public class BraintreeCreditCardProcessor : CreditCardProcessorBase
@@ -64,7 +64,7 @@ namespace Westwind.CreditCardProcessing
             }
             else if (!string.IsNullOrEmpty(Order.ClientNonce))
             {
-                request.PaymentMethodNonce = Order.ClientNonce.Trim();                               
+                request.PaymentMethodNonce = Order.ClientNonce.Trim();
             }
             else
             {
@@ -87,31 +87,31 @@ namespace Westwind.CreditCardProcessing
 
             // braintree only allows two decimals so round to
             request.Amount = Math.Round(request.Amount, 2);
-            
+
             if (!string.IsNullOrEmpty(Order.OrderId))
                 request.OrderId = Order.OrderId;
-            
+
             request.BillingAddress = new AddressRequest()
             {
                 LastName = BillingInfo.LastName,
                 FirstName = BillingInfo.FirstName,
                 StreetAddress = BillingInfo.Address,
                 PostalCode = BillingInfo.PostalCode,
-                CountryCodeAlpha2 = BillingInfo.CountryCode                
+                CountryCodeAlpha2 = BillingInfo.CountryCode
             };
             if (!string.IsNullOrEmpty(BillingInfo.Company))
                 request.BillingAddress.Company = BillingInfo.Company;
 
 
             if (Order.ProcessType == ccProcessTypes.Sale || Order.ProcessType == ccProcessTypes.AuthCapture)
-            {                
+            {
                 request.Options = new TransactionOptionsRequest()
                 {
                     SubmitForSettlement = true
                 };
             }
 
-            // assume failed 
+            // assume failed
             Result.ValidatedResult = ccProcessResults.Failed;
             Result.IsSuccess = false;
 
@@ -135,21 +135,21 @@ namespace Westwind.CreditCardProcessing
             }
 
             Result.ProcessorResultObject = braintreeResult;
-            
+
             if (braintreeResult.IsSuccess())
             {
                 var transaction = braintreeResult.Target;
                 Result.TransactionId = transaction.Id;
                 Result.AuthorizationCode = transaction.ProcessorAuthorizationCode;
-                
+
                 if (Order.ProcessType == ccProcessTypes.PreAuth)
                     Result.ValidatedResult = ccProcessResults.Authorized;
                 else
                     Result.ValidatedResult = ccProcessResults.Approved;
-                
+
                 Result.ProcessedAmount = transaction.Amount ?? 0M;
                 Result.CCLastFour = transaction.CreditCard.MaskedNumber;
-                
+
                 // update BillingInfor from BrainTree Processor where possible
                 var resultObject = Result.ProcessorResultObject as Result<Transaction>;
                 var postalCode = resultObject.Target?.BillingAddress?.PostalCode;
@@ -182,8 +182,8 @@ namespace Westwind.CreditCardProcessing
                 Result.ValidatedResult = ccProcessResults.Declined;
 
                 Result.CCLastFour = transaction.CreditCard?.MaskedNumber;
-                
-                Result.Message = braintreeResult.Message;                
+
+                Result.Message = braintreeResult.Message;
                 Result.AvsResultCode = transaction.AvsErrorResponseCode + ": " + transaction.AvsPostalCodeResponseCode + " " + transaction.AvsStreetAddressResponseCode;
                 Result.CvvResultCode = transaction.CvvResponseCode;
 
@@ -198,7 +198,7 @@ namespace Westwind.CreditCardProcessing
             else
             {
                 Result.ValidatedResult = ccProcessResults.Declined;
-                Result.Message = braintreeResult.Message;                
+                Result.Message = braintreeResult.Message;
                 StringBuilder sb = new StringBuilder();
 
                 foreach (ValidationError error in braintreeResult.Errors.DeepAll())
@@ -222,7 +222,7 @@ namespace Westwind.CreditCardProcessing
             }
 
             LogTransaction();
-            
+
             return Result;
         }
 
@@ -238,13 +238,13 @@ namespace Westwind.CreditCardProcessing
                 PublicKey = Merchant.PublicKey,
                 PrivateKey = Merchant.PrivateKey
             };
-            
+
             try
             {
                 return gateway.ClientToken.Generate();
             }
             catch(Exception ex)
-            {                
+            {
                 this.ErrorMessage = ex.Message;
                 return null;
             }
@@ -271,7 +271,7 @@ namespace Westwind.CreditCardProcessing
 
             Result.CustomerId = customer.Id;
             Result.CreditCardToken = card.Token;
-            
+
             var subscriptionRequest = new SubscriptionRequest
             {
                 PaymentMethodToken =  Result.CreditCardToken,
@@ -286,10 +286,10 @@ namespace Westwind.CreditCardProcessing
             catch (Exception ex)
             {
                 Result.ValidatedResult = ccProcessResults.Failed;
-                Result.Message = ex.GetBaseException().Message;                
-                return Result;            
+                Result.Message = ex.GetBaseException().Message;
+                return Result;
             }
-            
+
             Result.ProcessorResultObject = subResult;
 
             if (!subResult.IsSuccess())
@@ -307,7 +307,7 @@ namespace Westwind.CreditCardProcessing
         }
 
         /// <summary>
-        /// Creates or updates an existing customer and 
+        /// Creates or updates an existing customer and
         /// removes all but the current card.
         /// </summary>
         /// <param name="customerId"></param>
@@ -325,7 +325,7 @@ namespace Westwind.CreditCardProcessing
                 CreditCard = new CreditCardRequest
                 {
                     CardholderName = BillingInfo.Name,
-                    Number = Order.CardNumber,                    
+                    Number = Order.CardNumber,
                     ExpirationMonth = Order.ExpirationMonth,
                     ExpirationYear = Order.ExpirationYear,
                     BillingAddress = new CreditCardAddressRequest()
@@ -352,10 +352,10 @@ namespace Westwind.CreditCardProcessing
                     foreach (var addr in cust.Addresses)
                     {
                         gateway.Address.Delete(customerId,addr.Id);
-                    }                              
+                    }
                     custResult = gateway.Customer.Update(customerId, request);
                 }
-                    
+
                 else
                     custResult = gateway.Customer.Create(request);
             }
@@ -379,7 +379,7 @@ namespace Westwind.CreditCardProcessing
                 return null;
             }
 
-            return custResult.Target;            
+            return custResult.Target;
         }
 
         public Customer GetCustomer(string custId)
@@ -398,7 +398,7 @@ namespace Westwind.CreditCardProcessing
             }
 
             return customer;
-        }        
+        }
 
         public Subscription GetSubscription(string id)
         {
@@ -412,7 +412,7 @@ namespace Westwind.CreditCardProcessing
             catch (Exception ex)
             {
                 SetError(ex.Message);
-                return null;                
+                return null;
             }
 
             return subscription;
@@ -430,7 +430,7 @@ namespace Westwind.CreditCardProcessing
             Result<Subscription> result;
             try
             {
-                result = gateway.Subscription.Cancel(id); 
+                result = gateway.Subscription.Cancel(id);
             }
             catch (Exception ex)
             {
@@ -440,8 +440,8 @@ namespace Westwind.CreditCardProcessing
 
             if (result.IsSuccess())
                 return true;
-            
-            
+
+
             if (!result.IsSuccess())
             {
                 SetError(result.Message);
@@ -464,7 +464,7 @@ namespace Westwind.CreditCardProcessing
                 CustomerId = customerId,
                 Number = Order.CardNumber,
                 ExpirationMonth = Order.ExpirationMonth,
-                ExpirationYear = Order.ExpirationYear,                                
+                ExpirationYear = Order.ExpirationYear,
                 BillingAddress = new CreditCardAddressRequest
                 {
                     FirstName = BillingInfo.FirstName,

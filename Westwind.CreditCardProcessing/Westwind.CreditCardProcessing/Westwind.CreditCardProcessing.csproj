@@ -4,6 +4,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="Braintree" Version="5.13.0" />
-	  <PackageReference Include="Westwind.Utilities" Version="3.1.14" />
+	  <PackageReference Include="Westwind.Utilities" Version="3.1.15" />
 	</ItemGroup>
 </Project>

@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LibrariesAndTests", "Librar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Westwind.CreditCardProcessing", "Westwind.CreditCardProcessing\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing.csproj", "{70C17269-373C-4E1C-8D71-B417985AE1EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Westwind.Utilities", "..\Westwind.Utilities\Westwind.Utilities\Westwind.Utilities.csproj", "{A8C7CA34-4A22-4231-A252-D059CF684C17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{70C17269-373C-4E1C-8D71-B417985AE1EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70C17269-373C-4E1C-8D71-B417985AE1EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70C17269-373C-4E1C-8D71-B417985AE1EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8C7CA34-4A22-4231-A252-D059CF684C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8C7CA34-4A22-4231-A252-D059CF684C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8C7CA34-4A22-4231-A252-D059CF684C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8C7CA34-4A22-4231-A252-D059CF684C17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +55,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{FD5041FE-909D-43D8-87F4-19B6C9256E99} = {9963D622-0E91-4636-B25E-7C52D3BCB196}
 		{70C17269-373C-4E1C-8D71-B417985AE1EB} = {9963D622-0E91-4636-B25E-7C52D3BCB196}
+		{A8C7CA34-4A22-4231-A252-D059CF684C17} = {9963D622-0E91-4636-B25E-7C52D3BCB196}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {550943C1-D5D6-4368-A5D6-43ED7F2F1DA6}

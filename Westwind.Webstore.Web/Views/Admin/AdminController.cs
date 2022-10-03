@@ -74,26 +74,6 @@ namespace Westwind.Webstore.Web.Views.Admin
             return View(model);
         }
 
-        [HttpGet]
-        [Route("/admin/clearlog")]
-        public ActionResult ClearLog()
-        {
-            var model = CreateViewModel<AdminViewModel>();
-            try
-            {
-                // doesn't work - file is locked
-                var file = Path.Combine(wsApp.Constants.WebRootFolder, "admin", "applicationlog.txt");
-                System.IO.File.WriteAllText(file,"");
-            }
-            catch(Exception ex)
-            {
-                model.ErrorDisplay.ShowError("Failed to delete log file: " + ex.Message);
-                return View("index", model);
-            }
-
-            model.ErrorDisplay.ShowSuccess("Log file cleared.");
-            return View("index", model);
-        }
 
         [HttpPost]
         [Route("/admin/configuration")]
@@ -106,6 +86,7 @@ namespace Westwind.Webstore.Web.Views.Admin
                 var config =
                     JsonSerializationUtils.Deserialize(model.ConfigurationJson, typeof(WebStoreConfiguration)) as
                         WebStoreConfiguration;
+
                 if (config != null)
                 {
                     wsApp.Configuration = config;
@@ -128,8 +109,29 @@ namespace Westwind.Webstore.Web.Views.Admin
                     model.ErrorDisplay.ShowError($"Configuration could not be written.");
             }
 
-
             return View("Configuration",model);
+        }
+
+
+        [HttpGet]
+        [Route("/admin/clearlog")]
+        public ActionResult ClearLog()
+        {
+            var model = CreateViewModel<AdminViewModel>();
+            try
+            {
+                // doesn't work - file is locked
+                var file = Path.Combine(wsApp.Constants.WebRootFolder, "admin", "applicationlog.txt");
+                System.IO.File.WriteAllText(file,"");
+            }
+            catch(Exception ex)
+            {
+                model.ErrorDisplay.ShowError("Failed to delete log file: " + ex.Message);
+                return View("index", model);
+            }
+
+            model.ErrorDisplay.ShowSuccess("Log file cleared.");
+            return View("index", model);
         }
 
         [Route("/admin/SkuEmailList"), HttpGet, HttpPost]

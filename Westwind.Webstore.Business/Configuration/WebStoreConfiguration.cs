@@ -5,6 +5,59 @@ namespace Westwind.Webstore.Business
 {
 
 
+    /// <summary>
+    /// Web Store specific configuration settings that are stored separate from the application.json
+    /// configuration settings for general application behavior.
+    ///
+    /// If permissions allow this file is auto-created on startup.
+    /// </summary>
+    public class WebStoreConfiguration : Westwind.Utilities.Configuration.AppConfiguration
+    {
+        public string ApplicationCompany { get; set; } = "West Wind Technologies";
+
+        public string ApplicationDomain { get; set; } = "west-wind.com";
+
+        /// <summary>
+        /// The Application's home Url with a trailing slash
+        /// </summary>
+        public string ApplicationHomeUrl { get; set; } = "https://localhost:5201/";
+
+        public string ApplicationName { get; set; } = "West Wind Web Store";
+        public string ConnectionString { get; set; } =
+            "server=.;database=WebStoreNew;integrated security=yes;encrypt=false;";
+
+        public string ProductImageUploadFilePath { get; set; } = "/images/product-images/";
+        public string ProductImageWebPath { get; set; } = "~/images/product-images/";
+
+        public string Theme { get; set; } = "default";
+        public string TitleBottom { get; set; } = "Web Store";
+        public string TitleTop { get; set; } = "West Wind";
+        public string DefaultCountryCode { get; set; } = "US";
+        public string CurrencySymbol { get; set; } = "$";
+
+        public EmailConfiguration Email { get; set; } = new EmailConfiguration();
+        public PaymentConfiguration Payment { get; set; } = new PaymentConfiguration();
+        public CompanyConfiguration Company { get; set; } = new CompanyConfiguration();
+
+        public LicensingConfiguration Licensing { get; set; } = new LicensingConfiguration();
+
+        public FraudConfiguration Security { get; set; } = new FraudConfiguration();
+
+        public SystemConfiguration System { get; set; } = new SystemConfiguration();
+
+
+        protected override IConfigurationProvider OnCreateDefaultProvider(string sectionName, object configData)
+        {
+            var provider = new JsonFileConfigurationProvider<WebStoreConfiguration>()
+            {
+                JsonConfigurationFile = "_webstore-configuration.json",
+            };
+            return provider;
+        }
+
+    }
+
+
     public class PaymentConfiguration
     {
         public string MerchantId { get; set; }
@@ -64,56 +117,6 @@ namespace Westwind.Webstore.Business
         public string TransactionHtmlLink { get; set;  } = "https://www.braintreegateway.com/merchants/{1}/transactions/{0}";
     }
 
-    /// <summary>
-    /// Web Store specific configuration settings that are stored separate from the application.json
-    /// configuration settings for general application behavior.
-    ///
-    /// If permissions allow this file is auto-created on startup.
-    /// </summary>
-    public class WebStoreConfiguration : Westwind.Utilities.Configuration.AppConfiguration
-    {
-        public string ApplicationCompany { get; set; } = "West Wind Technologies";
-
-        public string ApplicationDomain { get; set; } = "west-wind.com";
-
-        /// <summary>
-        /// The Application's home Url with a trailing slash
-        /// </summary>
-        public string ApplicationHomeUrl { get; set; } = "https://localhost:5201/";
-
-        public string ApplicationName { get; set; } = "West Wind Web Store";
-        public string ConnectionString { get; set; } =
-            "server=.;database=WebStoreNew;integrated security=yes;encrypt=false;";
-
-        public string ProductImageUploadFilePath { get; set; } = "/images/product-images/";
-        public string ProductImageWebPath { get; set; } = "~/images/product-images/";
-
-        public string Theme { get; set; } = "default";
-        public string TitleBottom { get; set; } = "Web Store";
-        public string TitleTop { get; set; } = "West Wind";
-        public string DefaultCountryCode { get; set; } = "US";
-        public string CurrencySymbol { get; set; } = "$";
-
-        public EmailConfiguration Email { get; set; } = new EmailConfiguration();
-        public PaymentConfiguration Payment { get; set; } = new PaymentConfiguration();
-        public CompanyConfiguration Company { get; set; } = new CompanyConfiguration();
-
-        public LicensingConfiguration Licensing { get; set; } = new LicensingConfiguration();
-
-        public FraudConfiguration Security { get; set; } = new FraudConfiguration();
-
-        public SystemConfiguration System { get; set; } = new SystemConfiguration();
-
-
-        protected override IConfigurationProvider OnCreateDefaultProvider(string sectionName, object configData)
-        {
-            var provider = new JsonFileConfigurationProvider<WebStoreConfiguration>()
-            {
-                JsonConfigurationFile = "_webstore-configuration.json",
-            };
-            return provider;
-        }
-    }
 
     public class CompanyConfiguration
     {

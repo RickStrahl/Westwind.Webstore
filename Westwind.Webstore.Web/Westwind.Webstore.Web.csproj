@@ -13,11 +13,11 @@
     <PackageReference Include="Westwind.AspNetCore.LiveReload" Version="0.3.6" />
     <PackageReference Include="Westwind.AspnetCore.Markdown" Version="3.9.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.9" />
-    <PackageReference Include="Westwind.Utilities" Version="3.1.14" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     <PackageReference Include="Westwind.AspNetCore" Version="3.6.2" />
     <PackageReference Include="Westwind.Data.EfCore" Version="4.0.5" />
     <PackageReference Include="Westwind.Globalization.AspnetCore" Version="3.1.5" />
+    <PackageReference Include="Westwind.Utilities" Version="3.1.15" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +29,7 @@
     <!--    <ProjectReference Include="..\..\Libraries\Westwind.Globalization\src\Westwind.Globalization\Westwind.Globalization.csproj" />-->
     <!--    <ProjectReference Include="..\..\Westwind.AspNetCore\Westwind.AspNetCore\Westwind.AspNetCore.csproj" />-->
     <!--    <ProjectReference Include="..\..\Westwind.Data.EfCore\Westwind.Data.EfCore\Westwind.Data.EfCore.csproj" />-->
+    <!--    <ProjectReference Include="..\..\Westwind.Utilities\Westwind.Utilities\Westwind.Utilities.csproj" />-->
   </ItemGroup>
 
   <ItemGroup>
