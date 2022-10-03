@@ -1,0 +1,60 @@
+﻿@model Westwind.Webstore.Web.Views.Admin.SkuEmailListViewModel
+
+@section Headers {
+    <style>
+        html, body { 
+            height:  100%;
+         }
+    </style>
+}
+<div class="container" style="max-width: 100%">
+    
+    <h1 class="page-header-text">
+        <i class="fad fa-gears"></i>
+        Email Sku List
+        
+        <a href="/admin" title="Back to main Admin page"
+           class="btn btn-secondary btn-sm float-end">
+            <i class="fad fa-home-alt text-warning"></i>
+        </a>
+    </h1>
+    
+    <form action="" method="Get">
+    <div class="small responsive-container">
+        <div>
+            Sku: <input class="form-control form-control-sm d-inline" asp-for="Sku"/>
+        </div>
+        <div>
+            Days: <input class="form-control form-control-sm d-inline" type="number"
+                         asp-for="Days" />
+        </div>
+        <div>
+            Separator: <input class="form-control form-control-sm d-inline"
+                         asp-for="Separator" />
+        </div>
+<button type="submit" class="btn btn-secondary btn-sm">
+            Go
+                    </button>
+    </div>
+    </form>
+    
+    <error-display class="mt-3 mb-4" error-display-model="@Model.ErrorDisplay">
+    </error-display>
+    
+    @{
+        var lastSku = "XXXXX";
+    }
+    @foreach (var emailItem in Model.EmailList)
+    {
+        if(string.IsNullOrWhiteSpace(emailItem.Sku) || string.IsNullOrEmpty(emailItem.Email))
+        {
+            continue;
+        }
+        if (!lastSku.Equals(emailItem.Sku, StringComparison.OrdinalIgnoreCase))
+        {
+            <h3 class="page-header-text">@emailItem.Sku.ToLower()</h3>
+            lastSku = emailItem.Sku;
+        }
+        @(emailItem.Email)@Html.Raw(!string.IsNullOrEmpty(Model.Separator) ? Model.Separator + " " : "<br/>")
+    }
+</div>
