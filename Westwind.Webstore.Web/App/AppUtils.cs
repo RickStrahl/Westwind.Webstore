@@ -85,14 +85,12 @@ namespace Westwind.Webstore.Web.App
             ControllerContext controllerContext)
         {
             var invoice = model.InvoiceModel.Invoice;
-            string confirmation =
-                await ViewRenderer.RenderViewToStringAsync("EmailConfirmation", model, controllerContext);
-
+            string confirmationHtml = await ViewRenderer.RenderViewToStringAsync("EmailConfirmation", model, controllerContext);
 
             var emailer = new Emailer();
             return emailer.SendEmail(invoice.Customer.Email,
                 $"{wsApp.Configuration.ApplicationName} Order Confirmation #{invoice.InvoiceNumber}",
-                confirmation,
+                confirmationHtml,
                 "text/html");
         }
 

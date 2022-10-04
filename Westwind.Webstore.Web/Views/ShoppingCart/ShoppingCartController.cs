@@ -630,7 +630,7 @@ Nonce:      {inv.CreditCard.Nonce}";
                 if (invoice.CreditCardResult.IsApproved())
                 {
                     invoice.Completed = DateTime.Now;
-                    invoiceBusiness.SendEmailConfirmations();
+                    invoiceBusiness.SendEmailItemConfirmations();
                 }
 
                 invoiceBusiness.Save();

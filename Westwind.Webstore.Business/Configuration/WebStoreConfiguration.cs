@@ -172,6 +172,15 @@ namespace Westwind.Webstore.Business
         /// </summary>
         public bool UseOrderFormRecaptcha { get; set; } = true;
 
+        /// <summary>
+        ///  The site key embedded into the HTML page to process the capture
+        /// </summary>
+        public string  GoogleRecaptureSiteKey { get; set; }
+
+        /// <summary>
+        /// The secret key used to validate a recapture value
+        /// captured from the the client
+        /// </summary>
         public string GoogleRecaptureSecret { get; set; }
 
         public bool UseOrderFormTimeout { get; set; } = true;

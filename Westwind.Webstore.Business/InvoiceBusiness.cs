@@ -1,14 +1,10 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Westwind.CreditCardProcessing;
-using Westwind.Data.EfCore;
 using Westwind.Utilities;
 using Westwind.Utilities.InternetTools;
 using Westwind.Webstore.Business.Entities;
@@ -296,6 +292,12 @@ namespace Westwind.Webstore.Business
 
             return lineItem;
         }
+
+        public LineItem GetLineItem(string lineItemNumber)
+        {
+            return Context.LineItems.FirstOrDefault(li => li.Id == lineItemNumber);
+        }
+
 
         /// <summary>
         /// Removes an item from the lineitems collection
@@ -810,10 +812,7 @@ namespace Westwind.Webstore.Business
 
         #endregion
 
-        public override string ToString()
-        {
-            return $"{ErrorMessage} #{Entity?.InvoiceNumber} {Entity.InvoiceTotal}";
-        }
+        #region Emails
 
         /// <summary>
         /// Sends a Confirmation email for the order by looping through all the
@@ -825,7 +824,7 @@ namespace Westwind.Webstore.Business
         /// the message is posted to this link.
         /// </summary>
         /// <returns></returns>
-        public bool SendEmailConfirmations()
+        public bool SendEmailItemConfirmations()
         {
             if (Entity.LineItems.Count < 1)
             {
@@ -904,7 +903,7 @@ namespace Westwind.Webstore.Business
 
 
         /// <summary>
-        /// Sends an email.
+        /// Sends an order confirmation email
         /// </summary>
         /// <param name="Subject"></param>
         /// <param name="MessageText"></param>
@@ -992,6 +991,7 @@ namespace Westwind.Webstore.Business
             //        }
             //    }
         }
+        #endregion
 
         #region Custom Events
 
@@ -1003,9 +1003,11 @@ namespace Westwind.Webstore.Business
 
         #endregion
 
-        public LineItem GetLineItem(string lineItemNumber)
+
+
+        public override string ToString()
         {
-            return Context.LineItems.FirstOrDefault(li => li.Id == lineItemNumber);
+            return $"{ErrorMessage} #{Entity?.InvoiceNumber} {Entity.InvoiceTotal}";
         }
     }
 

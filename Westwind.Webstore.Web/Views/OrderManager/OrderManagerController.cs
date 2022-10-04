@@ -316,7 +316,7 @@ public class OrderManagerController : WebStoreBaseController
         }
         else
         {
-            result = invoiceBus.SendEmailConfirmations();
+            result = invoiceBus.SendEmailItemConfirmations();
 
             if (!result)
             {
@@ -377,7 +377,7 @@ public class OrderManagerController : WebStoreBaseController
         if (invoice == null)
             return Redirect("/admin/ordermanager");
 
-       var result =  invoiceBus.SendEmailConfirmations();
+       var result =  invoiceBus.SendEmailItemConfirmations();
 
        var message = "Product Email confirmation sent.";
        var icon = "success";

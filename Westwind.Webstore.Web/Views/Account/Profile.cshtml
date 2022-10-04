@@ -229,7 +229,7 @@
 @{
     var invoiceBus = BusinessFactory.GetInvoiceBusiness();
     List<InvoiceListItem> invoiceList = null;
-    if (Model.IsNewUser)
+    if (Model.IsNewUser || Model.IsOrderProfile)
     {
         invoiceList = new List<InvoiceListItem>();
     }
@@ -246,14 +246,14 @@
         Your Orders
     </h3>
 
-
     <style>
-                    .highlighted {
-                        font-size: 1.2em;
-                        font-weight: bold;
-                        color: firebrick;
-                    }
+        .highlighted {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: firebrick;
+        }
     </style>
+
 
     <table class="table table-hover">
         <tbody>
@@ -262,11 +262,11 @@
             var color = string.Empty;
             if (@invoice.Status == "AUTHORIZED")
                 color = "background: cornsilk;";
-            else if(invoice.Status == "UNPROCESSED" || string.IsNullOrEmpty(invoice.Status))
+            else if (invoice.Status == "UNPROCESSED" || string.IsNullOrEmpty(invoice.Status))
                 color = "background:  #f9f9f9;";
-            else if( invoice.Status == "DUE AND PAYABLE")
+            else if (invoice.Status == "DUE AND PAYABLE")
                 color = "background:   #ffeeee;";
-            else if(invoice.Status == "APPROVED")
+            else if (invoice.Status == "APPROVED")
                 color = "background: #effffa";
             else if (invoice.Status == "REFUNDED" || invoice.Status == "VOID" || invoice.Status == "VOIDED")
                 color = "background: #e9e1ff";
@@ -296,14 +296,14 @@
                             </div>
                         }
                     </div>
-        
+
                 </td>
                 <td class="right bold">
                     @{
                         var total = invoice.InvoiceTotal.ToString("c2");
                     }
-        
-        
+
+
                     @if (invoice.Status == "APPROVED")
                     {
                         <span class="text-success">
@@ -338,7 +338,7 @@
                         <a href="/invoice/@invoice.InvoiceNumber"
                            class="invoice-link btn btn-sm btn-default hidable" title="show/print/export invoice">
                             <i class="fas fa-print text-info"></i>
-        
+
                         </a>
                     </span>
                 </td>
