@@ -253,7 +253,7 @@ namespace Westwind.Webstore.Web.Views
 
             if (!validationResult)
             {
-                model.ErrorDisplay.AddMessages(customerBusiness.ValidationErrors);
+                model.ErrorDisplay.AddMessages(customerBusiness.ValidationErrors, null);
                 model.ErrorDisplay.ShowError("Please fix the following");
                 return View(model);
             }
@@ -467,7 +467,11 @@ This email is to confirm your email address **{email}** for the **{wsApp.Configu
 
 Your email validation code is:
 
-### {validationKey}
+<div style='background: #eee padding: 1em; margin: 0 auto'>
+
+## {validationKey}
+
+</div>
 
 Please copy the code, return to the Web browser and enter the validation code to verify your email address.
 

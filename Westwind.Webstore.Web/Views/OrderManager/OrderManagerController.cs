@@ -97,6 +97,7 @@ public class OrderManagerController : WebStoreBaseController
         return View("CustomerList", model);
     }
 
+    [HttpGet]
     [Route("/admin/ordermanager/customers/{id}")]
     public IActionResult CustomerEditor(string id,[FromQuery] string listSearchTerm)
     {
@@ -107,11 +108,61 @@ public class OrderManagerController : WebStoreBaseController
         if (model.Customer == null)
             model.Customer = customerBus.Create();
 
-        model.BillingAddress = CustomerBusiness.GetShippingAddress(model.Customer);
+        model.BillingAddress = CustomerBusiness.GetBillingAddress(model.Customer);
         model.SearchTerm = listSearchTerm;
 
         return View("CustomerEditor",model);
     }
+
+    [HttpPost]
+    [Route("/admin/ordermanager/customers/{id}")]
+    public IActionResult CustomerEditor(CustomerEditorViewModel model, string id)
+    {
+        InitializeViewModel(model);
+
+        var customerBus = BusinessFactory.GetCustomerBusiness();
+        model.Customer = customerBus.Load(id);
+        if (model.Customer == null)
+        {
+            model.Customer = customerBus.CreateEmpty();
+        }
+
+        var errors = HttpContext.Request.UnbindFormVarsToObject(model.Customer, "Id", "Customer.");
+        if (errors.Count > 0)
+        {
+            foreach(var error in errors)
+                customerBus.ValidationErrors.Add(error);
+        }
+
+        model.BillingAddress = CustomerBusiness.GetBillingAddress(model.Customer);
+
+        errors = HttpContext.Request.UnbindFormVarsToObject(model.BillingAddress, "Id", "BillingAddress.");
+        if (errors.Count > 0)
+        {
+            foreach(var error in errors)
+                customerBus.ValidationErrors.Add(error);
+        }
+
+        if (!customerBus.Validate( model.Customer, false))
+        {
+            model.ErrorDisplay.AddMessages(customerBus.ValidationErrors);
+            model.ErrorDisplay.ShowError("Please fix the following errors:");
+            return View("CustomerEditor", model);
+        }
+
+        ModelState.Clear();
+        if (!customerBus.Save())
+        {
+            model.ErrorDisplay.ShowError(customerBus.ErrorMessage, "Customer could not be saved.");
+        }
+        else
+        {
+            model.ErrorDisplay.ShowSuccess($"Customer {model.Customer.Fullname} has been saved.");
+        }
+
+        return View("CustomerEditor",model);
+    }
+
 
     #endregion
 

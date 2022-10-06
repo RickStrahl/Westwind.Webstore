@@ -17,12 +17,10 @@ namespace Westwind.Webstore.Business
 {
     public class CustomerBusiness : WebStoreBusinessObject<Customer>
     {
+
         public CustomerBusiness(WebStoreContext context) : base(context)
         {
         }
-
-
-
 
 
         /// <summary>
@@ -415,6 +413,16 @@ namespace Westwind.Webstore.Business
 
         #region Bus Object Overrides
 
+        /// <summary>
+        /// Validates a customer.
+        ///
+        /// Note: Doesn't validate:
+        /// * Email Address (call ValidateEmailAddress if checking for dupes)
+        /// * Password (call ValidatePassword)
+        /// These need to be manually checked
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         protected override bool OnValidate(Customer customer)
         {
             if (string.IsNullOrEmpty(customer.Lastname) && string.IsNullOrEmpty(customer.Company))

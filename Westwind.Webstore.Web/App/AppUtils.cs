@@ -70,7 +70,7 @@ namespace Westwind.Webstore.Web.App
                 Subject = title,
                 Recipient = email,
                 ContentType = noHtml ? "text/plain" : "text/html",
-                BCC = config.CcList
+                BCC = !noCCs ? config.CcList : null
             };
 
             error = null;
