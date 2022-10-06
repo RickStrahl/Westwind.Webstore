@@ -16,13 +16,17 @@
 <div style="margin: 1em;">
     
 <div class="float-end">
+    <a class="btn btn-secondary btn-sm" onclick="addNewInvoiceForCustomer('@Model.Customer.Id', '@Model.Customer.Fullname')" 
+           href="#0" title="Create a new order for this customer.">
+        <i class="fad fa-circle-plus fa-button text-warning"></i>
+    </a>
     <a class="btn btn-secondary btn-sm" 
        href="/admin/ordermanager/customers" title="back to customer list">
-        <i class="fad fa-list fa-button"></i>
+        <i class="fad fa-list fa-button text-warning"></i>
     </a>
-        
+           
 </div>
-    
+
     
 <h1 class="page-header-text">
     <i class="fad fa-user"></i>
@@ -251,4 +255,27 @@
         </tbody>
     </table>
 }
+
+<div class="mt-4">
+    <a href="#0" onclick="$('#CustomerDetail').toggle();">
+        <i class="fad fa-eye"></i>
+        Full Customer Detail
+    </a>
+    <pre style="display: none" id="CustomerDetail">@JsonSerializationUtils.Serialize(Model.Customer, formatJsonOutput: true)</pre>
+</div>
+
 </div>      
+@section Scripts
+{
+    <script>
+     function addNewInvoiceForCustomer(custId, invoiceName) {       
+            if( confirm(`Create a new invoice for ${invoiceName}`) )
+            {
+                location.href = `/admin/ordermanager/customers?action=addinvoice&customerid=${custId}`;
+            }                         
+            event.cancelBubble = true;
+            event.preventDefault();
+            return false;                            
+        }
+    </script>
+}

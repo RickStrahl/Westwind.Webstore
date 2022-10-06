@@ -7,10 +7,19 @@
 
 <div style="margin: 1em">
     
-    <h2 class="page-header-text">
-        <i class="fad fa-receipt"></i>
-        @wsApp.Configuration.ApplicationName Orders
-    </h2>    
+     
+    
+    <div class="float-end">
+        <a class="btn btn-secondary btn-sm" 
+           href="/admin" title="back to customer list">
+            <i class="fad fa-home fa-button text-warning"></i>
+        </a>
+    </div>
+    
+      <h2 class="page-header-text">
+            <i class="fad fa-receipt"></i>
+            @wsApp.Configuration.ApplicationName Orders
+      </h2> 
     
     <error-display error-display-model="Model.ErrorDisplay"></error-display>
     
