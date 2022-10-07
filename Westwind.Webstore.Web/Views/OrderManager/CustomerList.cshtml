@@ -82,7 +82,7 @@
                 </td>
                 <td>
                     <a class="btn btn-link text-decoration-none" 
-                       href="/admin/ordermanager/customers/@customer.Id">
+                       href="/admin/ordermanager/customers/@customer.Id?s=@Model.SearchTerm">
                         @if (!string.IsNullOrEmpty(customer.Company))
                         {
                             <b>@customer.Company -</b>
@@ -94,6 +94,12 @@
                     <a href="/admin/ordermanager/customers?action=addinvoice&customerid=@customer.Id&s=@Model.SearchTerm"
                        class="btn btn-default">
                         <i class="fas fa-plus-circle text-success"></i>
+                    </a>
+                    
+                    <a href="/admin/ordermanager/customers?action=deletecustomer&customerid=@customer.Id&s=@Model.SearchTerm"
+                       onclick="if (!confirm('Are you sure you want to delete @customer.Name?')) { return false; }"
+                       class="btn btn-default">
+                        <i class="fas fa-times-circle text-danger"></i>
                     </a>
                 </td>
             </tr>

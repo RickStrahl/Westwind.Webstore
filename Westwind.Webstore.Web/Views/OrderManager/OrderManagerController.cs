@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.Extensions;
 using Westwind.AspNetCore.Views;
@@ -94,12 +95,33 @@ public class OrderManagerController : WebStoreBaseController
             return NewInvoiceFromCustomer(model);
         }
 
+        if (model.Action.Equals("deletecustomer"))
+        {
+            return DeleteCustomer(model);
+        }
+
+        return View("CustomerList", model);
+    }
+
+    private IActionResult DeleteCustomer(CustomerListViewModel model)
+    {
+        var customerBus = BusinessFactory.GetCustomerBusiness();
+        if (!customerBus.Delete(model.CustomerId, true))
+        {
+            model.ErrorDisplay.ShowError(customerBus.ErrorMessage ,"Couldn't delete customer.");
+        }
+        else
+        {
+            model.ErrorDisplay.ShowSuccess("Customer has been deleted.");
+        }
+
+        Response.Headers["Refresh"] = $"1;/admin/OrderManager/Customers?s={model.SearchTerm}";
         return View("CustomerList", model);
     }
 
     [HttpGet]
     [Route("/admin/ordermanager/customers/{id}")]
-    public IActionResult CustomerEditor(string id,[FromQuery] string listSearchTerm)
+    public IActionResult CustomerEditor(string id,[FromQuery] string s = null)
     {
         var model = CreateViewModel<CustomerEditorViewModel>();
 
@@ -109,16 +131,17 @@ public class OrderManagerController : WebStoreBaseController
             model.Customer = customerBus.Create();
 
         model.BillingAddress = CustomerBusiness.GetBillingAddress(model.Customer);
-        model.SearchTerm = listSearchTerm;
+        model.SearchTerm = s;
 
         return View("CustomerEditor",model);
     }
 
     [HttpPost]
     [Route("/admin/ordermanager/customers/{id}")]
-    public IActionResult CustomerEditor(CustomerEditorViewModel model, string id)
+    public IActionResult CustomerEditor(CustomerEditorViewModel model, string id, [FromQuery] string s = null)
     {
         InitializeViewModel(model);
+        model.SearchTerm = s;
 
         var customerBus = BusinessFactory.GetCustomerBusiness();
         model.Customer = customerBus.Load(id);
@@ -492,6 +515,8 @@ public class LineItemEditorViewModel : WebStoreBaseViewModel
 {
     public LineItem LineItem { get; set; } = new LineItem();
     public Invoice Invoice { get; set; } = new Invoice();
+
+    public string SearchTerm { get; set; }
 }
 
 public class CustomerListViewModel : WebStoreBaseViewModel

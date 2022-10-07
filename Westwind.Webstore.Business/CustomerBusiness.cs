@@ -545,22 +545,22 @@ namespace Westwind.Webstore.Business
         }
 
 
-        protected override bool OnBeforeSave(Customer entity)
+        protected override bool OnBeforeSave(Customer customer)
         {
-            if (!base.OnBeforeSave(entity))
+            if (!base.OnBeforeSave(customer))
                 return false;
 
-            if (entity._extraProperties != null)
+            if (customer._extraProperties != null)
             {
-                entity._extraPropertiesStorage = JsonSerializationUtils.Serialize(entity._extraProperties);
+                customer._extraPropertiesStorage = JsonSerializationUtils.Serialize(customer._extraProperties);
             }
 
-            if (!string.IsNullOrEmpty(entity.Password) && !entity.Password.EndsWith(HashPostFix))
+            if (!string.IsNullOrEmpty(customer.Password) && !customer.Password.EndsWith(HashPostFix))
             {
-                entity.Password = HashPassword(entity.Password, entity.Id);
+                customer.Password = HashPassword(customer.Password, customer.Id);
             }
 
-            entity.Updated = DateTime.Now;
+            customer.Updated = DateTime.Now;
 
             return true;
         }
@@ -571,6 +571,32 @@ namespace Westwind.Webstore.Business
                 return false;
 
             entity.IsNew = false;
+            return true;
+        }
+
+        /// <summary>
+        /// Delete Invoices and Addresses
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        protected override bool OnBeforeDelete(Customer customer)
+        {
+            if (customer == null)
+                return false;
+
+            var invoiceBusiness =  BusinessFactory.Current.GetInvoiceBusiness();
+
+            var ids = Context.Invoices
+                .Where(inv => inv.CustomerId == customer.Id)
+                .Select(inv => inv.Id);
+
+            foreach (var id in ids)
+            {
+                bool res =  invoiceBusiness.Delete(id, true);
+            }
+
+            customer.Addresses.Clear();
+
             return true;
         }
 

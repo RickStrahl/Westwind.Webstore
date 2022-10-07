@@ -1,4 +1,5 @@
-﻿@model CustomerEditorViewModel
+﻿@using Microsoft.EntityFrameworkCore
+@model CustomerEditorViewModel
 @inject BusinessFactory BusinessFactory
 
 @{
@@ -154,10 +155,17 @@
         </div>
     </div>
 
-    <button type="submit" name="txtSubmit" id="txtSubmit" class="btn btn-primary mt-3">
+    <button type="submit" name="btnSubmit" id="txtSubmit" class="btn btn-primary mt-3">
         <i class="far fa-check-circle text-success"></i>
         Save Customer
     </button>
+    
+    <a href="/admin/ordermanager/customers?action=deletecustomer&customerid=@Model.Customer.Id&s=@Model.SearchTerm"
+       onclick="if (!confirm('Are you sure you want to delete @Model.Customer.Fullname?')) { return false; }"
+       class="btn btn-secondary btn-sm mt-3 float-end">
+            <i class="far fa-times-circle"></i>
+            Delete
+        </a>
 
 </form>
         
