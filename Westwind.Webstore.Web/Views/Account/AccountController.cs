@@ -227,7 +227,8 @@ namespace Westwind.Webstore.Web.Views
                 }
                 else
                 {
-                    validationResult = customerBusiness.ValidatePassword(model.Password);
+                    if(!customerBusiness.ValidatePassword(model.Password))
+                        validationResult = false;
                 }
 
                 customerBusiness.Attach(customer, true);

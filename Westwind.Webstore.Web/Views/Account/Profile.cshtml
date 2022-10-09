@@ -42,27 +42,29 @@
                         Sign out
                     </a>
                 }
-                else
-                {
-                    
-                    <a href="~/account/signin?ReturnUrl=@Context.Request.Path"
-                       class="btn btn-warning btn-sm">
-                        <i class="fad fa-sign-in-alt"></i>
-                        Sign in
-                    </a>
-                }
+                
             </div>
 
-            <h3 class="page-header-text mt-0 mb-0">
+            <h3 class="page-header-text mt-0 mb-1">
                 
                 <i class="fad fa-address-card"></i>
-                Name and Email
-                
+                Your Contact Info
             </h3>
             
-            <div class="header-byline mb-3">as it appears on your credit card statement</div>
+            
 
-
+                @if (!@Model.AppUserState.IsAuthenticated())
+                {
+                    <a href="~/account/signin?ReturnUrl=@Context.Request.Path"
+                       class="btn btn-primary btn-sm ">
+                        <i class="fad fa-sign-in-alt"></i>
+                        Sign in to your  existing account
+                    </a>
+                    <div class="header-byline mb-3">or fill out the form below to create one</div>
+                }
+                else {
+                    <div class="header-byline mb-3">as it appears on your credit card statement</div>
+                }
             <div class="responsive-container mb-2">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fad fa-fw fa-user"></i></span>
@@ -158,7 +160,7 @@
             </h3>
             <div class="header-byline">as it appears on your credit card statement</div>
 
-            <div class="form-group mt-2">
+            <div class="form-group">
                 <label>Address<sup>*</sup></label>
                 <div class="input-group">
                     <textArea type="text"
@@ -204,7 +206,7 @@
 
 
 
-            <button class="btn-primary btn btn-lg mt-4" type="submit">
+            <button class="btn-primary btn btn-lg mt-3" type="submit">
                 <i class="fa fa-check-circle text-success"></i>
                 @if (isOrderProfile)
                 {
