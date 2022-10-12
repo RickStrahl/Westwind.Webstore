@@ -153,7 +153,7 @@ namespace Westwind.Webstore.Business
 
         public List<CustomerListItem> GetCustomerList(string search = null, int maxItems = 1000)
         {
-            IQueryable<Customer> invBase = Context.Customers
+            IQueryable<Customer> custBase = Context.Customers
                 .Include(c => c.Addresses);
 
 
@@ -164,24 +164,51 @@ namespace Westwind.Webstore.Business
                 {
                     // everything
                 }
+                else if (lsearch == "recent")
+                {
+                    var result = custBase
+                        //.Where(c=> c.Entered > DateTime.Now.AddYears(-1))
+                        .OrderByDescending(c => c.Updated)
+                        .Take(20)
+                        .ToList();
+
+                    return result.Select(c => new CustomerListItem
+                        {
+                            Id = c.Id,
+                            Name = c.Fullname,
+                            Lastname = c.Lastname,
+                            Company = c.Company,
+                            Email = c.Email,
+                            Entered = c.Entered,
+                            Updated = c.Updated,
+                            City = GetBillingAddress(c)?.City
+                        })
+                        .ToList();
+                }
                 else
                 {
-                   invBase = invBase.Where(c => c.Lastname.Contains(search) ||
+                   custBase = custBase.Where(c => c.Lastname.Contains(search) ||
                                                  c.Company.Contains(search) ||
                                                  c.Email.Contains(search) ||
                                                  c.Id.Contains(search));
                 }
             }
-            var custList = invBase.ToList();
+            var custList = custBase.ToList();
 
             return custList.Select(c => new CustomerListItem
             {
                 Id= c.Id,
                 Name = c.Fullname,
+                Lastname = c.Lastname,
                 Company = c.Company,
                 Email = c.Email,
+                Entered = c.Entered,
+                Updated = c.Updated,
                 City = GetBillingAddress(c)?.City
-            }).ToList();
+            })
+            .OrderBy(c=> c.Lastname)
+            .ThenByDescending(c=> c.Company)
+            .ToList();
         }
 
         public IEnumerable<CustomerListResult> GetCustomerList(CustomerListFilter filter )
@@ -649,9 +676,11 @@ namespace Westwind.Webstore.Business
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Lastname { get; set; }
         public string Company { get; set; }
         public string Email { get; set; }
         public string City { get; set; }
-
+        public DateTime Entered { get; set; }
+        public DateTime Updated { get; set; }
     }
 }

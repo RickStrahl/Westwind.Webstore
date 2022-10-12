@@ -40,7 +40,7 @@ $(function () {
         $("#NoEmailMessage").toggleClass("hidden");
     });
 
-    function sendValidation(email) {
+    function sendValidation(email, customerId) {
         
         if (!email)
             email = $("#txtEmail").val();
@@ -48,6 +48,11 @@ $(function () {
             toastr.error("Missing or invalid email address.");
             return;
         }
+        if (!customerId){
+            customerId = $("#Customer_Id").val();
+        }
+        
+        
         $("#email-validation-code").val("");
 
         emailValidationModel.email = email;
@@ -64,14 +69,15 @@ $(function () {
     function validateCode() {
         var code = $("#email-validation-code").val();
         var email = $("#txtEmail").val();
+        var customerId = $("#Customer_Id").val();
 
-        $.get("/api/account/validate/" + code +"?email=" + encodeURIComponent(email),
+        $.get("/api/account/validate/" + code +"?email=" + encodeURIComponent(email) + "&id=" + encodeURIComponent(customerId),
             function (result) {
                 
                 if (!result.isValidated) {
                     $("#txtEmail").removeClass("valid");
                     $("#txtEmail").addClass("invalid");
-                    toastr.error("Invalid validation code. Please check your email and refresh the validation.");
+                    toastr.error(result.message,"Email Validation failed");
                     return;
                 }
 

@@ -76,7 +76,7 @@ public class OrderManagerController : WebStoreBaseController
     public IActionResult CustomerList([FromQuery] string s=null, [FromQuery] string action = null, [FromQuery] string customerid = null)
     {
         var model = CreateViewModel<CustomerListViewModel>();
-        model.SearchTerm = s;
+        model.SearchTerm = s ?? "recent";
         model.Action = action ?? string.Empty;
         model.CustomerId = customerid;
 

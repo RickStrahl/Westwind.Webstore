@@ -59,13 +59,13 @@ namespace Westwind.Webstore
         {
             if (string.IsNullOrEmpty(code))
             {
-                ErrorMessage = "Invalid or missing validation code.";
+                ErrorMessage = "Invalid or missing email validation code.";
                 return false;
             }
 
             if (string.IsNullOrEmpty(email))
             {
-                ErrorMessage = "Invalid or missing email adddress for validation.";
+                ErrorMessage = "Invalid or missing email address for validation.";
                 return false;
             }
 
@@ -75,12 +75,13 @@ namespace Westwind.Webstore
                 $@"
 delete from {Tablename} where DateDiff( Minute,  Timestamp, getutcdate()) > @0;
 select ValidationCode from {Tablename} where ValidationCode = @1 and Email = @2;
+delete from {Tablename} where ValidationCode != @1 and Email = @2
 update {Tablename} set IsValidated = 1 where ValidationCode = @1 and Email = @2",
                 TimeoutMinutes, code, email) as string;
 
             if (string.IsNullOrEmpty(result))
             {
-                ErrorMessage = "Invalid validation code. " + db.ErrorMessage;
+                ErrorMessage = "Invalid email validation code. " + db.ErrorMessage;
                 return false;
             }
 

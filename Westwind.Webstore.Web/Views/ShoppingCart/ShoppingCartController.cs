@@ -442,7 +442,7 @@ namespace Westwind.Webstore.Web.Controllers
                 }
                 else
                 {
-                    ErrorDisplay.AddMessage("Your email address has not been validated.", "Email");
+                    ErrorDisplay.AddMessage("Your email address has not been validated. Please use the validate button on the email field.", "Email");
                 }
             }
 

@@ -248,7 +248,7 @@ namespace Westwind.Webstore.Web.Views
                 }
                 else
                 {
-                    ErrorDisplay.AddMessage("Your email address has not been validated.", "Email");
+                    ErrorDisplay.AddMessage("Your email address has not been validated. Please use the validate button on the email field.", "Email");
                 }
             }
 
@@ -488,12 +488,25 @@ The {wsApp.Configuration.ApplicationCompany} Team
 
         [Route("api/account/validate/{validationId}")]
         [AllowAnonymous]
-        public ActionResult ValidateEmail(string validationId, [FromQuery] string email)
+        public ActionResult ValidateEmail(string validationId, [FromQuery] string email, [FromQuery] string id)
         {
             var validator = new EmailAddressValidator();
             bool result = validator.ValidateCode(validationId, email);
 
-            return Json(new { isValidated = result, message = validator.ErrorMessage });
+            if (!result || string.IsNullOrEmpty(id))
+                return Json(new { isValidated = result, message = validator.ErrorMessage });
+
+            // also check to see if the email address already exists
+            var customerBus = BusinessFactory.GetCustomerBusiness();
+            var customer = customerBus.Load(id);
+            if (customer == null)
+            {
+                customer = customerBus.CreateEmpty();
+                customer.Email = email;
+            }
+
+            result = customerBus.ValidateEmailAddress(customer.IsNew, customer);
+            return Json(new { isValidated = result, message = customerBus.ValidationErrors.ToString()});
         }
 
         #endregion

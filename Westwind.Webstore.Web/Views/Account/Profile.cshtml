@@ -68,12 +68,20 @@
             <div class="responsive-container mb-2">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fad fa-fw fa-user"></i></span>
-                    <input type="text" class="form-control" placeholder="First name" asp-for="Customer.Firstname"/>
+                    <input id="txtFirstname" 
+                           class="form-control"
+                           aria-label="First name"
+                           placeholder="First name"
+                           asp-for="Customer.Firstname"/>
                 </div>
 
                 <div class="input-group">
                     <span class="input-group-text"><i class="fad fa-fw fa-user "></i></span>
-                    <input type="text" class="form-control" id="txtLastname" asp-for="Customer.Lastname" placeholder="Last name"/>
+                    <input  id="txtLastname"
+                            class="form-control" 
+                            aria-label="Last name"
+                            asp-for="Customer.Lastname"
+                            placeholder="Last name" />
                 </div>
             </div>
 
@@ -85,13 +93,13 @@
                        placeholder="Enter your Company"
                        asp-for="Customer.Company"
                        autocapitalize="off"
-                       autocomplete="off"
                        spellcheck="false"
-                       autocorrect="off"/>
+                       autocorrect="off" />
             </div>
     <div class="form-group mb-0">
             <div class="input-group mb-0">
                 <span class="input-group-text"><i class="fas fa-envelope-open fa-fw"></i></span>
+                
                 <input type="email"
                        id="txtEmail"
                        class="form-control"
@@ -100,14 +108,14 @@
                        aria-label="Email"
                        title="Please enter a valid email address "
                        autocapitalize="off"
-                       autocomplete="off"
                        spellcheck="false"
-                       autocorrect="off" required/>
+                       autocorrect="off" required />
+                
                 <button id="btnSendValidationEmail"
                         type="button"
                         class="btn btn-sm btn-secondary"
                         title="Validate the email address. Re-sends an email with a confirmation code.">
-                    <i class="fas fa-rotate text-warning"></i>
+                    <i style="font-size: 1.3em" class="far fa-check-circle text-warning"></i>
                 </button>
             </div>
 
@@ -119,7 +127,7 @@
             </div>
         }
         
-            <div class="header-byline ">used to verify your email address</div>
+        <div class="header-byline ">used to verify your email address. <i class="text-info">New emails or email changes need to be validated via the check button.</i></div>
         </div>
 
             @if (Model.IsNewUser)
@@ -161,24 +169,27 @@
             <div class="header-byline">as it appears on your credit card statement</div>
 
             <div class="form-group">
-                <label>Address<sup>*</sup></label>
+                <label for="BillingAddress_StreetAddress">Address<sup>*</sup></label>
                 <div class="input-group">
                     <textArea type="text"
                               class="form-control"
                               placeholder="Enter your Address"
-                              asp-for="BillingAddress.StreetAddress"
-                              autocapitalize="off"
-                              autocomplete="off"
-                              spellcheck="false"
-                              autocorrect="off"></textArea>
+                              id="Address"
+                              asp-for="BillingAddress.StreetAddress"  
+                              aria-label="Address" 
+                              autocomplete="on"
+                              ></textArea>
                 </div>
             </div>
 
 
             <div class="form-group">
-                <label class="control-label" for="City">City<sup>*</sup>, State, Postalcode<sup>*</sup></label>
+                <label class="control-label" for="Billing_City">City<sup>*</sup>, State, Postalcode<sup>*</sup></label>
                 <div class="responsive-container">
-                    <input asp-for="BillingAddress.City" class="form-control" style="min-width: 280px" placeholder="City"/>
+                    <input asp-for="BillingAddress.City" 
+                           class="form-control"
+                           style="min-width: 280px" 
+                           placeholder="City"/>
                     <select asp-for="BillingAddress.State"
                             class="form-select"
                             title="US State or Candian Province - all others can leave this unset."
@@ -189,7 +200,7 @@
             </div>
 
             <div class="form-group">
-                <label class="control-label" for="CountryCode">@AppResources.Account.Country<sup>*</sup></label>
+                <label class="control-label" for="BillingAddress_CountryCode">@AppResources.Account.Country<sup>*</sup></label>
                 <select asp-for="BillingAddress.CountryCode"
                         class="form-select"
                         title="Country - if not listed use 'Other' at the end of the list"

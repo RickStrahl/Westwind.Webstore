@@ -29,7 +29,7 @@
 </div>
 
     
-<h1 class="page-header-text">
+<h1 class="page-header-text mb-1">
     <i class="fad fa-user"></i>
     @if (Model.Customer.IsNew)
     {
@@ -48,6 +48,19 @@
         }
     }
 </h1>
+
+@if (!Model.Customer.IsNew)
+{
+    <div class="header-byline  mb-3">
+        <i class="far fa-clock fa-fw"></i>
+        since: @TimeUtils.FriendlyDateString(Model.Customer.Entered)
+        @if(Model.Customer.Updated.Date != Model.Customer.Entered.Date) 
+        
+        {
+            <span> &bull; <i class="far fa-timer fa-fw"></i> updated: @TimeUtils.FriendlyDateString(Model.Customer.Updated) </span>
+        }
+    </div>
+}
 
 <error-display error-display-model="Model.ErrorDisplay"></error-display>
     
@@ -153,6 +166,7 @@
                
                    class="form-control" placeholder="Customer Referral" />
         </div>
+        
     </div>
 
     <button type="submit" name="btnSubmit" id="txtSubmit" class="btn btn-primary mt-3">

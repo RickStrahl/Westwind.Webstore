@@ -46,7 +46,7 @@
                             <input id="CustomerSearch" name="s"
                                    class="form-control" type="text"
                                    value="@Model.SearchTerm"
-                                   placeholder="search customer... (last name, company)"
+                                   placeholder="search customer... (last name, company, email, recent)"
                                    title="search customer... (last name, company)" autocomplete="off" autocorrect="off">
                             <button type="submit"
                                     class="input-group-text text-info"
@@ -77,18 +77,18 @@
         @foreach (CustomerListItem customer in Model.CustomerList)
         {
             <tr>
-                <td class="small">
-                    <b class="text-info">@customer.Id</b><br/>
+                <td class="small" >
+                    <b class="text-info">@customer.Id</b>
                 </td>
                 <td>
-                    <a class="btn btn-link text-decoration-none" 
-                       href="/admin/ordermanager/customers/@customer.Id?s=@Model.SearchTerm">
+                    <a href="/admin/ordermanager/customers/@customer.Id?s=@Model.SearchTerm">
                         @if (!string.IsNullOrEmpty(customer.Company))
                         {
-                            <b>@customer.Company -</b>
+                            <b class="text-info">@customer.Company -</b>
                         }
                         @customer.Name
                     </a>
+                    <i class="small d-block mt-0" style="font-size: 0.7em">last: @customer.Updated.ToString("yyyy-MM-dd") &nbsp; &bull; &nbsp; since: @customer.Entered.ToString("yyyy-MM-dd")</i>
                 </td>
                 <td class="right bold">
                     <a href="/admin/ordermanager/customers?action=addinvoice&customerid=@customer.Id&s=@Model.SearchTerm"

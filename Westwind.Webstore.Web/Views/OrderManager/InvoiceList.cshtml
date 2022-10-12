@@ -85,7 +85,7 @@
                 color = "background:  #f9f9f9;";
             else if( invoice.Status == "DUE AND PAYABLE")
                 color = "background:   #ffeeee;";
-            else if(invoice.Status == "APPROVED")
+            else if(invoice.Status == "APPROVED" || invoice.Status == "PAID IN FULL")
                 color = "background: #effffa";
             else if (invoice.Status == "REFUNDED" || invoice.Status == "VOID" || invoice.Status == "VOIDED")
                 color = "background: #e9e1ff";
