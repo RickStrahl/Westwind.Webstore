@@ -26,6 +26,8 @@ namespace Westwind.Webstore.Business
         public string ConnectionString { get; set; } =
             "server=.;database=WebStoreNew;integrated security=yes;encrypt=false;";
 
+        public string DatabaseName { get; set; } = "WebStoreNew";
+
         public string ProductImageUploadFilePath { get; set; } = "/images/product-images/";
         public string ProductImageWebPath { get; set; } = "~/images/product-images/";
 
@@ -44,6 +46,7 @@ namespace Westwind.Webstore.Business
         public FraudConfiguration Security { get; set; } = new FraudConfiguration();
 
         public SystemConfiguration System { get; set; } = new SystemConfiguration();
+
 
 
         protected override IConfigurationProvider OnCreateDefaultProvider(string sectionName, object configData)

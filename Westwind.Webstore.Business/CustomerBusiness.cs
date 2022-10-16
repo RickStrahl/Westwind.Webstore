@@ -169,7 +169,7 @@ namespace Westwind.Webstore.Business
                     var result = custBase
                         //.Where(c=> c.Entered > DateTime.Now.AddYears(-1))
                         .OrderByDescending(c => c.Updated)
-                        .Take(20)
+                        .Take(10)
                         .ToList();
 
                     return result.Select(c => new CustomerListItem

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Westwind.Utilities;
 using Westwind.Utilities.Data;
 using Westwind.Webstore.Business.Entities;
 
@@ -10,10 +13,11 @@ namespace Westwind.Webstore.Business
 {
     public class AdminBusiness : WebStoreBusinessObject<Customer>
     {
+        BusinessFactory BusinessFactory { get; }
 
-
-        public AdminBusiness(WebStoreContext context) : base(context)
+        public AdminBusiness(WebStoreContext context, BusinessFactory businessFactory) : base(context)
         {
+            BusinessFactory = businessFactory;
             var ctx = context;
         }
 
@@ -60,7 +64,7 @@ order by Sku, InvoiceDate Desc
 
         #endregion
 
-        #region Database Cleanup
+        #region Database Backup and Cleanup
 
         /// <summary>
         /// Backs up the current Database to a specific path
@@ -112,6 +116,7 @@ order by Sku, InvoiceDate Desc
 
             string zipFileTemp = zipFile.Replace("\\temp\\", "\\temp2\\");
             var tpath = Path.GetDirectoryName(zipFileTemp);
+
             if (!Directory.Exists(tpath))
                 Directory.CreateDirectory(tpath);
             if (File.Exists(zipFileTemp))
@@ -119,9 +124,12 @@ order by Sku, InvoiceDate Desc
             if (File.Exists(zipFile))
                 File.Delete(zipFile);
 
+            // TODO: Use Configured image path once we upload to a custom image path (not implemented yet)
+            // also copy images folder
+            FileUtils.CopyDirectory("./wwwroot/images/product-images", Path.Combine(basePath, "product-images"), true, true);
+
             try
             {
-
                 ZipFile.CreateFromDirectory(basePath, zipFileTemp);
                 File.Delete(serverBackupFilename);
                 File.Move(zipFileTemp, zipFile);
@@ -136,6 +144,77 @@ order by Sku, InvoiceDate Desc
             return zipFile;
         }
 
+
+        /// <summary>
+        /// Cleanup database and compact
+        /// * Delete inactive Customers with no invoices
+        /// * Delete Temporary LineItems
+        /// * Delete Orphaned Invoices
+        /// * Shrink Database
+        /// </summary>
+        /// <param name="databaseName"></param>
+        /// <returns></returns>
+        public string DatabaseCleanup()
+        {
+            var sb = new StringBuilder();
+            var customerBus = BusinessFactory.GetCustomerBusiness();
+
+            // delete customers older than 5 years and no orders
+            var sql = @"select id from customers where DATEDIFF(year, lastOrder, getUtcDate()) > 5 and id NOT IN (SELECT customerId FROM invoices)";
+            var oldCustomerIds = Db.QueryList<IdListItem>(sql);
+            foreach (var idItem in oldCustomerIds)
+            {
+                customerBus.Delete(idItem.Id, saveChanges: true);
+            }
+
+            if (oldCustomerIds == null)
+            {
+                sb.AppendLine("Unable to get old customer ids");
+                return sb.ToString();
+            }
+
+            sb.AppendLine($"Deleted {oldCustomerIds.Count} old customers without orders.");
+
+            sql = "select id from invoices where customerId not in (select id from customers)";
+            var orphanedInvoiceIds = Db.QueryList<IdListItem>(sql);
+            foreach (var idItem in oldCustomerIds)
+            {
+                Db.ExecuteNonQuery("delete from lineitems where invoiceid = @0; delete from invoices where id = @0");
+            }
+            sb.AppendLine($"Deleted {orphanedInvoiceIds.Count} orphaned invoices.");
+
+            sql = "delete from lineItems where invoiceId not in (select id from invoices)";
+            var count = Db.ExecuteNonQuery(sql);
+
+            sb.AppendLine($"Deleted {count} orphaned line items.");
+
+            var invoiceBus = BusinessFactory.GetInvoiceBusiness();
+            invoiceBus.DeleteExpiredTemporaryInvoices();
+
+            ShrinkDatabase();
+
+            return sb.ToString();
+        }
+
+
+
+
+        public bool ShrinkDatabase(string databaseName = null)
+        {
+            if (string.IsNullOrEmpty(databaseName))
+                databaseName = wsApp.Configuration.DatabaseName;
+            if (string.IsNullOrEmpty(databaseName))
+                databaseName = "WebStoreNew";
+
+            string sql = $@"DBCC SHRINKDATABASE('{databaseName}');";
+            if (Db.ExecuteNonQuery(sql) < 0)
+            {
+                SetError(Db.ErrorMessage);
+                return false;
+            }
+
+            return true;
+        }
 
         #endregion
     }

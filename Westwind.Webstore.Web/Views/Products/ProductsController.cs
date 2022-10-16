@@ -20,7 +20,7 @@ namespace Westwind.Webstore.Web.Controllers
 
 
         [HttpGet, Route("products"),  Route("products/{category}")]
-        public IActionResult Products(string category, string searchTerm, string order)
+        public IActionResult Products(string category, string s, string order)
         {
             var model = CreateViewModel<ProductListViewModel>();
 
@@ -28,7 +28,7 @@ namespace Westwind.Webstore.Web.Controllers
                 new InventoryItemsFilter()
                 {
                     Category = category,
-                    SearchTerm = searchTerm
+                    SearchTerm = s
                 };
 
             // Check if the category is valid and assign message to error model

@@ -110,4 +110,12 @@ namespace Westwind.Webstore.Business.Entities
         }
 
     }
+
+    /// <summary>
+    /// Custom class that returns a single query item with a string value (id)
+    /// Use for direct DB queries that return simple lists
+    /// </summary>
+    public class IdListItem {
+        public string Id {get; set;}
+    }
 }

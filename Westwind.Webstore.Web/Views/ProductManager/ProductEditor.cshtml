@@ -52,8 +52,22 @@
 <input type="text" class="form-control "
        asp-for="Product.Manufacturer"/>
 
-<div class="responsive-container ">
-    <div class="ms-3">
+
+
+<button type="submit" name="btnSubmit" id="btnSubmit"
+        class="btn btn-primary mt-3 mb-3 d-block" accesskey="S">
+    <i class="fas fa-check text-success"></i>
+    Save Product
+</button>
+
+
+<h3 class="page-header-text">
+    <i class="fad fa-barcode-read"></i>
+    Prices and Stock
+</h3>
+
+
+    <div>
         <label title="Inactive items aren't shown in public listings but can be manually added.">
             <input type="checkbox" class="d-inline"
                    asp-for="Product.InActive"/>
@@ -70,19 +84,6 @@
             Partial Qty
         </label>
     </div>
-</div>
-
-<button type="submit" name="btnSubmit" id="btnSubmit"
-        class="btn btn-primary mt-3 mb-3 d-block" accesskey="S">
-    <i class="fas fa-check text-success"></i>
-    Save Product
-</button>
-
-
-<h3 class="page-header-text">
-    <i class="fad fa-barcode-read"></i>
-    Prices and Stock
-</h3>
 
 <div class="responsive-container mb-2">
     <div>
@@ -92,6 +93,14 @@
                asp-for="Product.Price"
                asp-format="{0:0.00}"/>
     </div>
+        <div>
+            <label>List Price:</label>
+            <input type="number"
+                   step="any"
+                   class="form-control right"
+                   asp-for="Product.ListPrice"
+                   asp-format="{0:0.00}"/>
+        </div>
     <div>
         <label>Cost:</label>
         <input type="number"
@@ -100,14 +109,14 @@
                asp-for="Product.Cost"
                asp-format="{0:0.00}"/>
     </div>
-    <div>
-        <label>Comission:</label>
-        <input type="number"
-               step="any"
-               class="form-control right"
-               asp-for="Product.ListPrice"
-               asp-format="{0:0.00}"/>
-    </div>
+    @* <div> *@
+    @*     <label>Comission:</label> *@
+    @*     <input type="number" *@
+    @*            step="any" *@
+    @*            class="form-control right" *@
+    @*            asp-for="Product.ListPrice" *@
+    @*            asp-format="{0:0.00}"/> *@
+    @* </div> *@
 </div>
 
 <div class="responsive-container">
@@ -130,6 +139,8 @@
                asp-format="{0:0.00}"/>
     </div>
 </div>
+
+
 
 <button type="submit" name="btnSubmit" id="btnSubmit"
         class="btn btn-primary mt-3 mb-3 d-block" accesskey="S">

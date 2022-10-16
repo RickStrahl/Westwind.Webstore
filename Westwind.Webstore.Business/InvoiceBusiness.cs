@@ -62,7 +62,6 @@ namespace Westwind.Webstore.Business
         /// <param name="saveInvoices"></param>
         public void DeleteExpiredTemporaryInvoices(bool saveInvoices = true)
         {
-
             var invPks = Context.Invoices
                         .Where(inv => inv.IsTemporary && inv.InvoiceDate < DateTime.Now.AddDays(1))
                         .Select(inv => inv.Id);
@@ -114,7 +113,7 @@ namespace Westwind.Webstore.Business
                 }
                 else if (lsearch == "30 days" || lsearch == "30")
                 {
-                    var dt = DateTime.Now.AddDays(-60);
+                    var dt = DateTime.Now.AddDays(-30);
                     invBase = invBase.Where(inv => inv.InvoiceDate >= dt);
                 }
                 else if (lsearch == "unapproved" || lsearch == "unpaid")
@@ -157,7 +156,8 @@ namespace Westwind.Webstore.Business
                         InvoiceNumber = inv.InvoiceNumber,
                         Name = inv.Customer.Fullname,
                         Company = inv.Customer.Company,
-                        InvoiceDate = inv.InvoiceDate, InvoiceTotal = inv.InvoiceTotal,
+                        InvoiceDate = inv.InvoiceDate,
+                        InvoiceTotal = inv.InvoiceTotal,
                         Status = inv.CreditCardResult.ProcessingResult,
                         Id = inv.Id,
                         CustId = inv.CustomerId,

@@ -309,9 +309,6 @@ input[type=number]::-webkit-inner-spin-button {
 .hidable, .hidable-xs {   }
 
 
-
-
-
 /* flows child elements evenly to fill 100%*/
 .responsive-container {
     display: flex;
@@ -319,7 +316,7 @@ input[type=number]::-webkit-inner-spin-button {
     vertical-align: middle;
 }
 .responsive-container>* {
-    margin-right: 3px;
+    margin-right: 0.5em;
     width: 100%;
 }
 .responsive-container>*:last-child {
@@ -328,7 +325,7 @@ input[type=number]::-webkit-inner-spin-button {
 
 .stackable {
 }
-@media(max-width: 768px) {
+@media(max-width: 767px) {
     .responsive-container {
         flex-direction: column;        
     }
@@ -340,7 +337,7 @@ input[type=number]::-webkit-inner-spin-button {
         }
     .stackable {
         display: block;
-        margin-top: 4px;        
+        margin-top: 0.5em;        
     }
 }
 

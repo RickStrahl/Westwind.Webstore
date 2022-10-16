@@ -191,6 +191,22 @@ namespace Westwind.Webstore.Web.Views.Admin
             return View("Index",model);
         }
 
+        [HttpGet, Route("/admin/databasecleanup")]
+        public IActionResult DatabaseCleanup()
+        {
+            var model = CreateViewModel<AdminViewModel>();
+
+            var adminBus = BusinessFactory.GetAdminBusiness();
+            var msg = adminBus.DatabaseCleanup();
+
+
+            ErrorDisplay.ShowInfo(HtmlUtils.DisplayMemo(msg),"Database Cleanup Result");
+            ErrorDisplay.MessageAsRawHtml = true;
+
+            return View("Index", model);
+        }
+
+
         [Route("/admin/reloadapp")]
         public IActionResult ReloadApp()
         {
