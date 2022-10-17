@@ -248,7 +248,8 @@ namespace Westwind.Webstore.Web.Views
                 }
                 else
                 {
-                    ErrorDisplay.AddMessage("Your email address has not been validated. Please use the validate button on the email field.", "Email");
+                    ErrorDisplay.AddMessage("Your email address has not been validated. Please use the validate button on the email field.", "txtEmail");
+                    validationResult = false;
                 }
             }
 
