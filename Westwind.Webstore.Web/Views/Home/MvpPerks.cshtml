@@ -1,0 +1,141 @@
+﻿@model MvpPerksViewModel
+
+@{
+    ViewBag.Title = "MVP Perks";
+    Layout = "_Layout";
+}
+<div class="container">
+    <form action="" method="post">
+        <h1 class="page-header-text">West Wind Products for MVPs and Microsoft Employees</h1>
+        <p>
+            We provide Microsoft Most Valuable Professionals, ASP.NET Insiders and Microsoft Employees 
+            with complimentary licenses to <b>Markdown Monster</b> and <b>West Wind Web Surge</b>.
+        </p>
+        <p>
+            To request a free license, please fill out the form below.
+        </p>
+
+        <error-display error-display-model="Model.ErrorDisplay"></error-display>
+
+        <div>
+       
+
+            <h3 class="page-header-text mb-3">
+                <i class="fad fa-user"></i>
+                Your Contact Info
+            </h3>
+        
+            <div class="form-group">
+                <div class="responsive-container">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fad fa-fw fa-user"></i></span>
+                        <input id="txtFirstname" 
+                               class="form-control"
+                               aria-label="First name"
+                               placeholder="First name"
+                               asp-for="Firstname"/>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fad fa-fw fa-user "></i></span>
+                        <input  id="txtLastname"
+                                class="form-control" 
+                                aria-label="Last name"
+                                asp-for="Lastname"
+                                placeholder="Last name" />
+                    </div>
+                </div>
+            
+                <div class="form-group mt-2 mb-0">
+                    <div class="input-group mb-0">
+                        <span class="input-group-text"><i class="fas fa-envelope-open fa-fw"></i></span>
+                            
+                        <input type="email"
+                               id="txtEmail"
+                               class="form-control"
+                               placeholder="Enter your Email address"
+                               asp-for="Email"
+                               aria-label="Email"
+                               title="Please enter a valid email address "
+                               autocapitalize="off"
+                               spellcheck="false"
+                               autocorrect="off" required />
+                    </div>
+                    <small>Email address must match your MVP or Insider Profile or for MS employees must be @@microsoft.com</small>
+                </div>
+                
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="Billing_City">City<sup>*</sup>, Country<sup>*</sup></label>
+                <div class="responsive-container">
+                    <div class="input-group mb-0">
+                        <span class="input-group-text"><i class="fad fa-location-dot fa-fw"></i></span>
+                        <input asp-for="City"
+                               class="form-control"
+                               style="min-width: 280px"
+                               placeholder="City"/>
+                    </div>
+                    <div class="input-group mb-0">
+                        <span class="input-group-text"><i class="fad fa-flag fa-fw"></i></span>
+                        <select asp-for="CountryCode"
+                                class="form-select"
+                                title="Country - if not listed use 'Other' at the end of the list"
+                                asp-items="@(new SelectList(wsApp.Countries, "CountryCode", "Country"))">
+                        </select>
+                    </div>
+                </div>
+            </div>
+        
+        
+            <h3 class="page-header-text mt-3 mb-0">
+                <i class="fa fa-trophy"></i>
+                Your Award Info <br />
+            </h3>
+            <div class="header-byline mb-2">Provide a link to your MVP Award Profile</div>
+            
+            <div class="form-group">       
+                <div class="input-group mb-0">
+                    <span class="input-group-text"><i class="fad fa-file-certificate fa-fw"></i></span>
+                    <input asp-for="MvpLink"  placeholder="Mvp Profile Link" class="form-control" />
+                </div>
+            </div>
+        
+        
+            <h3 class="page-header-text mb-0">
+                <i class="fad fa-boxes"></i>
+                Products <br />
+            </h3>
+            <div class="header-byline mb-2">Choose the products to request</div>
+           
+            <div style="margin: 20px 0 20px 30px">
+                
+                <label class="d-block" title="request Markdown Monster.">
+                    <input type="checkbox" asp-for="ReceiveMarkdownMonster" Text="Markdown Monster"/>
+                    Markdown Monster
+                </label>
+                
+                <label class="d-block" title="request West Wind WebSurge">
+                    <input type="checkbox" asp-for="ReceiveMarkdownMonster" Text="Markdown Monster"/>
+                    West Wind WebSurge
+                </label>
+
+            </div>
+            
+            <h3 class="page-header-text">
+                <i class="far fa-info-circle"></i>
+                Leave us a note
+            </h3>
+            <textarea asp-for="CustomerNotes" Height="125px" class="form-control" placeholder="Any notes or thoughts"></textArea>
+            
+    
+
+     
+        
+            <button type="submit" id="btnSubmit" name="btnSubmit" runat="server" 
+                    OnServerClick="btnSubmit_Click" ClientIDMode="static"
+                    class="btn btn-primary btn-lg mt-3">
+                <i class="fa fa-check" style="color: lightgreen"></i>
+                Apply for Free Licenses
+            </button>
+        </div> 
+    </form>
+</div>
