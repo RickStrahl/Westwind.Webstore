@@ -35,7 +35,7 @@ namespace Westwind.Webstore.Web.Views
 
 
 
-    public class CustomerViewModel
+    public class CustomerViewModel : WebStoreBaseViewModel
     {
         public string Id { get; set; } = wsApp.NewId();
 
@@ -51,6 +51,17 @@ namespace Westwind.Webstore.Web.Views
         public string Company { get; set; }
 
         public string CustomerNotes { get; set;  }
+    }
+
+    public class MvpPerksViewModel : CustomerViewModel
+    {
+        public string City { get; set;  }
+
+        public string CountryCode { get; set; }
+        public string MvpLink { get; set; }
+        public bool ReceiveMarkdownMonster { get; set; }
+        public bool ReceiveWebSurge { get; set; }
+        public bool IsDiscountRequest { get; set; }
     }
 
 
