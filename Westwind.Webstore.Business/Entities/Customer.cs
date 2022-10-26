@@ -5,7 +5,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
+using Braintree;
 using Newtonsoft.Json;
 using Westwind.Utilities;
 
@@ -294,6 +296,25 @@ namespace Westwind.Webstore.Business.Entities
                    string.IsNullOrEmpty(StreetAddress);
         }
 
+        /// <summary>
+        /// Retrieves a country name from a country code and returns it
+        ///
+        /// Note: does not set the Country field
+        /// </summary>
+        /// <param name="countryCode"></param>
+        /// <returns></returns>
+        public string GetCountryFromCode(string countryCode = null)
+        {
+            if (countryCode == null)
+                countryCode = CountryCode;
+
+            if (string.IsNullOrEmpty(countryCode))
+                return countryCode;
+
+            return wsApp.Countries?.FirstOrDefault(c =>
+                !string.IsNullOrEmpty(c.CountryCode) &&
+                c.CountryCode.Equals(countryCode, StringComparison.InvariantCultureIgnoreCase))?.Country;
+        }
 
         public string ToString(bool noFullName = false)
         {
@@ -315,12 +336,17 @@ namespace Westwind.Webstore.Business.Entities
             {
                 if (!string.IsNullOrEmpty(this.City))
                     sb.Append(City + ", ");
-                sb.Append((State + " ").Trim() + PostalCode);
+                sb.Append((State + " ") + PostalCode);
                 sb.AppendLine();
             }
 
-            if (!string.IsNullOrEmpty(CountryCode) && Country != wsApp.Configuration.DefaultCountryCode)
-                sb.AppendLine(Country);
+            string country = null;
+            if (!string.IsNullOrEmpty(CountryCode) && CountryCode != wsApp.Configuration.DefaultCountryCode)
+            {
+                country = wsApp.Countries?.FirstOrDefault(c => c.CountryCode == CountryCode)?.Country;
+                if (!string.IsNullOrEmpty(country))
+                    sb.AppendLine(country);
+            }
 
             return sb.ToString();
         }

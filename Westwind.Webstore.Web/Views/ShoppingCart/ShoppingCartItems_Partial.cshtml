@@ -144,7 +144,7 @@
             <tr>
                 <td  class="right">Subtotal:</td>
                 <td class="invoice-subtotal">
-                    @invoice.SubTotal.ToString("c")
+                   $@invoice.SubTotal.ToString("n")
                 </td>
             </tr>
 
@@ -153,7 +153,7 @@
                 <tr>
                     <td class="right">Tax:</td>
                     <td class="invoice-subtotal">
-                        @invoice.Tax.ToString("c")
+                       $@invoice.Tax.ToString("n")
                     </td>
                 </tr>
             }
@@ -163,7 +163,7 @@
                 <tr>
                     <td class="right">Shipping:</td>
                     <td class="invoice-subtotal">
-                        @invoice.Shipping.ToString("c")
+                        $@invoice.Shipping.ToString("n")
                     </td>
                 </tr>
             }
@@ -202,7 +202,7 @@
             </td>
             <td class="right text-danger invoice-total" 
                 style="font-size: 1.6em; font-weight: bold;">
-                @invoice.InvoiceTotal.ToString("c")
+                $@invoice.InvoiceTotal.ToString("n")
             </td>
         </tr>
         </table>

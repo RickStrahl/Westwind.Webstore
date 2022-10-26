@@ -173,6 +173,8 @@ public class OrderManagerController : WebStoreBaseController
             return View("CustomerEditor", model);
         }
 
+        model.BillingAddress.Country = model.BillingAddress.GetCountryFromCode(model.BillingAddress.CountryCode);
+
         ModelState.Clear();
         if (!customerBus.Save())
         {
@@ -309,6 +311,7 @@ public class OrderManagerController : WebStoreBaseController
         invoice.BillingAddress.City = minvoice.BillingAddress.City;
         invoice.BillingAddress.PostalCode = minvoice.BillingAddress.PostalCode;
         invoice.BillingAddress.CountryCode = minvoice.BillingAddress.CountryCode;
+        invoice.BillingAddress.Country = minvoice.BillingAddress.GetCountryFromCode(invoice.BillingAddress.CountryCode);
         invoice.BillingAddress.Telephone = minvoice.BillingAddress.Telephone;
 
         if (!invoiceBus.Save())

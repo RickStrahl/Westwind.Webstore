@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Westwind.Utilities;
 using Westwind.Utilities.Data;
 using Westwind.WebStore.App;
@@ -259,6 +260,8 @@ namespace Westwind.Webstore.Web.Views
                 model.ErrorDisplay.ShowError("Please fix the following");
                 return View(model);
             }
+
+            address.Country = address.GetCountryFromCode(address.CountryCode);
 
             if (!await customerBusiness.SaveAsync())
                 model.ErrorDisplay.ShowError(customerBusiness.ErrorMessage,

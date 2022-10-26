@@ -8,8 +8,9 @@
     <form action="" method="post">
         <h1 class="page-header-text">West Wind Products for MVPs and Microsoft Employees</h1>
         <p>
-            We provide Microsoft Most Valuable Professionals, ASP.NET Insiders and Microsoft Employees 
-            with complimentary licenses to <b>Markdown Monster</b> and <b>West Wind Web Surge</b>.
+            We provide Microsoft Most Valuable Professionals, ASP.NET Insiders, Microsoft employees, and
+            3rd party vendors that provide MVP benefits with complimentary licenses to
+            <b>Markdown Monster</b> and <b>West Wind Web Surge</b>.
         </p>
         <p>
             To request a free license, please fill out the form below.
@@ -18,8 +19,6 @@
         <error-display error-display-model="Model.ErrorDisplay"></error-display>
 
         <div>
-       
-
             <h3 class="page-header-text mb-3">
                 <i class="fad fa-user"></i>
                 Your Contact Info
@@ -124,11 +123,8 @@
                 <i class="far fa-info-circle"></i>
                 Leave us a note
             </h3>
-            <textarea asp-for="CustomerNotes" Height="125px" class="form-control" placeholder="Any notes or thoughts"></textArea>
-            
+            <textarea asp-for="CustomerNotes" Height="125px" class="form-control" placeholder="Please leave a short note, thoughts or clarification of your MVP/etc. status"></textArea>
     
-
-     
         
             <button type="submit" id="btnSubmit" name="btnSubmit" runat="server" 
                     OnServerClick="btnSubmit_Click" ClientIDMode="static"

@@ -107,7 +107,7 @@ body {{ font-family: sans-serif }}
         }
 
         [Route("/mvpperks")]
-        [Route("/discountpricing")]
+        //[Route("/discountpricing")]
         public IActionResult MvpPerks(MvpPerksViewModel model)
         {
             bool isPostback = false;

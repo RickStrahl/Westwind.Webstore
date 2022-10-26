@@ -19,26 +19,36 @@
          style="width: 3em; max-width: 1.75em;"/> &nbsp
     @Model.Product.Description
 
-    <a href="/product/@Model.Product.Sku" class="btn btn-secondary btn-sm float-end"
-       title="Show product page">
-        <i class="fad fa-external-link text-warning"></i>
-    </a>
+    <div class="float-end">
+        <a href="/product/@Model.Product.Sku" class="btn btn-secondary btn-sm"
+           title="Show product page">
+            <i class="fad fa-external-link text-warning"></i>
+        </a>
+        <a href="/admin/productmanager" class="btn btn-secondary btn-sm "
+           title="Product list">
+            <i class="fad fa-list text-warning" ></i>
+        </a>
+    </div>
 </h1>
 
 <error-display error-display-model="Model.ErrorDisplay"></error-display>
 
 <form method="post" action="">
 <div class="responsive-container ">
-    <div id="SkuContainer">
-        <input type="text" class="form-control"
-               required
-               placeholder="Item sku"
-               asp-for="Product.Sku"/>
-    </div>
-    <div>
+    <input type="text" class="form-control" style="25em"
+           required
+           placeholder="Item sku"
+           asp-for="Product.Sku"/>
+
+    <div class="d-flex">
         <input type="text" class="form-control "
                placeholder="Item description" required
                asp-for="Product.Description"/>
+        
+        <input type="text" class="form-control ms-2" 
+                   style="width: 4em"
+                   placeholder="Version" required
+                   asp-for="Product.Version"/>
     </div>
 </div>
 
