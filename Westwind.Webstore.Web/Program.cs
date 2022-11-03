@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * CommandLine Parameters supported:
+ *   -CreateDatabase    -   Creates database and default lookup values
+ *                          uses configured connectionstring
+*/
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -29,6 +34,8 @@ using Westwind.Globalization.AspnetCore;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
@@ -38,10 +45,14 @@ wsApp.Constants.StartupFolder = Environment.CurrentDirectory;
 wsApp.Constants.WebRootFolder = System.IO.Path.Combine(wsApp.Constants.StartupFolder, "wwwroot");
 //DataProtector.UniqueIdentifier = "WebStore!*9@11";
 
-// base configuration
+// base configuration (read from _webstore-configuration.json initially)
+// then apply ASP.NET Core configuration on top of it here
 var config = wsApp.Configuration;
 builder.Configuration.GetSection("WebStore").Bind(config);
 services.AddSingleton(config);
+
+if (CommandLineProcessor.CreateDatabase(args))
+    return;
 
 // logging
 var logConfig = new LoggerConfiguration()
@@ -330,6 +341,10 @@ if (!System.IO.File.Exists("_webstore-configuration.json"))
 wsApp.Constants.AppStartedOn = DateTime.Now;
 
 app.Run();
+
+
+
+
 
 
 /// <summary>
