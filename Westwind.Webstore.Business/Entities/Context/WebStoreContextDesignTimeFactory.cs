@@ -16,7 +16,7 @@ namespace Westwind.Webstore.Business.Entities.Context
 
             string conn = wsApp.Configuration.ConnectionString;
             if (string.IsNullOrEmpty(conn))
-                conn = "server=.;database=WebStoreNew; integrated security=true; encrypt=false;";
+                conn = "server=.;database=WestwindWebStore; integrated security=true; encrypt=false;";
 
             var optionsBuilder = new DbContextOptionsBuilder<WebStoreContext>();
             optionsBuilder.UseSqlServer(conn, opt =>
@@ -24,7 +24,7 @@ namespace Westwind.Webstore.Business.Entities.Context
                 opt.CommandTimeout(15);
                 opt.EnableRetryOnFailure();
             });
-            
+
 
             return new WebStoreContext(optionsBuilder.Options);
         }

@@ -69,7 +69,7 @@ namespace Westwind.Webstore.Business
             foreach (var id in invPks)
             {
                 Db.ExecuteNonQuery("delete from LineItems where invoiceId = @0;\n" +
-                                      "delete from invoices where id = @0", id );
+                                   "delete from invoices where id = @0", id );
             }
 
             // delete orphaned lineitems

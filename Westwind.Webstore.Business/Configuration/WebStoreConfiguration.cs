@@ -24,9 +24,9 @@ namespace Westwind.Webstore.Business
 
         public string ApplicationName { get; set; } = "West Wind Web Store";
         public string ConnectionString { get; set; } =
-            "server=.;database=WebStoreNew;integrated security=yes;encrypt=false;";
+            "server=.;database=WestwindWebStore;integrated security=yes;encrypt=false;";
 
-        public string DatabaseName { get; set; } = "WebStoreNew";
+        public string DatabaseName { get; set; } = "WestwindWebStore";
 
         public string ProductImageUploadFilePath { get; set; } = "/images/product-images/";
         public string ProductImageWebPath { get; set; } = "~/images/product-images/";

@@ -156,7 +156,7 @@ namespace Westwind.Webstore.Business
 
         public DateTime AppStartedOn { get; set; }
 
-        public string DefaultConnectionString { get; set; } = "server=.;database=WebStoreNew; integrated security=true; encrypt=false;";
+        public string DefaultConnectionString { get; set; } = "server=.;database=WestwindWebStore; integrated security=true; encrypt=false;";
 
         public string StartupFolder { get; set; }
         public string WebRootFolder { get; set; }

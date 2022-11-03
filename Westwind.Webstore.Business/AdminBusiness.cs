@@ -72,7 +72,7 @@ order by Sku, InvoiceDate Desc
         /// <param name="serverBackupFilename"></param>
         /// <param name="database">Name of the database to back up</param>
         /// <returns></returns>
-        public string BackupDatabase(string serverBackupFilename, string database = "WebStoreNew",
+        public string BackupDatabase(string serverBackupFilename, string database = "WestwindWebStore",
             bool zipDatabase = false)
         {
             SetError();
@@ -204,7 +204,7 @@ order by Sku, InvoiceDate Desc
             if (string.IsNullOrEmpty(databaseName))
                 databaseName = wsApp.Configuration.DatabaseName;
             if (string.IsNullOrEmpty(databaseName))
-                databaseName = "WebStoreNew";
+                databaseName = "WestwindWebStore";
 
             string sql = $@"DBCC SHRINKDATABASE('{databaseName}');";
             if (Db.ExecuteNonQuery(sql) < 0)
