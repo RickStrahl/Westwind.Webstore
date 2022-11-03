@@ -129,6 +129,7 @@ namespace Westwind.Webstore.Web.Views
             var userId = AppUserState.UserId;
 
             var model = CreateViewModel<ProfileViewModel>();
+
             model.IsOrderProfile =
                 HttpContext.Request.Path.Value.Contains("/orderprofile", StringComparison.OrdinalIgnoreCase);
             model.ReturnUrl = returnUrl;
@@ -164,6 +165,7 @@ namespace Westwind.Webstore.Web.Views
             var routeData = ControllerContext.RouteData;
 
             InitializeViewModel(model);
+
             if (string.IsNullOrEmpty(model.ReturnUrl))
                 model.ReturnUrl = HttpContext.Request.Query["ReturnUrl"].FirstOrDefault();
 
@@ -193,7 +195,6 @@ namespace Westwind.Webstore.Web.Views
             }
 
             string oldEmail = customer.Email;
-
 
             // Map model data onto business object for each block captured
             var mapper = ApplicationMapper.Current;
