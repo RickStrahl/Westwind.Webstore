@@ -45,10 +45,15 @@
        href="/admin/ordermanager?s=@Model.ListSearchTerm" title="back to invoice list">
         <i class="fad fa-list fa-button"></i>
     </a>
-     <a class="btn btn-secondary btn-sm" 
-           href="/admin/ordermanager/customers/@invoice.CustomerId" title="show customer details">
-            <i class="fad  fa-user fa-button"></i>
-        </a>
+    <a class="btn btn-secondary btn-sm" 
+       href="/admin/ordermanager/customers/@invoice.CustomerId" title="show customer details">
+        <i class="fad  fa-user fa-button"></i>
+    </a>
+    <a class="btn btn-secondary btn-sm" 
+       href="mailto:@Model.Invoice.Customer.Email?subject=re: @wsApp.Configuration.ApplicationName Order # @Model.Invoice.InvoiceNumber" 
+       title="send email to customer">
+         <i class="fa-duotone fa-circle-envelope fa-button fa-"></i>
+    </a>
     <a class="btn btn-secondary btn-sm" 
        href="/invoice/@invoice.InvoiceNumber" title="print invoice">
         <i class="fad  fa-print fa-button"></i>
