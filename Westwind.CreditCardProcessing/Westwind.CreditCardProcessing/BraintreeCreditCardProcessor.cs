@@ -184,8 +184,31 @@ namespace Westwind.CreditCardProcessing
                 Result.CCLastFour = transaction.CreditCard?.MaskedNumber;
 
                 Result.Message = braintreeResult.Message;
-                Result.AvsResultCode = transaction.AvsErrorResponseCode + ": " + transaction.AvsPostalCodeResponseCode + " " + transaction.AvsStreetAddressResponseCode;
+                Result.AvsResultCode = transaction.AvsErrorResponseCode + "  P:" +
+                                       transaction.AvsPostalCodeResponseCode + " A:" +
+                                       transaction.AvsStreetAddressResponseCode;
                 Result.CvvResultCode = transaction.CvvResponseCode;
+
+                try
+                {
+                    if (Result.Message.Contains("avs", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (transaction.AvsPostalCodeResponseCode != "M")
+                            Result.Message += " Postal Code doesn't match or is missing, ";
+                        if (transaction.AvsStreetAddressResponseCode != "M")
+                            Result.Message += " Street Address doesn't match or is missing, ";
+                    }
+                    if (Result.Message.Contains("cvv", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (Result.CvvResultCode != "M")
+                            Result.Message += " Card Code doesn't match";
+                    }
+
+                    Result.Message = Result.Message.TrimEnd(',', ' ');
+                }
+                catch
+                {
+                }
 
                 Result.ExtendedMessage = braintreeResult.Message + "\r\n" +
                                          "Status: " + transaction.Status + "\r\n" +
@@ -206,6 +229,8 @@ namespace Westwind.CreditCardProcessing
                     sb.AppendLine("Attribute: " + error.Attribute);
                     sb.AppendLine("     Code: " + error.Code);
                     sb.AppendLine("  Message: " + error.Message);
+                    sb.AppendLine("      AVS: " + Result?.AvsResultCode);
+                    sb.AppendLine("      CVV: " + Result?.CvvResultCode);
                 }
                 Result.ExtendedMessage = sb.ToString();
             }
