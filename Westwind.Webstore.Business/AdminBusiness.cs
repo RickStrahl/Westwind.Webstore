@@ -37,7 +37,8 @@ select sku, email, invoiceDate, CreditCardResult_ProcessingResult
             where lineitems.InvoiceId = invoices.id and
                   invoices.CustomerId = customers.id and
                   invoices.InvoiceDate > @date and
-                  (invoices.CreditCardResult_ProcessingResult = 'APPROVED' OR invoices.CreditCardResult_ProcessingResult = 'PAID IN FULL')
+                  (invoices.CreditCardResult_ProcessingResult = 'APPROVED' OR
+                   invoices.CreditCardResult_ProcessingResult = 'PAID IN FULL')
 order by Sku, InvoiceDate Desc
 ";
 
