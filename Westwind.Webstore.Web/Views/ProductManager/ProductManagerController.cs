@@ -71,6 +71,11 @@ public class ProductManagerController : WebStoreBaseController
         return View("ProductList",model);
     }
 
+    /// <summary>
+    /// Special sky of `new` creates a new product
+    /// </summary>
+    /// <param name="sku"></param>
+    /// <returns></returns>
     [HttpGet]
     [Route("/admin/ProductManager/{sku}")]
     public IActionResult ProductEditor(string sku)
@@ -78,10 +83,18 @@ public class ProductManagerController : WebStoreBaseController
         var model = CreateViewModel<ProductEditorViewModel>();
 
         var productBus = BusinessFactory.GetProductBusiness();
-        model.Product = productBus.LoadBySku(sku);
-        if (model.Product == null)
+
+        if (sku.Equals("new", StringComparison.OrdinalIgnoreCase))
         {
             model.Product = productBus.Create();
+        }
+        else
+        {
+            model.Product = productBus.LoadBySku(sku);
+            if (model.Product == null)
+            {
+                model.Product = productBus.Create();
+            }
         }
 
         model.Json = JsonSerializationUtils.Serialize(model.Product, formatJsonOutput: true);
@@ -89,6 +102,12 @@ public class ProductManagerController : WebStoreBaseController
         return View("ProductEditor",model);
     }
 
+
+    /// <summary>
+    /// Special sky of `new` creates a new product
+    /// </summary>
+    /// <param name="sku"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("/admin/ProductManager/{sku}")]
     public IActionResult ProductEditorUpdate(ProductEditorViewModel model, string sku)
@@ -99,12 +118,24 @@ public class ProductManagerController : WebStoreBaseController
             return DeleteProduct(model);
 
         var productBus = BusinessFactory.GetProductBusiness();
-        var product = productBus.LoadBySku(sku);
-        if (product == null)
+
+        Product product = null;
+        bool isNewItem = false;
+        if (sku.Equals("new", StringComparison.OrdinalIgnoreCase))
         {
             product = productBus.Create();
+            isNewItem = true;
+        }
+        else
+        {
+            product = productBus.LoadBySku(sku);
+            if (product == null)
+            {
+                product = productBus.Create();
+            }
         }
 
+        // we'll read directly from POST data using the Binder
         ModelState.Clear();
 
         // var dataBinder = new FormVariableBinder(Request, product, prefixes: "Product.");
@@ -132,6 +163,10 @@ public class ProductManagerController : WebStoreBaseController
         model.Json = JsonSerializationUtils.Serialize(model.Product, formatJsonOutput: true);
 
         model.ErrorDisplay.ShowSuccess("Product saved.");
+        if (isNewItem)
+        {
+            Response.Headers.Add("Refresh", "1,url=/admin/productmanager/" + WebUtility.UrlEncode(product.Sku));
+        }
 
         return View("ProductEditor",model);
     }

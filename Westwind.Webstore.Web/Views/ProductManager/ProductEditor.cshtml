@@ -35,7 +35,7 @@
 
 <form method="post" action="">
 <div class="responsive-container ">
-    <input type="text" class="form-control" style="25em"
+    <input type="text" class="form-control" style="width: 25em"
            required
            placeholder="Item sku"
            asp-for="Product.Sku"/>
@@ -47,7 +47,7 @@
         
         <input type="text" class="form-control ms-2" 
                    style="width: 4em"
-                   placeholder="Version" required
+                   placeholder="Version"
                    asp-for="Product.Version"/>
     </div>
 </div>
@@ -439,7 +439,7 @@
 
 @scriptVars.ToHtmlString(true)
 
-<input type="hidden" asp-for="Product.Id"/>
+<input type="hidden" asp-for="Product.Id" />
 </form>
 
 
