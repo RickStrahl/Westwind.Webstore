@@ -403,6 +403,21 @@ INSERT [dbo].[Lookups] ([Id], [Type], [Key], [CData], [CData1], [NData]) VALUES 
                 return false;
             }
 
+            // 1 Admin customer, 1 test product
+            sql = @"
+INSERT [dbo].[Customers] ([Id], [Email], [Firstname], [Lastname], [Company], [Password], [ValidationKey], [IsAdminUser], [Telephone], [Notes], [CustomerNotes], [ReferralCode], [IsActive], [LastOrder], [Entered], [Updated], [LanguageId], [Theme], [ExtraPropertiesStorage], [OldPk]) VALUES (N'81bo4r0faa', N'testuser@test.com', N'Jim', N'Jimson', N'Big Time LLC.', N'test', N'', 1, N'(111) 111-1111', N'', NULL, N'Big Time LLC Store', 1, CAST(N'2022-10-17T09:17:00.0000000' AS DateTime2), CAST(N'1999-11-18T16:00:00.0000000' AS DateTime2), CAST(N'2022-10-25T14:56:26.9823529' AS DateTime2), N'en', N'Light', NULL, 0)
+INSERT [dbo].[Addresses] ([Id], [CustomerId], [AddressName], [StreetAddress], [City], [PostalCode], [State], [Country], [CountryCode], [AddressType], [SortOrder], [AddressFullname], [AddressCompany], [Telephone]) VALUES (N'dkx6e48ir8', N'81bo4r0faa', NULL, N'11 Nowhere Lane', N'Nowhere', N'96771', N'HI', N'United States', N'US', N'Billing', 0, N'Jim Jimson', N'Big Time LLC', N'')
+
+INSERT [dbo].[Products] ([Id], [Sku], [ParentSku], [Description], [Abstract], [LongDescription], [Categories], [IsStockItem], [Manufacturer], [Version], [ProductDate], [InfoUrl], [ItemImage], [RedirectUrl], [InActive], [SortOrder], [Price], [ListPrice], [Cost], [Weight], [Stock], [OnOrder], [Expected], [IsFractional], [IsPhysical], [Commission], [CommissionBasePrice], [EmailTo], [RegistrationItemConfirmation], [RegistrationPassword], [AutoRegister], [VendorEmail], [SpecialsText], [SpecialsHeader], [SpecialsPrice], [SpecialsOrder], [UseLicensing], [LicenseCount], [OldPk], [Type]) VALUES (N'21t1h5s9fa', N'test_item', N'', N'Test Item', N'', N'Test Item 1 so there's something here to look at. This text can use Markdown.', N'', 0, N'Big Time LLC', NULL, NULL, N'', N'', N'', 1, 0, CAST(150.0000 AS Decimal(18, 4)), CAST(0.0000 AS Decimal(18, 4)), CAST(0.0000 AS Decimal(18, 4)), CAST(0.0000 AS Decimal(18, 4)), CAST(0.0000 AS Decimal(18, 4)), CAST(0.0000 AS Decimal(18, 4)), CAST(N'1900-01-02T00:00:00.0000000' AS DateTime2), 1, 0, CAST(0.0000 AS Decimal(18, 4)), CAST(0.0000 AS Decimal(18, 4)), NULL, NULL, NULL, 0, NULL, NULL, NULL, CAST(0.0000 AS Decimal(18, 4)), 0, 1, 0, 100608, NULL)
+";
+
+            if (Db.ExecuteNonQuery(sql) < 0)
+            {
+                SetError(Db.ErrorMessage);
+                return false;
+            }
+
+
             return true;
         }
     }
