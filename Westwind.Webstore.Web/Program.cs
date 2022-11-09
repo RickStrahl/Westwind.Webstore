@@ -7,12 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
@@ -280,6 +280,8 @@ app.UseStatusCodePages(new StatusCodePagesOptions
     {
         if (ctx.HttpContext.Response.StatusCode == 404)
         {
+            // throw an exception so it shows as an error page
+            //  404 has special handling in `/home/error`
             throw new HttpRequestException("Page not  found: " + ctx.HttpContext.Request.Path, null, statusCode: System.Net.HttpStatusCode.NotFound);
         }
         else if (ctx.HttpContext.Response.StatusCode == 401)
@@ -298,9 +300,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.UseCors("CorsPolicy");
-
-
-
 
 app.UseEndpoints(endpoints =>
 {
