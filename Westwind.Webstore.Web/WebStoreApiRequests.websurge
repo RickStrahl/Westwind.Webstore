@@ -39,7 +39,7 @@ WebSurge-Request-Group: Licensing
 
 GET /invoice/sendorderconfirmations/737f2fde HTTP/1.1
 Accept-Encoding: gzip,deflate
-Websurge-Request-Name: SendOrderConfirmations
+Websurge-Request-Name: Send Order Confirmations
 
 ------------------------------------------------------------------
 

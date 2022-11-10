@@ -79,6 +79,9 @@
             .manage-license-link {
                 display: none;
             }
+            .not-printable {
+                display:  none;
+            }
         }
     </style>
 </head>
@@ -157,7 +160,7 @@
                              });
                         }
                     </script>
-                   <a class="btn btn-secondary btn-sm float-end" style="margin-top: -0.3em;" onclick="confirmProducts()"
+                   <a class="btn btn-secondary btn-sm float-end not-printable" style="margin-top: -0.3em;" onclick="confirmProducts()"
                       title="Resend order email confirmations for all items that are electronically delivered.">
                        <i class="fad fa-envelopes-bulk fa-fw"></i>
                        Resend confirmations
