@@ -267,7 +267,11 @@
         }
     </style>
 
-
+    <script>
+        function invoiceClick(invNo) {               
+           location.href='/invoice/' + invNo;
+        }
+    </script>
     <table class="table table-hover">
         <tbody>
         @foreach (InvoiceListItem invoice in invoiceList)
@@ -283,19 +287,15 @@
                 color = "background: #effffa";
             else if (invoice.Status == "REFUNDED" || invoice.Status == "VOID" || invoice.Status == "VOIDED")
                 color = "background: #e9e1ff";
-            <script>
-                function invoiceClick() {                    
-                   location.href='/invoice/@invoice.InvoiceNumber';
-                }
-            </script>
+      
             <tr style="@color">
                 <div style="background: #e9e1ff"></div>
                 @* <tr onclick="window.open('/admin/ordermanager/@invoice.InvoiceNumber','','width=1020,height=1220'); return false;"> *@
-                <td class="small" onclick="invoiceClick()">
+                <td class="small" onclick="invoiceClick('@invoice.InvoiceNumber')">
                     <b class="text-info">@invoice.InvoiceNumber</b><br/>
                     <i style="font-size: 0.7em">@TimeUtils.FriendlyDateString(invoice.InvoiceDate)</i>
                 </td>
-                <td onclick="invoiceClick()">
+                <td onclick="invoiceClick('@invoice.InvoiceNumber')">
                     @if (!string.IsNullOrEmpty(invoice.Company))
                     {
                         <b>@invoice.Company -</b>
@@ -352,7 +352,7 @@
                            class="invoice-link btn btn-sm btn-default hidable" title="show/print/export invoice">
                             <i class="fas fa-print text-info"></i>
 
-                        </a>
+                        </a>                        
                     </span>
                 </td>
             </tr>

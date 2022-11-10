@@ -6,14 +6,14 @@
 
     // Full InvoiceModel Entity from View Model
     var invoice = Model.InvoiceModel.Invoice;
-    string title = "InvoiceModel # " + invoice.InvoiceNumber;
-
+    string title = "Invoice # " + invoice.InvoiceNumber;
+    
 }
 <!DOCTYPE html>
 <html>
 <head>
     <base href="@wsApp.Configuration.ApplicationHomeUrl" />
-    <title>@(title)</title>
+    <title>@(title) - @wsApp.Configuration.Company</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -91,6 +91,7 @@
         <i class="fad fa-print"></i>
         print invoice
     </button>
+
     <a class="btn btn-secondary btn-sm" href="/account/profile" 
        title="Go to profile"
     >
@@ -140,6 +141,29 @@
         <partial name="OrderAddress_Partial" model="invoice" />
         
         <h3 class="page-header-text mt-2">
+               @if (invoice.CreditCardResult.IsApproved())
+               {
+                   <script>                        
+                        function confirmProducts() { 
+                            ajaxJson("/invoice/sendorderconfirmations/@invoice.InvoiceNumber",
+                            null,
+                            function (result) {
+                                if (result.isError || !result.data) {
+                                    toastr.error("Order confirmations failed to send: " + result.message);
+                                }
+                                else {
+                                    toastr.success("Email confirmations sent to @invoice.Customer.Email");
+                                }
+                             });
+                        }
+                    </script>
+                   <a class="btn btn-secondary btn-sm float-end" style="margin-top: -0.3em;" onclick="confirmProducts()"
+                      title="Resend order email confirmations for all items that are electronically delivered.">
+                       <i class="fad fa-envelopes-bulk fa-fw"></i>
+                       Resend confirmations
+                   </a>
+               }
+
             <i class="fad fa-list"></i>
             Items purchased
         </h3>
@@ -173,6 +197,11 @@
     
     </div>
 </div>
+
+<script src="/lib/jquery/dist/jquery.min.js"></script>
+<script src="/lib/westwind.jquery.js"></script>
+<script src="/lib/toastr/build/toastr.min.js"></script>
+<link href="/lib/toastr/build/toastr.css" rel="stylesheet" />
 
 </body>
 </html>

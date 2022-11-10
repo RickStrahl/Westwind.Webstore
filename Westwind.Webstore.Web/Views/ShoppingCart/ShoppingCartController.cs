@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Westwind.AspNetCore.Extensions;
+using Westwind.AspNetCore.Messages;
 using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
@@ -603,7 +604,7 @@ Nonce:      {inv.CreditCard.Nonce}";
             var invoiceBusiness = BusinessFactory.GetInvoiceBusiness();
             var invoice = invoiceBusiness.LoadByInvNo(invoiceNo);
 
-            if(invoice == null)return RedirectToAction("Index");
+            if(invoice == null) return RedirectToAction("Index");
 
             if (invoice.IsTemporary)
             {
@@ -642,6 +643,42 @@ Nonce:      {inv.CreditCard.Nonce}";
 
             return View(model);
         }
+
+        /// <summary>
+        /// Sends email confirmations
+        /// </summary>
+        /// <param name="invoiceNo"></param>
+        /// <returns></returns>
+        [HttpGet,Route("invoice/sendorderconfirmations/{invoiceNo}")]
+        public ApiResponse<bool> SendProductConfirmations(string invoiceNo)
+        {
+            var response = new ApiResponse<bool>() {IsError = true};
+
+            var invoiceBusiness = BusinessFactory.GetInvoiceBusiness();
+            var invoice = invoiceBusiness.LoadByInvNo(invoiceNo);
+
+            if (invoice == null || invoice.IsTemporary)
+            {
+                response.Message = "Invalid invoice.";
+                return response;
+            }
+
+            // Only allow access for user who created this invoice - or admin
+            if (!AppUserState.IsAdmin && invoice.CustomerId != AppUserState.UserId)
+            {
+                response.Message = "Cannot access invoice - please log in first.";
+                return response;
+            }
+
+            response.Data = invoiceBusiness.SendEmailItemConfirmations();
+            response.IsError = !response.Data;
+            if (!response.Data)
+                response.Message = invoiceBusiness.ErrorMessage;
+
+            return response;
+        }
+
+
 
         #endregion
 
