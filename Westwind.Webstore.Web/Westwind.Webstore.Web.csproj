@@ -15,7 +15,7 @@
     <PackageReference Include="Westwind.AspnetCore.Markdown" Version="3.9.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
-    <PackageReference Include="Westwind.Data.EfCore" Version="4.1.0" />
+    <PackageReference Include="Westwind.Data.EfCore" Version="5.0.0" />
     <PackageReference Include="Westwind.Globalization.AspnetCore" Version="3.1.5" />
     <PackageReference Include="Westwind.Utilities" Version="3.1.15" />
   </ItemGroup>
