@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Hosting
 @using System.Runtime.InteropServices
+@using System.Globalization
 @model Westwind.Webstore.Web.Views.Admin.AdminViewModel;
 @inject IWebHostEnvironment Environment
 @{
@@ -68,7 +69,9 @@
         <div class="header-byline mb-2">
         os: @RuntimeInformation.OSDescription &bull;
         user: @System.Environment.UserName &bull;
-        started: @wsApp.Constants.AppStartedOn
+        started: @wsApp.Constants.AppStartedOn &bull;
+        
+        cur: @((110.10).ToString("c")) - @CultureInfo.CurrentUICulture.Name - @CultureInfo.CurrentUICulture.NumberFormat.CurrencySymbol
         </div>
         
         
