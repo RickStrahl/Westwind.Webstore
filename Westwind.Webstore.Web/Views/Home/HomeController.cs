@@ -222,6 +222,8 @@ body {{ font-family: sans-serif }}
                 invoice.IsTemporary = false;
                 invoiceBus.UpdateCustomerReferences(customer);
 
+                invoice.Notes = model.MvpLink + "\n\n" + model.CustomerNotes;
+
                 if (model.ReceiveMarkdownMonster)
                     invoiceBus.AddLineItem("markdown_monster_2_mvp");
                 if (model.ReceiveWebSurge)
