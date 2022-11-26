@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using AutoMapper;
 using Westwind.Webstore.Business.Entities;
+using Westwind.Webstore.Web.Service;
 using Westwind.Webstore.Web.Views;
 
 namespace Westwind.WebStore.App
@@ -32,6 +33,7 @@ namespace Westwind.WebStore.App
             {
                 // MapInstrumentationParameterModels(cfg);
                 MapAccountModels(cfg);
+                MapProductModels(cfg);
             });
 
             return config.CreateMapper();
@@ -59,13 +61,13 @@ namespace Westwind.WebStore.App
 
             cfg.CreateMap<Customer, OrderFormFastViewModel>()
                 .ReverseMap();
+        }
 
+        public static void MapProductModels(IMapperConfigurationExpression cfg)
+        {
+            cfg.CreateMap<Product, ProductApiModel>()
+                .ReverseMap();
 
-                // cfg.CreateMap<Privilege, PrivilegeResultModel>()
-                //     .ReverseMap();
-                //
-                // cfg.CreateMap<UserInfo, UserResultModel>()
-                //     .ReverseMap();
         }
     }
 }

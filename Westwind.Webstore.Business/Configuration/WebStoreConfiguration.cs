@@ -212,6 +212,8 @@ namespace Westwind.Webstore.Business
 
         public ErrorDisplayModes ErrorDisplayMode { get; set; } = ErrorDisplayModes.Application;
         public int CookieTimeoutDays { get; set; } = 2;
+
+        public bool ShowConsoleRequestTimings { get; set; }
     }
 
     public enum ErrorDisplayModes

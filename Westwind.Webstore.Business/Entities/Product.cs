@@ -194,8 +194,14 @@ namespace Westwind.Webstore.Business.Entities
         #region Item Registration
 
 
+        /// <summary>
+        /// Confirmation text for item.
+        /// </summary>
         public string RegistrationItemConfirmation { get; set; }
 
+        /// <summary>
+        /// Registration Password or License Key
+        /// </summary>
         public string RegistrationPassword { get; set; }
 
         /// <summary>

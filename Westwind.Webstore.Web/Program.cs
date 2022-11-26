@@ -5,11 +5,13 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Azure.Core;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -27,10 +29,13 @@ using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Serilog;
 using Westwind.AspNetCore.Errors;
+using Westwind.AspNetCore.Extensions;
 using Westwind.AspNetCore.LiveReload;
 using Westwind.AspNetCore.Middleware;
 using Westwind.Globalization;
 using Westwind.Globalization.AspnetCore;
+using Westwind.Globalization.AspnetCore.Utilities;
+using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 
@@ -189,13 +194,11 @@ var app = builder.Build();
 Task.Run(() =>
 {
     // DI doesn't work here because no request scope (DbContextOptions)
-
     //var factory = BusinessFactory.CreateFactoryWithProvider();
     //var lookups = factory.GetLookupBusiness();
-
     var lookups = app.Services.GetService<LookupBusiness>();
     var res = lookups.GetPromoCodePercentage("RESELLER");
-    Console.WriteLine("Lookup retrieved.");
+    Console.WriteLine("EF pre-loading completed.");
 });
 
 if(wsApp.Configuration.System.LiveReloadEnabled)
@@ -216,6 +219,8 @@ else
 }
 if (wsApp.Configuration.System.RedirectToHttps)
     app.UseHsts();
+
+
 
 var supportedCultures = new[]
 {
@@ -300,6 +305,33 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.UseCors("CorsPolicy");
+
+if (wsApp.Configuration.System.ShowConsoleRequestTimings)
+{
+    app.Use(async (ctx, next) =>
+    {
+        ctx.Request.EnableBuffering();
+        var timer = new Stopwatch();
+        timer.Start();
+
+        await next(ctx);
+
+        timer.Stop();
+        var method = ctx.Request.Method;
+        Console.WriteLine( method + " " + wsApp.Configuration.ApplicationHomeUrl.TrimEnd('/',' ') +  ctx.Request.Path.Value  + " - " + timer.ElapsedMilliseconds.ToString("n0") + "ms");
+        if (method == "POST" || method == "PUT")
+        {
+            ctx.Request.Body.Position = 0;
+            var body = await ctx.Request.GetRawBodyStringAsync();
+            if (body != null)
+            {
+                if (body.Length > 2000)
+                    body = body.GetMaxCharacters(2000) + "...\n2,000 bytes of " + ctx.Request.ContentLength + " bytes.";
+                Console.WriteLine(body + "\n");
+            }
+        }
+    });
+}
 
 app.UseEndpoints(endpoints =>
 {

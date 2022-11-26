@@ -43,8 +43,6 @@ namespace Westwind.Webstore.Web.Controllers
             PersistUserState();
         }
 
-
-
         protected void CreateUserState()
        {
             // Create UserState

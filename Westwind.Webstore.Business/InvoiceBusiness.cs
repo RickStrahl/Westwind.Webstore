@@ -668,7 +668,6 @@ namespace Westwind.Webstore.Business
         /// <returns></returns>
         public bool UpdateLineItemsLicenses(bool force = false, bool saveInvoice = false)
         {
-
             // Check if we should apply licensing at all
             if (!wsApp.Configuration.Licensing.IsLicensingEnabled ||
                 !Entity.CreditCardResult.IsApproved())
