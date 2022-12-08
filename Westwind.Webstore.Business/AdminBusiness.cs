@@ -125,16 +125,24 @@ order by Sku, InvoiceDate Desc
             if (File.Exists(zipFile))
                 File.Delete(zipFile);
 
+            var productImagesFolder = Path.Combine(basePath, "product-images");
+
             // TODO: Use Configured image path once we upload to a custom image path (not implemented yet)
             // also copy images folder
-            FileUtils.CopyDirectory("./wwwroot/images/product-images", Path.Combine(basePath, "product-images"), true, true);
+            FileUtils.CopyDirectory("./wwwroot/images/product-images", productImagesFolder, true, true);
 
             try
             {
                 ZipFile.CreateFromDirectory(basePath, zipFileTemp);
+
+                // delete .bak file and product-images files
                 File.Delete(serverBackupFilename);
+                Directory.Delete(productImagesFolder,true);
+
                 File.Move(zipFileTemp, zipFile);
+
                 Directory.Delete(tpath);
+
             }
             catch (Exception ex)
             {

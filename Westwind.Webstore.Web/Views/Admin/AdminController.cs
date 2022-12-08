@@ -29,6 +29,7 @@ namespace Westwind.Webstore.Web.Views.Admin
         {
             BusinessFactory = businessFactory;
             AppLifeTime = lifetime;
+
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -43,6 +44,9 @@ namespace Westwind.Webstore.Web.Views.Admin
             }
 
             await next();
+
+            // Clear out temp folder files older than 5 minutes
+            FileUtils.DeleteTimedoutFiles(Path.Combine(Request.MapPath("/temp"), "*.*"), 300);
         }
 
 
