@@ -78,11 +78,16 @@ namespace Westwind.Webstore.Web.Controllers
             using (var busItem = BusinessFactory.GetProductBusiness())
             {
                 model.Item = busItem.LoadBySku(sku.ToLower());
+                if (model.Item == null)
                 {
-                    if (model.Item == null)
-                        return Products(null,null,null);
+                    return Products(null, null, null);
+                }
+                if (!string.IsNullOrEmpty(model.Item.RedirectUrl))
+                {
+                    return RedirectPermanent(model.Item.RedirectUrl);
                 }
             }
+
 
             model.Prepare();
             return View("Product",model);
