@@ -2,11 +2,9 @@
 
 ## Bugs
 
-* Fix Backup
+* Order Manager: Invalid Order Number blows up
 * Fix permissions to log files
-* Fix logging for 404 (Exception routing    )
+* Fix logging for 404 (Exception routing)
 
 ## Features
-
-* Product and Order APIs
 
