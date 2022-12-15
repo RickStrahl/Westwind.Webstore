@@ -6,13 +6,27 @@
 }
 <div class="container">
     <form action="" method="post">
-        <h1 class="page-header-text">West Wind Products for MVPs and Microsoft Employees</h1>
+        <h1 class="page-header-text">
+            <i class="fad fa-tags"></i>
+            Discount Pricing for West Wind Products
+        </h1>
+    
         <p>
-            We provide Microsoft Most Valuable Professionals, ASP.NET Insiders and Microsoft Employees 
-            with complimentary licenses to <b>Markdown Monster</b> and <b>West Wind Web Surge</b>.
+            We know that in some locations in the world, pricing in US Dollars can be prohibitively expensive.
         </p>
         <p>
-            To request a free license, please fill out the form below.
+            To help make it easier and more fair to purchase a legal copy of our products,
+            we offer discount pricing for many locations around the world using a simple formula <b>based
+            on the <a href="https://fxssi.com/big-mac-index" target="_blank">Big Mac Index</a></b> for adjustment.
+
+            Please fill out the form below and specify your country of residence, as well as a note to 
+            describe why you think you need a discount. 
+        </p>            
+        <p>
+            <b>Discount approval is at our discretion</b>, so please
+            provide a note with brief information on why you should receive a discount. If we approve your 
+            request you'll receive a discount code via email that you can use with an order to receive
+            the discount.
         </p>
 
         <error-display error-display-model="Model.ErrorDisplay"></error-display>
@@ -33,6 +47,7 @@
                                class="form-control"
                                aria-label="First name"
                                placeholder="First name"
+                               title="First name"
                                asp-for="Firstname"/>
                     </div>
                     <div class="input-group">
@@ -41,6 +56,7 @@
                                 class="form-control" 
                                 aria-label="Last name"
                                 asp-for="Lastname"
+                                title="Last name"
                                 placeholder="Last name" />
                     </div>
                 </div>
@@ -52,7 +68,7 @@
                         <input type="email"
                                id="txtEmail"
                                class="form-control"
-                               placeholder="Enter your Email address"
+                               placeholder="Email address"
                                asp-for="Email"
                                aria-label="Email"
                                title="Please enter a valid email address "
@@ -60,18 +76,18 @@
                                spellcheck="false"
                                autocorrect="off" required />
                     </div>
-                    <small>Email address must match your MVP or Insider Profile or for MS employees must be @@microsoft.com</small>
                 </div>
                 
             </div>
-            <div class="form-group">
-                <label class="control-label" for="Billing_City">City<sup>*</sup>, Country<sup>*</sup></label>
+            <div class="form-group mt-2">
+              
                 <div class="responsive-container">
                     <div class="input-group mb-0">
                         <span class="input-group-text"><i class="fad fa-location-dot fa-fw"></i></span>
                         <input asp-for="City"
                                class="form-control"
                                style="min-width: 280px"
+                               title="City"
                                placeholder="City"/>
                     </div>
                     <div class="input-group mb-0">
@@ -86,18 +102,7 @@
             </div>
         
         
-            <h3 class="page-header-text mt-3 mb-0">
-                <i class="fa fa-trophy"></i>
-                Your Award Info <br />
-            </h3>
-            <div class="header-byline mb-2">Provide a link to your MVP Award Profile</div>
-            
-            <div class="form-group">       
-                <div class="input-group mb-0">
-                    <span class="input-group-text"><i class="fad fa-file-certificate fa-fw"></i></span>
-                    <input asp-for="MvpLink"  placeholder="Mvp Profile Link" class="form-control" />
-                </div>
-            </div>
+           
         
         
             <h3 class="page-header-text mb-0">
@@ -124,7 +129,8 @@
                 <i class="far fa-info-circle"></i>
                 Leave us a note
             </h3>
-            <textarea asp-for="CustomerNotes" Height="125px" class="form-control" placeholder="Any notes or thoughts"></textArea>
+            <textarea asp-for="CustomerNotes" Height="125px" class="form-control" 
+                                placeholder="leave a brief note on why you are requesting a discounted license"></textArea>
             
     
 

@@ -107,9 +107,16 @@ body {{ font-family: sans-serif }}
         }
 
         [Route("/mvpperks")]
-        //[Route("/discountpricing")]
+        [Route("/discountpricing")]
         public IActionResult MvpPerks(MvpPerksViewModel model)
         {
+            var viewName = "MvpPerks";
+            if (Request.Path.Value.Contains("/discountpricing", StringComparison.OrdinalIgnoreCase))
+            {
+                model.IsDiscountRequest = true;
+                viewName = "DiscountPricing";
+            }
+
             bool isPostback = false;
             if (!Request.Method.Equals("POST", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -122,7 +129,7 @@ body {{ font-family: sans-serif }}
             }
 
             if (!isPostback)
-                return View(model);
+                return View(viewName,model);
 
             var validationErrors = new ValidationErrorCollection();
 
@@ -151,7 +158,7 @@ body {{ font-family: sans-serif }}
             {
                 model.ErrorDisplay.AddMessages(validationErrors, "");
                 model.ErrorDisplay.ShowError("Please fix the following errors");
-                return View(model);
+                return View(viewName,model);
             }
 
             StringBuilder sb = new StringBuilder();
