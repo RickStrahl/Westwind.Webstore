@@ -116,10 +116,11 @@ order by Sku, InvoiceDate Desc
             string zipFile = Path.ChangeExtension(serverBackupFilename, "zip");
 
             string zipFileTemp = zipFile.Replace("\\temp\\", "\\temp2\\");
-            var tpath = Path.GetDirectoryName(zipFileTemp);
+            var ziptpath = Path.GetDirectoryName(zipFileTemp);
+            Directory.Delete(ziptpath, true);
 
-            if (!Directory.Exists(tpath))
-                Directory.CreateDirectory(tpath);
+            if (!Directory.Exists(ziptpath))
+                Directory.CreateDirectory(ziptpath);
             if (File.Exists(zipFileTemp))
                 File.Delete(zipFileTemp);
             if (File.Exists(zipFile))
@@ -141,7 +142,7 @@ order by Sku, InvoiceDate Desc
 
                 File.Move(zipFileTemp, zipFile);
 
-                Directory.Delete(tpath);
+                Directory.Delete(ziptpath);
 
             }
             catch (Exception ex)
