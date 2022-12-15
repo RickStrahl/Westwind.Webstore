@@ -866,7 +866,7 @@ namespace Westwind.Webstore.Business
                     OnStatusMessage("Confirming " + descript + " to " + customer.Email);
 
                     var emailer = new Emailer();
-                    if (!emailer.SendEmail(customer.Email, descript + " (Order Confirmation)", regText, "text/plain"))
+                    if (!emailer.SendEmail(customer.Email, descript + " (Registration Confirmation)", regText, "text/plain"))
                     {
                         Error += $"Item {descript} failed to confirm: {emailer.ErrorMessage}";
                         OnStatusMessage(
