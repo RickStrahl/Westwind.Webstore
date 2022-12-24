@@ -1,24 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Westwind.AspNetCore.Security;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Westwind.Utilities;
-using Westwind.Utilities.Data;
 using Westwind.WebStore.App;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 using Westwind.Webstore.Web.App;
 using Westwind.Webstore.Web.Controllers;
-using Westwind.Webstore.Web.Views;
 
 
 namespace Westwind.Webstore.Web.Views
@@ -114,18 +103,16 @@ namespace Westwind.Webstore.Web.Views
 
         #region Profile Editing and Creation
 
-        [Route("account/profile/new")]
-        [AllowAnonymous]
-        public ActionResult NewProfile()
-        {
-            return Profile();
-        }
-
         [HttpGet]
         [Route("shoppingcart/orderprofile")]
         [Route("account/profile")]
-        public ActionResult Profile([FromQuery] string returnUrl = null)
+        [Route("profile")]
+        [Route("account/profile/new")]
+        [AllowAnonymous]
+        public ActionResult Profile([FromQuery] string returnUrl = null, string action = null)
         {
+            var isNewRequest = Request.Path.Value.Contains("/new");
+
             var userId = AppUserState.UserId;
 
             var model = CreateViewModel<ProfileViewModel>();
@@ -136,7 +123,9 @@ namespace Westwind.Webstore.Web.Views
 
             var customerBusiness = BusinessFactory.GetCustomerBusiness();
             Customer customer;
-            if (!AppUserState.IsAuthenticated())
+            if (!isNewRequest && !AppUserState.IsAuthenticated())
+                return Redirect("/account/signin?returnurl=/account/profile");
+            if (isNewRequest && !AppUserState.IsAuthenticated())
             {
                 customer = customerBusiness.Create();
                 model.IsNewUser = true;
@@ -160,6 +149,9 @@ namespace Westwind.Webstore.Web.Views
         [HttpPost]
         [Route("shoppingcart/orderprofile")]
         [Route("account/profile")]
+        [Route("profile")]
+        [Route("account/profile/new")]
+        [AllowAnonymous]
         public async Task<ActionResult> Profile(ProfileViewModel model)
         {
             var routeData = ControllerContext.RouteData;

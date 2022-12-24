@@ -4,7 +4,7 @@
 @model  ProfileViewModel
 @inject BusinessFactory BusinessFactory
 @{
-    ViewData["Title"] = "My Profile";
+    ViewData["Title"] = "My Profile - " + wsApp.Configuration.Company.CompanyName;
 
     bool isOrderProfile = Context.Request.Path.Value.Contains("/shoppingcart/");
     if (isOrderProfile)

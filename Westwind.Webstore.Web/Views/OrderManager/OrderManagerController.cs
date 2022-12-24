@@ -298,6 +298,7 @@ public class OrderManagerController : WebStoreBaseController
         var minvoice = model.Invoice;
         invoice.InvoiceDate = minvoice.InvoiceDate;
         invoice.Completed = minvoice.Completed;
+        invoice.ConfirmationEmail = minvoice.ConfirmationEmail;
         invoice.PoNumber = minvoice.PoNumber;
         invoice.CreditCardResult.ProcessingResult = minvoice.CreditCardResult.ProcessingResult;
         invoice.PromoCode = minvoice.PromoCode;
@@ -393,7 +394,7 @@ public class OrderManagerController : WebStoreBaseController
         }
         else
         {
-            result = invoiceBus.SendEmailItemConfirmations();
+            result = invoiceBus.SendEmailProductConfirmations();
 
             if (!result)
             {
@@ -454,7 +455,7 @@ public class OrderManagerController : WebStoreBaseController
         if (invoice == null)
             return Redirect("/admin/ordermanager");
 
-       var result =  invoiceBus.SendEmailItemConfirmations();
+       var result =  invoiceBus.SendEmailProductConfirmations();
 
        var message = "Product Email confirmation sent.";
        var icon = "success";

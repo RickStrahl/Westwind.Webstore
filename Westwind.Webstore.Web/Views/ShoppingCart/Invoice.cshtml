@@ -13,7 +13,7 @@
 <html>
 <head>
     <base href="@wsApp.Configuration.ApplicationHomeUrl" />
-    <title>@(title) - @wsApp.Configuration.Company</title>
+    <title>@(title) - @(wsApp.Configuration.Company.CompanyName)</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -161,8 +161,9 @@
                         }
                     </script>
                    <a class="btn btn-secondary btn-sm float-end not-printable" style="margin-top: -0.3em;" onclick="confirmProducts()"
-                      title="Resend order email confirmations for all items that are electronically delivered.">
-                       <i class="fad fa-envelopes-bulk fa-fw"></i>
+                      title="Resend email confirmations for all products that are electronically delivered.
+Email to: @(string.IsNullOrEmpty(invoice.ConfirmationEmail) ? invoice.Customer.Email : invoice.ConfirmationEmail)">
+                       <i class="fad fa-envelopes-bulk fa-fw float-left"></i>
                        Resend confirmations
                    </a>
                }

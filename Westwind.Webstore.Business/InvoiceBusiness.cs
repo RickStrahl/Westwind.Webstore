@@ -823,7 +823,7 @@ namespace Westwind.Webstore.Business
         /// the message is posted to this link.
         /// </summary>
         /// <returns></returns>
-        public bool SendEmailItemConfirmations()
+        public bool SendEmailProductConfirmations()
         {
             if (Entity.LineItems.Count < 1)
             {
@@ -865,8 +865,12 @@ namespace Westwind.Webstore.Business
 
                     OnStatusMessage("Confirming " + descript + " to " + customer.Email);
 
+                    var email = invoice.ConfirmationEmail;
+                    if (string.IsNullOrEmpty(email))
+                        email = customer.Email;
+
                     var emailer = new Emailer();
-                    if (!emailer.SendEmail(customer.Email, descript + " (Registration Confirmation)", regText, "text/plain"))
+                    if (!emailer.SendEmail(email, descript + " (Registration Confirmation)", regText, "text/plain"))
                     {
                         Error += $"Item {descript} failed to confirm: {emailer.ErrorMessage}";
                         OnStatusMessage(

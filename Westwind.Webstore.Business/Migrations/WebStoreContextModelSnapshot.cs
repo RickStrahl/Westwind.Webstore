@@ -17,10 +17,10 @@ namespace Westwind.Webstore.Business.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.7")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Westwind.Webstore.Business.Entities.Address", b =>
                 {
@@ -191,6 +191,9 @@ namespace Westwind.Webstore.Business.Migrations
 
                     b.Property<DateTime?>("Completed")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("ConfirmationEmail")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CustomerId")
                         .HasMaxLength(20)

@@ -57,6 +57,15 @@ namespace Westwind.Webstore.Business.Entities
         /// </summary>
         public string SoldBy { get; set; }
 
+
+        /// <summary>
+        /// Optional email address that's different than the customer's email
+        /// on this order to allow product confirmations for resellers.
+        ///
+        /// Used only on Product Confirmations, not on order confirmations.
+        /// </summary>
+        public string ConfirmationEmail { get; set;  }
+
         #region Child Entities
 
         /// <summary>
