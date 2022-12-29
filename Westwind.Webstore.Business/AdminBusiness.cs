@@ -117,7 +117,8 @@ order by Sku, InvoiceDate Desc
 
             string zipFileTemp = zipFile.Replace("\\temp\\", "\\temp2\\");
             var ziptpath = Path.GetDirectoryName(zipFileTemp);
-            Directory.Delete(ziptpath, true);
+            if(Directory.Exists(ziptpath))
+                Directory.Delete(ziptpath, true);
 
             if (!Directory.Exists(ziptpath))
                 Directory.CreateDirectory(ziptpath);
