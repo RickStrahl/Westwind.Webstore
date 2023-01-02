@@ -51,11 +51,6 @@ namespace Westwind.Webstore.Business.Entities
         /// </summary>
         public string Categories { get; set;  }
 
-        /// <summary>
-        /// Determines whether the item is a physical or virtual item (software)
-        /// that can be digitally shipped
-        /// </summary>
-        public bool IsStockItem { get; set;  }
 
         /// <summary>
         /// Optional Manufacturer
@@ -121,6 +116,20 @@ namespace Westwind.Webstore.Business.Entities
         [Column(TypeName = "decimal(18,4)")]
         public decimal Cost { get; set; }
 
+
+        /// <summary>
+        /// Determines whether the item is a physical or virtual item (software)
+        /// that can be digitally shipped
+        /// </summary>
+        public bool IsStockItem { get; set;  }
+
+        /// <summary>
+        /// Number of items that are available for physical items
+        /// </summary>
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Stock { get; set; }
+
+
         /// <summary>
         /// Weight of the item if physical. Can be used to calculate
         /// shipping.
@@ -128,11 +137,6 @@ namespace Westwind.Webstore.Business.Entities
         [Column(TypeName = "decimal(18,4)")]
         public decimal Weight { get; set; }
 
-        /// <summary>
-        /// Number of items that are available for physical items
-        /// </summary>
-        [Column(TypeName = "decimal(18,4)")]
-        public decimal Stock { get; set; }
 
         /// <summary>
         /// Number of items that are on order/expected. Use in
@@ -152,16 +156,8 @@ namespace Westwind.Webstore.Business.Entities
         /// </summary>
         public bool IsFractional { get; set; }
 
-        /// <summary>
-        /// Determines whether this is a physical item with actual
-        /// stock that needs to be updated.
-        /// </summary>
-        public bool IsPhysical { get; set; }
 
-        /// <summary>
-        /// Don't show on the Web or in 'public' lists
-        /// </summary>
-        //public bool NoWeb { get; set; }
+
 
         #endregion
 

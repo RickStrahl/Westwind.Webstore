@@ -274,20 +274,12 @@
     </script>
     <table class="table table-hover">
         <tbody>
+        
+        
         @foreach (InvoiceListItem invoice in invoiceList)
         {
-            var color = string.Empty;
-            if (@invoice.Status == "AUTHORIZED")
-                color = "background: cornsilk;";
-            else if (invoice.Status == "UNPROCESSED" || string.IsNullOrEmpty(invoice.Status))
-                color = "background:  #f9f9f9;";
-            else if (invoice.Status == "DUE AND PAYABLE")
-                color = "background:   #ffeeee;";
-            else if (invoice.Status == "APPROVED")
-                color = "background: #effffa";
-            else if (invoice.Status == "REFUNDED" || invoice.Status == "VOID" || invoice.Status == "VOIDED")
-                color = "background: #e9e1ff";
-      
+            var color = "background: " + Invoice.StatusColor(invoice.Status);
+
             <tr style="@color">
                 <div style="background: #e9e1ff"></div>
                 @* <tr onclick="window.open('/admin/ordermanager/@invoice.InvoiceNumber','','width=1020,height=1220'); return false;"> *@
@@ -352,7 +344,7 @@
                            class="invoice-link btn btn-sm btn-default hidable" title="show/print/export invoice">
                             <i class="fas fa-print text-info"></i>
 
-                        </a>                        
+                        </a>
                     </span>
                 </td>
             </tr>

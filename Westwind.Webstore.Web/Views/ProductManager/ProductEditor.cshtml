@@ -85,7 +85,7 @@
         </label>
         <label class="ps-3 pe-3" title="This item is not an electronic item that has to be shipped or picked up.">
             <input type="checkbox"
-                   asp-for="Product.IsPhysical"/>
+                   asp-for="Product.IsStockItem"/>
             Physical
         </label>
         <label title="This item supports fractional quantities when adding to an order.">
@@ -365,7 +365,7 @@
     Allow auto-registration
 </label>
 
-<div >
+<div>
     <label>
         <input type="checkbox" asp-for="Product.UseLicensing"/>
         Use Licensing
@@ -373,11 +373,10 @@
 
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
-    <label class="ml-4" style="display: inline"># of Uses per License: </label>
+    <label class="ml-4" style="display: inline"># of Devices per License: </label>
     <input type="number" class="form-control d-inline " style="width: 5em; display: inline !important"
            asp-for="Product.LicenseCount"
            asp-format="{0:0}"/>
-
 </div>
 
 

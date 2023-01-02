@@ -196,7 +196,7 @@
                 ddButtonClass = "primary";
             }
             
-            <div class="btn-group">
+            <div class="btn-group btn-group-sm">
                 <button type="button" class="btn btn-@ddButtonClass dropdown-toggle dropdown-toggle-split"
                         title="Custom email address for product confirmations"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -218,8 +218,6 @@
                     Product Confirmations
                 </button>
             </div>
-            
-          
         }
 
         @* @if (rawPaymentStatus == "APPROVED" || *@
@@ -245,7 +243,7 @@
            class="form-text"
            ondblclick="location.href='@transactionLink'"
            asp-for="Invoice.CreditCardResult.ProcessingResult"
-           style="border: none; color: inherit" 
+           style="border: none; color: @Invoice.StatusColor(invoice.CreditCardResult.ProcessingResult,true)" 
            title="Payment status - double click to lookup transaction"
            placeholder="UNPROCESSED"/>
 </div>    
@@ -334,6 +332,9 @@
         <i class="fad fa-eye"></i>
         Full invoice detail
     </a>
+    @{
+        Model.Invoice.Customer.Password = null;
+    }
     <pre style="display: none" id="InvoiceDetail">@JsonSerializationUtils.Serialize(Model.Invoice, formatJsonOutput: true)</pre>
 </div>
     
@@ -354,9 +355,9 @@
         });
     </script>
 }
-<script>
-window.globals = {
-    invoiceNumber: "@invoice.InvoiceNumber"
-};
-</script>
-<script src="/scripts/InvoiceEditor.js"></script>
+@* <script> *@
+@* window.globals = { *@
+@*     invoiceNumber: "@invoice.InvoiceNumber" *@
+@* }; *@
+@* </script> *@
+@* <script src="/scripts/InvoiceEditor.js"></script> *@

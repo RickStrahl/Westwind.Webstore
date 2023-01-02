@@ -301,6 +301,61 @@ namespace Westwind.Webstore.Business.Entities
                      string.IsNullOrEmpty(CreditCardResult.TransactionId));
         }
 
+
+        /// <summary>
+        /// Returns the status HTML color to display for
+        /// a given status.
+        ///
+        /// Used for backgrounds typically as these colors tend to be
+        /// on the light side to support normal dark text.
+        /// </summary>
+        /// <param name="status">Optional - status to </param>
+        /// <param name="foregroundColor">not implemented yet - color is background color only</param>
+        /// <returns></returns>
+        public static string StatusColor(string status, bool foregroundColor = false)
+        {
+            status = status?.ToUpper();
+            string color = "";
+
+            if (!foregroundColor)
+            {
+                if (string.IsNullOrEmpty(status) || status == "UNPROCESSED")
+                    color = "#f9f9f9;";
+                else if (status == "AUTHORIZED")
+                    color = "cornsilk;";
+                else if (status == "DUE AND PAYABLE")
+                    color = "#ffeeee;";
+                else if (status == "APPROVED" || status == "PAID IN FULL")
+                    color = "#effffa";
+                else if (status == "REFUNDED" || status == "VOID" || status == "VOIDED")
+                    color = "#e9e1ff";
+                else if (status == "DECLINED")
+                    color = "#e4cecd"; // red lighter
+                else if (status == "FRAUD")
+                    color = "#ec4946"; // red darker
+            }
+            else
+            {
+                color = "#333";
+                if (string.IsNullOrEmpty(status) || status == "UNPROCESSED")
+                    color = "#999";
+                else if (status == "AUTHORIZED")
+                    color = "Orange";
+                else if (status == "DUE AND PAYABLE")
+                    color = "GoldenRod";
+                else if (status == "APPROVED" || status == "PAID IN FULL")
+                    color = "Green";
+                else if (status == "REFUNDED" || status == "VOID" || status == "VOIDED")
+                    color = "Pink";
+                else if (status == "DECLINED")
+                    color = "FireBrick"; // red lighter
+                else if (status == "FRAUD")
+                    color = "Red"; // red darker
+            }
+
+            return color;
+        }
+
         public override string ToString()
         {
             if (Customer != null)
@@ -401,6 +456,7 @@ namespace Westwind.Webstore.Business.Entities
             return ProcessingResult != null &&
                    ProcessingResult.Equals("APPROVED", StringComparison.OrdinalIgnoreCase);
         }
+
 
 
         public override string ToString()
