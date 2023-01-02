@@ -75,7 +75,6 @@ namespace Westwind.Webstore.Web.Service
             };
         }
 
-
         [HttpGet]
         [Route("adminservice/products")]
         public IEnumerable<Product> GetProducts(string searchTerm)
@@ -96,6 +95,7 @@ namespace Westwind.Webstore.Web.Service
                 SortOrder = CustomerListSortOrder.Entered,
                 MaxItems = 5000
             });
+
 
             return custList;
         }

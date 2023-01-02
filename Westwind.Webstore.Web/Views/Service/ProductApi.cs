@@ -119,7 +119,6 @@ namespace Westwind.Webstore.Web.Service
 
         public bool IsFractional { get; set; }
 
-        public bool IsPhysical { get; set; }
 
         public bool UseLicensing { get; set;  }
 
