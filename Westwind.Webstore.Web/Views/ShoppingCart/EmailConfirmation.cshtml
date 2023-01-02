@@ -135,7 +135,7 @@
 
     <p>
         Thank you for your order in the West Wind Web Store.
-        Your order number is <b>@invoice.InvoiceNumber</b> for a total of <b>@invoice.InvoiceTotal.ToString("c2")</b>.
+        Your order number is <b>@invoice.InvoiceNumber</b> for a total of <b>$@invoice.InvoiceTotal.ToString("n2")</b>.
     </p>
 
     <p>
@@ -148,10 +148,15 @@
     <blockquote>
         <b>Important Note:</b><br/>
         Please ensure that you can receive email at the address you specified.
-        To be on the safe side you might want to add <b><i>@wsApp.Configuration.Email.SenderEmail</i></b>
+        To be on the safe side you might add <b><i>@wsApp.Configuration.Email.SenderEmail</i></b>
         to your safe sender's list. If you don't get this confirmation email
         within a couple of hours please check your Spam folder and
         if you still can't find it <a href="mailto:@wsApp.Configuration.Email.SenderEmail">contact us</a>.
+        <br/>
+        <br/>
+        You can also access this and previous orders through your <a href="@(wsApp.Configuration.ApplicationHomeUrl)account/profile">@wsApp.Configuration.Company.CompanyName profile</a>
+        where you can confirm order status, order history and retrieve license codes.
+        
     </blockquote>
 
     <p>
