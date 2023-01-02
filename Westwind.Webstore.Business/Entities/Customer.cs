@@ -336,14 +336,18 @@ namespace Westwind.Webstore.Business.Entities
             {
                 if (!string.IsNullOrEmpty(this.City))
                     sb.Append(City + ", ");
-                sb.Append((State + " ") + PostalCode);
+                if (!string.IsNullOrEmpty(State))
+                    sb.Append((State + " ") + PostalCode);
+                else
+                    sb.Append("Postal Code: " + PostalCode);
+
                 sb.AppendLine();
             }
 
             string country = null;
-            if (!string.IsNullOrEmpty(CountryCode) && CountryCode != wsApp.Configuration.DefaultCountryCode)
+            if (!string.IsNullOrEmpty(CountryCode)) // && CountryCode != wsApp.Configuration.DefaultCountryCode)
             {
-                country = wsApp.Countries?.FirstOrDefault(c => c.CountryCode == CountryCode)?.Country;
+                country = GetCountryFromCode(CountryCode);
                 if (!string.IsNullOrEmpty(country))
                     sb.AppendLine(country);
             }
