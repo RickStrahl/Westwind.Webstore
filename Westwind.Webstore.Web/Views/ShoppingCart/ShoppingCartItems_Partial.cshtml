@@ -68,7 +68,7 @@
                         }
                         @if (item.Quantity > 1 || item.DiscountPercent > 0.0001M)
                         {
-                            <span class="item-price ps-2reselle" title="per item price">@item.Price.ToString("c")</span>
+                            <span class="item-price ps-2reselle" title="per item price">@(wsApp.Configuration.CurrencySymbol)@item.Price.ToString("n")</span>
                         }
                         @if (item.DiscountPercent > 0.0001M)
                         {
@@ -163,7 +163,7 @@
                 <tr>
                     <td class="right">Shipping:</td>
                     <td class="invoice-subtotal">
-                        $@invoice.Shipping.ToString("n")
+                        @(wsApp.Configuration.CurrencySymbol)$@invoice.Shipping.ToString("n")
                     </td>
                 </tr>
             }

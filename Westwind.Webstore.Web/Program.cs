@@ -229,11 +229,13 @@ var supportedCultures = new[]
     // new CultureInfo("de-DE"),
     // new CultureInfo("de")
 };
-app.UseRequestLocalization(new RequestLocalizationOptions
+app.UseRequestLocalization(options =>
 {
-    DefaultRequestCulture = new RequestCulture("en-US"),
-    SupportedCultures = supportedCultures,
-    SupportedUICultures = supportedCultures
+    var cult = new RequestCulture("en-US");
+    //cult.Culture.NumberFormat.CurrencySymbol = wsApp.Configuration.CurrencySymbol;
+    options.DefaultRequestCulture = cult;
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
 });
 
 

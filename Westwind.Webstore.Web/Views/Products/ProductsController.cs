@@ -94,8 +94,9 @@ namespace Westwind.Webstore.Web.Controllers
         }
 
 
+
         [HttpGet, Route("api/product/search/{searchText}")]
-        public IActionResult ProductSearch(string searchText)
+        public IActionResult ApiProductSearch(string searchText)
         {
             List<object> list = new List<object>();
             using (var busItem = BusinessFactory.GetProductBusiness())

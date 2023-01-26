@@ -298,11 +298,17 @@
     </div>
 </div>
     
-   
-<div class="form-group mt-2">
-    <input asp-for="Invoice.BillingAddress.Telephone"
-           class="form-control" placeholder="phone number" />
-</div>
+<div class="responsive-container">
+    <div class="form-group mt-2">
+            <input asp-for="Invoice.BillingAddress.Email"
+                   class="form-control" placeholder="email used for this invoice"/>
+    </div>
+    <div class="form-group mt-2">
+        <input asp-for="Invoice.BillingAddress.Telephone"
+               class="form-control" placeholder="phone number"/>
+    </div>
+
+</div>   
 
 <h3 class="page-header-text mb-2">
     <i class="fad fa-notes"></i>

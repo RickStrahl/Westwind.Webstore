@@ -288,6 +288,11 @@ namespace Westwind.Webstore.Business.Entities
         /// </summary>
         public string Telephone {get; set; }
 
+        /// <summary>
+        /// Email Address at the time of the order
+        /// </summary>
+        public string Email { get; set;  }
+
 
         public bool IsEmpty()
         {

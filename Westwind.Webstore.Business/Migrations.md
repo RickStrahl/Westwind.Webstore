@@ -12,6 +12,8 @@ dotnet ef migrations add Invoice-Shipping-Adress-Added
 dotnet ef database update
 ```
 
+> Make sure that you are pointing at the correct database. The connection string will come from the local `_webstore-configuration.json` file in the WestStore.Business project folder and should be set there.
+
 ### Clear out Migrations and Start Over
 
 <small>[Blog Post](https://weblog.west-wind.com/posts/2016/Jan/13/Resetting-Entity-Framework-Migrations-to-a-clean-Slate)</small>

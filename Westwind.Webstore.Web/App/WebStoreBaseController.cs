@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Security.Claims;
 using System.Text;
@@ -12,6 +13,8 @@ using Westwind.AspNetCore;
 using Westwind.AspNetCore.Security;
 using Westwind.Webstore.Web.Models;
 using System.Security.Cryptography;
+using System.Threading;
+using Microsoft.AspNetCore.Localization;
 using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
@@ -36,6 +39,15 @@ namespace Westwind.Webstore.Web.Controllers
         {
             ViewBag.ErrorDisplay = ErrorDisplay;
             CreateUserState();
+
+            // var cult = context.HttpContext.Features.Get<IRequestCultureFeature>();
+            //
+            // cult.RequestCulture = new RequestCulture();
+            // cult.RequestCulture.Culture = new CultureInfo("en-us");
+            // cult.RequestCulture.Culture  = new CultureInfo(cult.RequestCulture.Culture.LCID);
+            //
+            // // Need to do this dynamically at runtime
+            // cult.RequestCulture.Culture  .NumberFormat.CurrencySymbol = wsApp.Configuration.CurrencySymbol;
         }
 
         public override void OnActionExecuted(ActionExecutedContext context) {

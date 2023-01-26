@@ -242,9 +242,15 @@ namespace Westwind.Webstore.Web.Controllers
             model.InvoiceModel = new InvoiceViewModel(invoice);
             model.InvoiceModel.CanEditPromoCode = true;
 
+            if (invoice.BillingAddress is not null)
+            {
+                if (invoice.BillingAddress.Email is null)
+                    invoice.BillingAddress.Email = customer.Email;
+            }
+
             // ensure customer and address are linked
             busInvoice.UpdateCustomerReferences(customer);
-            busInvoice.Save(); // save address and id
+            bool result = busInvoice.Save(); // save address and id
 
             return View(model);
         }
@@ -370,6 +376,7 @@ namespace Westwind.Webstore.Web.Controllers
             model.StreetAddress = address?.StreetAddress.GetLines().FirstOrDefault();
             model.PostalCode = address?.PostalCode;
             model.CountryCode = address?.CountryCode;
+            model.Email = address?.Email;
 
             return View("OrderFormFast", model);
         }
@@ -415,6 +422,7 @@ namespace Westwind.Webstore.Web.Controllers
             address.StreetAddress = model.StreetAddress;
             address.PostalCode = model.PostalCode;
             address.CountryCode = model.CountryCode;
+            address.Email = model.Email;
 
 
 

@@ -97,7 +97,8 @@ namespace Westwind.Webstore.Business
                     CustomerId = customer.Id,
                     AddressName = customer.Fullname,
                     AddressCompany = customer.Company,
-                    AddressType = AddressTypes.Billing
+                    AddressType = AddressTypes.Billing,
+                    Email = customer.Email
                 };
                 customer.Addresses.Add(address);
                 return address;
@@ -115,10 +116,13 @@ namespace Westwind.Webstore.Business
             {
                 address.AddressFullname = customer.Fullname;
             }
-
             if (address.AddressCompany is null)
             {
                 address.AddressCompany = customer.Company;
+            }
+            if (address.Email is null)
+            {
+                address.Email = customer?.Email;
             }
 
             return address;
