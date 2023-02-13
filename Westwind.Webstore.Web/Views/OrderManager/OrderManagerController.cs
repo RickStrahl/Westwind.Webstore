@@ -70,126 +70,7 @@ public class OrderManagerController : WebStoreBaseController
         return View("InvoiceList", model);
     }
 
-    #region Customer Editor
-    [HttpGet]
-    [Route("/admin/ordermanager/customers")]
-    public IActionResult CustomerList([FromQuery] string s=null, [FromQuery] string action = null, [FromQuery] string customerid = null)
-    {
-        var model = CreateViewModel<CustomerListViewModel>();
-        model.SearchTerm = s ?? "recent";
-        model.Action = action ?? string.Empty;
-        model.CustomerId = customerid;
 
-
-        var customerBus = BusinessFactory.GetCustomerBusiness();
-        if (string.IsNullOrEmpty(model.SearchTerm))
-            model.CustomerList = new List<CustomerListItem>();
-        else
-        {
-            model.CustomerList = customerBus.GetCustomerList(model.SearchTerm, 5000);
-            model.CustomerCount = model.CustomerList.Count();
-        }
-
-        if (model.Action.Equals("addinvoice", StringComparison.OrdinalIgnoreCase))
-        {
-            return NewInvoiceFromCustomer(model);
-        }
-
-        if (model.Action.Equals("deletecustomer"))
-        {
-            return DeleteCustomer(model);
-        }
-
-        return View("CustomerList", model);
-    }
-
-    private IActionResult DeleteCustomer(CustomerListViewModel model)
-    {
-        var customerBus = BusinessFactory.GetCustomerBusiness();
-        if (!customerBus.Delete(model.CustomerId, true))
-        {
-            model.ErrorDisplay.ShowError(customerBus.ErrorMessage ,"Couldn't delete customer.");
-        }
-        else
-        {
-            model.ErrorDisplay.ShowSuccess("Customer has been deleted.");
-        }
-
-        Response.Headers["Refresh"] = $"1;/admin/OrderManager/Customers?s={model.SearchTerm}";
-        return View("CustomerList", model);
-    }
-
-    [HttpGet]
-    [Route("/admin/ordermanager/customers/{id}")]
-    public IActionResult CustomerEditor(string id,[FromQuery] string s = null)
-    {
-        var model = CreateViewModel<CustomerEditorViewModel>();
-
-        var customerBus = BusinessFactory.GetCustomerBusiness();
-        model.Customer = customerBus.Load(id);
-        if (model.Customer == null)
-            model.Customer = customerBus.Create();
-
-        model.BillingAddress = CustomerBusiness.GetBillingAddress(model.Customer);
-        model.SearchTerm = s;
-
-        return View("CustomerEditor",model);
-    }
-
-    [HttpPost]
-    [Route("/admin/ordermanager/customers/{id}")]
-    public IActionResult CustomerEditor(CustomerEditorViewModel model, string id, [FromQuery] string s = null)
-    {
-        InitializeViewModel(model);
-        model.SearchTerm = s;
-
-        var customerBus = BusinessFactory.GetCustomerBusiness();
-        model.Customer = customerBus.Load(id);
-        if (model.Customer == null)
-        {
-            model.Customer = customerBus.CreateEmpty();
-        }
-
-        var errors = HttpContext.Request.UnbindFormVarsToObject(model.Customer, "Id", "Customer.");
-        if (errors.Count > 0)
-        {
-            foreach(var error in errors)
-                customerBus.ValidationErrors.Add(error);
-        }
-
-        model.BillingAddress = CustomerBusiness.GetBillingAddress(model.Customer);
-
-        errors = HttpContext.Request.UnbindFormVarsToObject(model.BillingAddress, "Id", "BillingAddress.");
-        if (errors.Count > 0)
-        {
-            foreach(var error in errors)
-                customerBus.ValidationErrors.Add(error);
-        }
-
-        if (!customerBus.Validate( model.Customer, false))
-        {
-            model.ErrorDisplay.AddMessages(customerBus.ValidationErrors);
-            model.ErrorDisplay.ShowError("Please fix the following errors:");
-            return View("CustomerEditor", model);
-        }
-
-        model.BillingAddress.Country = model.BillingAddress.GetCountryFromCode(model.BillingAddress.CountryCode);
-
-        ModelState.Clear();
-        if (!customerBus.Save())
-        {
-            model.ErrorDisplay.ShowError(customerBus.ErrorMessage, "Customer could not be saved.");
-        }
-        else
-        {
-            model.ErrorDisplay.ShowSuccess($"Customer {model.Customer.Fullname} has been saved.");
-        }
-
-        return View("CustomerEditor",model);
-    }
-
-
-    #endregion
 
     private IActionResult NewInvoiceFromCustomer(CustomerListViewModel model)
     {
@@ -329,21 +210,6 @@ public class OrderManagerController : WebStoreBaseController
         return View(model);
     }
 
-    private IActionResult AddLineItem(InvoiceEditorViewModel model)
-    {
-        var invoiceBus = BusinessFactory.GetInvoiceBusiness();
-        var invoice = invoiceBus.Load(model.Invoice.Id);
-        if (invoice == null)
-        {
-            model.ErrorDisplay.ShowError($"Couldn't load invoice: {invoiceBus.ErrorMessage}");
-            return View("InvoiceEditor", model);
-        }
-
-        var lineItem = invoiceBus.AddLineItem(string.Empty,createEmptyLineItem: true);
-        invoiceBus.Save();
-
-        return Redirect("/admin/ordermanager/" + invoice.Id + "/" + lineItem.Id);
-    }
 
     private IActionResult DeleteInvoice(InvoiceEditorViewModel model)
     {
@@ -385,30 +251,34 @@ public class OrderManagerController : WebStoreBaseController
 
         if (!result)
         {
-            // do nothing
+            // do nothing and redisplay with model errors
         }
         else if (!invoiceBus.Save())
         {
                 message = $"Couldn't save invoice: {invoiceBus.ErrorMessage}.";
                 icon = "warning";
         }
+        // success: saved
         else
         {
-            result = invoiceBus.SendEmailProductConfirmations();
-
-            if (!result)
+            if (wsApp.Configuration.Email.AutoConfirmAdminOrders)
             {
-                message = $"Failed to send email confirmations: {invoiceBus.ErrorMessage}.";
-                icon = "warning";
-            }
-            else
-            {
-                if (invoice.Completed == null || invoice.Completed <= wsApp.Constants.EmptyDate)
-                    invoice.Completed = DateTime.Now;
+                result = invoiceBus.SendEmailProductConfirmations();
 
-                message += " and product confirmation sent.";
+                if (!result)
+                {
+                    message = $"Failed to send email confirmations: {invoiceBus.ErrorMessage}.";
+                    icon = "warning";
+                }
+                else
+                {
+                    if (invoice.Completed == null || invoice.Completed <= wsApp.Constants.EmptyDate)
+                        invoice.Completed = DateTime.Now;
 
-                result = await invoiceBus.SaveAsync();
+                    message += " Product email confirmation sent.";
+
+                    result = await invoiceBus.SaveAsync();
+                }
             }
         }
 
@@ -416,6 +286,8 @@ public class OrderManagerController : WebStoreBaseController
 
         return Redirect($"/admin/ordermanager/{invoice.Id}?message={message}&messageicon={icon}");
     }
+
+    #region Email Confirmations
 
     private async Task<IActionResult> OrderEmailConfirmation(InvoiceEditorViewModel model)
     {
@@ -476,6 +348,25 @@ public class OrderManagerController : WebStoreBaseController
        return Redirect(url);
     }
 
+    #endregion
+
+    #region LineItems
+
+    private IActionResult AddLineItem(InvoiceEditorViewModel model)
+    {
+        var invoiceBus = BusinessFactory.GetInvoiceBusiness();
+        var invoice = invoiceBus.Load(model.Invoice.Id);
+        if (invoice == null)
+        {
+            model.ErrorDisplay.ShowError($"Couldn't load invoice: {invoiceBus.ErrorMessage}");
+            return View("InvoiceEditor", model);
+        }
+
+        var lineItem = invoiceBus.AddLineItem(string.Empty,createEmptyLineItem: true);
+        invoiceBus.Save();
+
+        return Redirect("/admin/ordermanager/" + invoice.Id + "/" + lineItem.Id);
+    }
 
     [HttpGet]
     [Route("/admin/ordermanager/{invoiceNumber}/{lineItemNumber}")]
@@ -493,6 +384,128 @@ public class OrderManagerController : WebStoreBaseController
         return View(model);
     }
 
+    #endregion
+
+    #region Customer Editor
+    [HttpGet]
+    [Route("/admin/ordermanager/customers")]
+    public IActionResult CustomerList([FromQuery] string s=null, [FromQuery] string action = null, [FromQuery] string customerid = null)
+    {
+        var model = CreateViewModel<CustomerListViewModel>();
+        model.SearchTerm = s ?? "recent";
+        model.Action = action ?? string.Empty;
+        model.CustomerId = customerid;
+
+
+        var customerBus = BusinessFactory.GetCustomerBusiness();
+        if (string.IsNullOrEmpty(model.SearchTerm))
+            model.CustomerList = new List<CustomerListItem>();
+        else
+        {
+            model.CustomerList = customerBus.GetCustomerList(model.SearchTerm, 5000);
+            model.CustomerCount = model.CustomerList.Count();
+        }
+
+        if (model.Action.Equals("addinvoice", StringComparison.OrdinalIgnoreCase))
+        {
+            return NewInvoiceFromCustomer(model);
+        }
+
+        if (model.Action.Equals("deletecustomer"))
+        {
+            return DeleteCustomer(model);
+        }
+
+        return View("CustomerList", model);
+    }
+
+    private IActionResult DeleteCustomer(CustomerListViewModel model)
+    {
+        var customerBus = BusinessFactory.GetCustomerBusiness();
+        if (!customerBus.Delete(model.CustomerId, true))
+        {
+            model.ErrorDisplay.ShowError(customerBus.ErrorMessage ,"Couldn't delete customer.");
+        }
+        else
+        {
+            model.ErrorDisplay.ShowSuccess("Customer has been deleted.");
+        }
+
+        Response.Headers["Refresh"] = $"1;/admin/OrderManager/Customers?s={model.SearchTerm}";
+        return View("CustomerList", model);
+    }
+
+    [HttpGet]
+    [Route("/admin/ordermanager/customers/{id}")]
+    public IActionResult CustomerEditor(string id,[FromQuery] string s = null)
+    {
+        var model = CreateViewModel<CustomerEditorViewModel>();
+
+        var customerBus = BusinessFactory.GetCustomerBusiness();
+        model.Customer = customerBus.Load(id);
+        if (model.Customer == null)
+            model.Customer = customerBus.Create();
+
+        model.BillingAddress = CustomerBusiness.GetBillingAddress(model.Customer);
+        model.SearchTerm = s;
+
+        return View("CustomerEditor",model);
+    }
+
+    [HttpPost]
+    [Route("/admin/ordermanager/customers/{id}")]
+    public IActionResult CustomerEditor(CustomerEditorViewModel model, string id, [FromQuery] string s = null)
+    {
+        InitializeViewModel(model);
+        model.SearchTerm = s;
+
+        var customerBus = BusinessFactory.GetCustomerBusiness();
+        model.Customer = customerBus.Load(id);
+        if (model.Customer == null)
+        {
+            model.Customer = customerBus.CreateEmpty();
+        }
+
+        var errors = HttpContext.Request.UnbindFormVarsToObject(model.Customer, "Id", "Customer.");
+        if (errors.Count > 0)
+        {
+            foreach(var error in errors)
+                customerBus.ValidationErrors.Add(error);
+        }
+
+        model.BillingAddress = CustomerBusiness.GetBillingAddress(model.Customer);
+
+        errors = HttpContext.Request.UnbindFormVarsToObject(model.BillingAddress, "Id", "BillingAddress.");
+        if (errors.Count > 0)
+        {
+            foreach(var error in errors)
+                customerBus.ValidationErrors.Add(error);
+        }
+
+        if (!customerBus.Validate( model.Customer, false))
+        {
+            model.ErrorDisplay.AddMessages(customerBus.ValidationErrors);
+            model.ErrorDisplay.ShowError("Please fix the following errors:");
+            return View("CustomerEditor", model);
+        }
+
+        model.BillingAddress.Country = model.BillingAddress.GetCountryFromCode(model.BillingAddress.CountryCode);
+
+        ModelState.Clear();
+        if (!customerBus.Save())
+        {
+            model.ErrorDisplay.ShowError(customerBus.ErrorMessage, "Customer could not be saved.");
+        }
+        else
+        {
+            model.ErrorDisplay.ShowSuccess($"Customer {model.Customer.Fullname} has been saved.");
+        }
+
+        return View("CustomerEditor",model);
+    }
+
+
+    #endregion
 
 }
 

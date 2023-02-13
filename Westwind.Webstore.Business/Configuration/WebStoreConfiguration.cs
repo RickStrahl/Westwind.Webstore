@@ -159,6 +159,13 @@ namespace Westwind.Webstore.Business
         /// * CC Fraud
         /// </summary>
         public bool SendAdminEmails { get; set; }
+
+        /// <summary>
+        /// If true automatically sends product confirmations on
+        /// orders processed through the admin interface. Otherwise
+        /// explicit order confirmation is required.
+        /// </summary>
+        public bool AutoConfirmAdminOrders { get; set; } = false;
     }
 
     public class FraudConfiguration
