@@ -76,7 +76,7 @@
                             <span class="item-price text-danger" title="item discount percentage">-@discount.ToString("n0")%</span>
                         }
                         <div class="text-secondary me-2" style="font-weight: 600; font-size:  1.3em; float:  right; margin-right:  0.2em">
-                            @item.ItemTotal.ToString("c")
+                            @(wsApp.Configuration.CurrencySymbol)@item.ItemTotal.ToString("n2")
                         </div>
                     </div>
                     

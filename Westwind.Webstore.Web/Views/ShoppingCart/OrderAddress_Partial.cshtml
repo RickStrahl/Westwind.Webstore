@@ -11,9 +11,10 @@
         {
             @Html.Raw(HtmlUtils.DisplayMemo(invoice.BillingAddress.ToString().Trim()))
         }
+        <br/>
         <a href="mailto:@(invoice.BillingAddress?.Email ?? invoice.Customer.Email)"  
-           class="d-block mt-1">@(invoice.BillingAddress?.Email ?? invoice.Customer.Email)</a>
-        @invoice.BillingAddress.Email
+           class="d-block mt-1">@(invoice.BillingAddress?.Email ?? invoice.Customer.Email)
+        </a>
     </div>
     @if (hasShippingAddress)
     {
