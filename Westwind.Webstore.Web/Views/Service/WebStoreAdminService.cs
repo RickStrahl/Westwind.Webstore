@@ -9,6 +9,7 @@ using Westwind.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
 using Westwind.AspNetCode.Security;
 using Westwind.AspNetCore.Errors;
 using Westwind.Webstore.Business;
@@ -122,7 +123,12 @@ namespace Westwind.Webstore.Web.Service
             Invoice invoice;
             using (var invoiceBus = BusinessFactory.Current.GetInvoiceBusiness())
             {
-                invoice = invoiceBus.LoadByInvNo(invoiceNumber);
+                invoice = invoiceBus.Context.Invoices
+                    .Include("LineItems")
+                    .Include("Customer")
+                    .Include(i=> i.Customer.Addresses)
+                    .FirstOrDefault(i => i.InvoiceNumber == invoiceNumber);
+
                 if (invoice == null)
                     throw new ApiException( "Invalid Invoice", 404);
 
