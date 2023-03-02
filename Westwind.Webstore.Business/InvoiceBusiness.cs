@@ -86,6 +86,7 @@ namespace Westwind.Webstore.Business
             string lsearch = search?.ToLower() ?? string.Empty;
 
             var invBase = Context.Invoices
+                .AsNoTracking()
                 .Include("Customer")
                 .Include("LineItems");
 
@@ -95,11 +96,22 @@ namespace Westwind.Webstore.Business
                 {
                     var dt = new DateTime(DateTime.Now.Year, 1, 1);
                     invBase = invBase.Where(inv => inv.InvoiceDate >= dt);
+                } else if (lsearch == "last year")
+                {
+                    var dt = new DateTime(DateTime.Now.Year -1, 1, 1);
+                    var dt2 =new DateTime(DateTime.Now.Year, 1, 1);
+                    invBase = invBase.Where(inv => inv.InvoiceDate >= dt && inv.InvoiceDate < dt2);
                 }
                 else if (lsearch == "this month")
                 {
                     var dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                     invBase = invBase.Where(inv => inv.InvoiceDate >= dt);
+                }
+                else if (lsearch == "last month")
+                {
+                    var dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month-1, 1);
+                    var dt2 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                    invBase = invBase.Where(inv => inv.InvoiceDate >= dt && inv.InvoiceDate < dt2);
                 }
                 else if (lsearch == "90 days" || lsearch == "90")
                 {
@@ -169,6 +181,7 @@ namespace Westwind.Webstore.Business
         public async Task<List<Invoice>> GetRecentInvoices(string customerId, int maxCount = 5)
         {
             return await Context.Invoices
+                .AsNoTracking()
                 .Include("Customer")
                 .Include("LineItems")
                 .Where(inv => inv.CustomerId == customerId && !inv.IsTemporary)
@@ -180,6 +193,7 @@ namespace Westwind.Webstore.Business
         public async Task<List<Invoice>> GetOpenInvoices(string customerId)
         {
             return await Context.Invoices
+                .AsNoTracking()
                 .Include("Customer")
                 .Where(inv => inv.CustomerId == customerId && inv.Completed == null && !inv.IsTemporary)
                 .OrderByDescending(inv => inv.InvoiceDate)
