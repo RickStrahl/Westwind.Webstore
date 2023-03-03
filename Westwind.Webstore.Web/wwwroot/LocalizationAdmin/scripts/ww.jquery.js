@@ -1936,6 +1936,14 @@ http://en.wikipedia.org/wiki/MIT_License
         return html.replace(/^[\s\S]*<body.*?>|<\/body>[\s\S]*$/ig, '').trimStart().trimEnd();
     }
 
+    copyToClipboard = function(text) {
+        const $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val(text).select();
+        document.execCommand("copy");
+        $temp.remove();
+    }
+
     $$ = function (id, context) {
         /// <summary>
         /// Searches for an ID based on ASP.NET naming container syntax.

@@ -168,6 +168,7 @@ namespace Westwind.Webstore.Business
                         InvoiceNumber = inv.InvoiceNumber,
                         Name = inv.Customer.Fullname,
                         Company = inv.Customer.Company,
+                        Email = inv.Customer.Email,
                         InvoiceDate = inv.InvoiceDate,
                         InvoiceTotal = inv.InvoiceTotal,
                         Status = inv.CreditCardResult.ProcessingResult,
@@ -1038,6 +1039,8 @@ namespace Westwind.Webstore.Business
         public string InvoiceNumber { get; init; }
         public string Name { get; init; }
         public string Company { get; init; }
+
+        public string Email { get; init; }
         public DateTime InvoiceDate { get; init; }
         public decimal InvoiceTotal { get; init; }
 

@@ -1583,6 +1583,17 @@ http://en.wikipedia.org/wiki/MIT_License
         );
     };
 
+    window.copyToClipboard = function(text) {
+        const $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val(text);
+        setTimeout(() => {
+            $temp.select();
+            document.execCommand("copy");
+            $temp.remove();
+        },5);
+    }
+
     window.getBodyFromHtmlDocument = function(html) {
         return html.replace(/^[\s\S]*<body.*?>|<\/body>[\s\S]*$/ig, '').trimStart().trimEnd();
     }

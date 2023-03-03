@@ -104,7 +104,8 @@
                     {
                         <b>@invoice.Company -</b>
                     }
-                    @invoice.Name<br/>
+                    @invoice.Name
+                    <br/>
                     <div class="lh-1">
                         @foreach (var lineItem in invoice.LineItems)
                         {
@@ -121,11 +122,11 @@
                     }
 
 
-                    @if (invoice.Status == "APPROVED")
+                    @if (invoice.Status == "APPROVED" || invoice.Status == "PAID IN FULL")
                     {
                         <span class="text-success">
                             @total
-                            <i class="fas fa-check-circle text-success hidable-xs" title="APPROVED"></i>
+                            <i class="fas fa-check-circle text-success hidable-xs" title="@invoice.Status"></i>
                         </span>
                     }
                     else if (invoice.Status == "AUTHORIZED")
@@ -152,21 +153,27 @@
                 </td>
                 <td class="right bold">
                     <span >
-
                         <a href="/admin/ordermanager/invoice/@invoice.InvoiceNumber"
                            class="btn btn-sm btn-default hidable">
                             <i class="fas fa-edit text-info"></i>
-
                         </a>
+                 
+                        <a href="#0"
+                           class="btn btn-sm btn-default hidable"
+                           title="Copy customer email to clipboard:
+@invoice.Email" onclick="onEmailCopy('@invoice.Email', event); return false;" >
+                           <i class="fad fa-envelopes text-info"></i>
+                        </a>
+                        
                         <a href="#0"
                            title="Add new invoice for this customer"
                            onclick="addNewInvoiceForCustomer('@invoice.CustId', '@invoice.Name')"
                            class="btn btn-sm btn-default">
                             <i class="fas fa-plus-circle text-success"></i>
                         </a>
-
+                        
                         <a href="#0"
-                           class="btn btn-sm btn-default me-0 hidable"
+                           class="btn btn-sm btn-default me-0 "
                            onclick="onClickDelete('@invoice.InvoiceNumber', event); return false;">
                             <i class="fas fa-times-circle text-danger "></i>
                         </a>
@@ -184,6 +191,13 @@
     <script>
     function onClickNewInvoice(custId, ev) {
         
+    }
+    function onEmailCopy(hrefText, event) {        
+        event.cancelBubble = true;
+        event.preventDefault();        
+        copyToClipboard(hrefText);
+        toastr.success("Email has been copied to clipboard.");
+        return false;
     }
     function onClickDelete(invNo, ev) {                
         if (!confirm('Are you sure you want to delete invoice ' + invNo + '?'))
