@@ -4,7 +4,7 @@
 		<TargetFrameworks>net472;NET6.0;net7.0</TargetFrameworks>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="Braintree" Version="5.14.0" />
-	  <PackageReference Include="Westwind.Utilities" Version="3.1.18" />
+	  <PackageReference Include="Braintree" Version="5.16.0" />
+	  <PackageReference Include="Westwind.Utilities" Version="3.1.19" />
 	</ItemGroup>
 </Project>
