@@ -92,6 +92,7 @@ namespace Westwind.Webstore.Business
 
             if (!string.IsNullOrEmpty(search))
             {
+
                 if (lsearch == "this year")
                 {
                     var dt = new DateTime(DateTime.Now.Year, 1, 1);
@@ -138,6 +139,11 @@ namespace Westwind.Webstore.Business
                 {
                     invBase = invBase.Where(inv => inv.CreditCardResult.ProcessingResult == "AUTHORIZED") ;
                 }
+                // By License Key
+                else if (StringUtils.Occurs(lsearch, '-') == 3 && lsearch.Length == 23)
+                {
+                    invBase = invBase.Where(inv => inv.LineItems.Any(li => li.LicenseSerial == search));
+                }
                 else if (lsearch == "all" || lsearch == "recent")
                 {
                     // do nothing - not recommended
@@ -154,6 +160,7 @@ namespace Westwind.Webstore.Business
             }
 
             IQueryable<Invoice> tlist = invBase
+                .AsNoTracking()
                 .Where(inv => !inv.IsTemporary)
                 .OrderByDescending(inv => inv.InvoiceDate);
 
