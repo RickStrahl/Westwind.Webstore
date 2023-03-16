@@ -85,16 +85,16 @@
             placeholder="description">
         </textarea>
 
-        <div class="invoice-total ps-3 pt-3 fs-2 w-100 right">
-            <span id="ItemTotalLabel">Item Total: </span>
-            <span id="ItemTotal"> ${{ lineItem.itemTotal.formatNumber("n2") }}</span>
+        <div class="ps-3 pt-3 fs-2 w-100 right">
+            <span id="ItemTotalLabel" style="font-size: 0.8em">Item Total: &nbsp;</span>
+            <span id="ItemTotal" class="invoice-total"> ${{ lineItem.itemTotal.formatNumber("n2") }}</span>
         </div>
         
-        <div v-if="lineItem.useLicensing">
-            <h3 class="page-header-text">
-                <i class="fas fa-home"></i>
+        <div v-if="lineItem.useLicensing" class="mt-3 mb-3">
+            <h2 class="page-header-text">
+                <i class="fad fa-file-certificate "></i>
                 Software License Information
-            </h3>
+            </h2>
 
             <div>
                 <input class="form-control bold d-inline" 
@@ -110,19 +110,20 @@
                 <a class="btn btn-link" target="ws_license" v-on:click="reissueLicense()">Reissue</a>
             </div>
         </div>
-    
-        
-        
-        <button type="button" class="btn btn-primary"
-                v-on:click="saveLineItem">
-            <i class="fas fa-check text-success"></i>
-            Save Lineitem
-        </button>
-        
-        <a class="btn btn-secondary ms-2" href="/admin/ordermanager/@Model.Invoice.InvoiceNumber">
-            <i class="fas fa-times text-danger"></i>
-            Cancel
-        </a>
+
+
+        <div>
+            <button type="button" class="btn btn-primary"
+                    v-on:click="saveLineItem">
+                <i class="fas fa-check text-success"></i>
+                Save Lineitem
+            </button>
+
+            <a class="btn btn-secondary ms-2" href="/admin/ordermanager/@Model.Invoice.InvoiceNumber">
+                <i class="fas fa-times text-danger"></i>
+                Cancel
+            </a>
+        </div>
 
 
         <input type="hidden" asp-for="LineItem.Id" />
@@ -130,9 +131,13 @@
         <input type="hidden" asp-for="LineItem.CustomerId" />
     </form>
     
-    <pre>
-    {{lineItem}}
-    </pre>
+    <div class="mt-4">
+        <a href="#0" onclick="$('#LineItemDetail').toggle();">
+            <i class="fad fa-eye"></i>
+            Full line item detail
+        </a>
+        <pre id="LineItemDetail" style="display:none">{{lineItem}}</pre>
+    </div>
 </div>
 
 
