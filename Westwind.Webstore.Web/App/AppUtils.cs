@@ -56,29 +56,20 @@ namespace Westwind.Webstore.Web.App
         /// <returns></returns>
         public static bool SendEmail(string email, string title, string body, out string error, bool noHtml = false, bool noCCs = false)
         {
-            var config = wsApp.Configuration.Email;
-
-            var smtp = new Westwind.Utilities.InternetTools.SmtpClientNative()
-            {
-                MailServer = config.MailServer,
-                Username = config.MailServerUsername,
-                Password = config.MailServerPassword,
-                UseSsl = config.UseSsl,
-                SenderEmail = config.SenderEmail,
-                SenderName = config.SenderName,
-                Message = body,
-                Subject = title,
-                Recipient = email,
-                ContentType = noHtml ? "text/plain" : "text/html",
-                BCC = !noCCs ? config.CcList : null
-            };
+            var emailer = new Emailer();
+            var result =emailer.SendEmail(email,
+                title,
+                body,
+                noHtml ? EmailModes.plain : EmailModes.html,
+                noCCs);
 
             error = null;
-            bool success = smtp.SendMail();
-            if (!success)
-                error = smtp.ErrorMessage;
+            if (!result)
+            {
+                error = emailer.ErrorMessage;
+            }
 
-            return success;
+            return result;
         }
 
         public static async Task<bool> SendOrderConfirmationEmail(OrderFormViewModel model,
@@ -91,7 +82,7 @@ namespace Westwind.Webstore.Web.App
             return emailer.SendEmail(invoice.Customer.Email,
                 $"{wsApp.Configuration.ApplicationName} Order Confirmation #{invoice.InvoiceNumber}",
                 confirmationHtml,
-                "text/html");
+                EmailModes.html);
         }
 
         #region HTML Utilities

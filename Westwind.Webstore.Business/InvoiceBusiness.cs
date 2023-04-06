@@ -892,7 +892,7 @@ namespace Westwind.Webstore.Business
                         email = customer.Email;
 
                     var emailer = new Emailer();
-                    if (!emailer.SendEmail(email, descript + " (Registration Confirmation)", regText, "text/plain"))
+                    if (!emailer.SendEmail(email, descript + " (Registration Confirmation)", regText, EmailModes.plain))
                     {
                         Error += $"Item {descript} failed to confirm: {emailer.ErrorMessage}";
                         OnStatusMessage(
@@ -905,7 +905,6 @@ namespace Westwind.Webstore.Business
                 //    VendorConfirmation()
 
             }
-
 
             if (!string.IsNullOrEmpty(Error))
             {
@@ -927,44 +926,30 @@ namespace Westwind.Webstore.Business
         }
 
 
-        /// <summary>
-        /// Sends an order confirmation email
-        /// </summary>
-        /// <param name="Subject"></param>
-        /// <param name="MessageText"></param>
-        /// <param name="ContentType"></param>
-        /// <returns></returns>
-        public bool SendOrderConfirmationEmail(string Subject, string MessageText, string ContentType, string Recipient)
-        {
-            // Set up the Email object - we'll use this for several emails
-            SmtpClientNative Smtp = new SmtpClientNative();
-
-            Smtp.MailServer = wsApp.Configuration.Email.MailServer;
-            Smtp.UseSsl = wsApp.Configuration.Email.UseSsl;
-            Smtp.SenderEmail = wsApp.Configuration.Email.SenderEmail;
-            Smtp.SenderName = wsApp.Configuration.Email.SenderName;
-            Smtp.Username = wsApp.Configuration.Email.MailServerUsername;
-            Smtp.Password = wsApp.Configuration.Email.MailServerPassword;
-            Smtp.Recipient = Recipient;
-
-            // Also forward to admin (TEMPORARY)
-            Smtp.BCC = wsApp.Configuration.Email.CcList;
-
-            if (ContentType == null)
-                Smtp.ContentType = "text/plain";
-            else
-                Smtp.ContentType = ContentType;
-
-            Smtp.Subject = Subject;
-            Smtp.Message = MessageText;
-            if (!Smtp.SendMail())
-            {
-                SetError(WebStoreBusinessResources.EmailFailure + ": " + Smtp.ErrorMessage);
-                return false;
-            }
-
-            return true;
-        }
+        // /// <summary>
+        // /// Sends an order confirmation email
+        // /// </summary>
+        // /// <param name="subject"></param>
+        // /// <param name="messageText"></param>
+        // /// <param name="ContentType"></param>
+        // /// <returns></returns>
+        // public bool _SendOrderConfirmationEmail(string recipient, string subject, string messageText, EmailModes emailMode = EmailModes.plain)
+        // {
+        //     var emailConfig = wsApp.Configuration.Email;
+        //
+        //     var emailer = new Emailer();
+        //     return emailer.SendEmail(recipient, subject, messageText, emailMode);
+        //     if (!result)
+        //         return false;
+        //
+        //     {
+        //         Error += $"Item {descript} failed to confirm: {emailer.ErrorMessage}";
+        //         OnStatusMessage(
+        //             $"Confirmation Email for {item.Description.TrimEnd()} to {customer.Email} failed.");
+        //     }
+        //
+        //
+        // }
 
 
         public void VendorConfirmation()

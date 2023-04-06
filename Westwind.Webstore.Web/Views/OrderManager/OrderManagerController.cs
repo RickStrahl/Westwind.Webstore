@@ -307,7 +307,7 @@ public class OrderManagerController : WebStoreBaseController
         var result = emailer.SendEmail(invoice.Customer.Email,
             wsApp.Configuration.ApplicationName + " Order Confirmation #" + invoice.InvoiceNumber,
             confirmation,
-            "text/html");
+            EmailModes.html);
 
         var message = "Email confirmation sent.";
         var icon = "success";

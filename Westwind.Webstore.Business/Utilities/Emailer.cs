@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
+using Westwind.Utilities;
 using Westwind.Utilities.InternetTools;
 using Westwind.Webstore.Business.Properties;
 
@@ -19,32 +23,57 @@ namespace Westwind.Webstore.Business.Utilities
         /// <param name="messageText"></param>
         /// <param name="contentType"></param>
         /// <returns></returns>
-        public bool SendEmail(string recipient, string subject, string messageText, string contentType = "text/plain")
+        public bool SendEmail(string recipient, string subject, string messageText, EmailModes emailMode = EmailModes.plain, bool noCCs = false)
         {
-            // Set up the Email object - we'll use this for several emails
-            var smtp = new SmtpClientNative();
+            var emailConfig = wsApp.Configuration.Email;
 
-            smtp.MailServer = wsApp.Configuration.Email.MailServer;
-            smtp.UseSsl = wsApp.Configuration.Email.UseSsl;
-            smtp.SenderEmail = wsApp.Configuration.Email.SenderEmail;
-            smtp.SenderName = wsApp.Configuration.Email.SenderName;
-            smtp.Username = wsApp.Configuration.Email.MailServerUsername;
-            smtp.Password = wsApp.Configuration.Email.MailServerPassword;
-            smtp.Recipient = recipient;
+            var message = new MimeMessage();
+            message.From.Add(CreateMailboxAddress(emailConfig.SenderName,
+                emailConfig.SenderEmail));
 
-            // Also forward to admin (TEMPORARY)
-            smtp.BCC = wsApp.Configuration.Email.CcList;
-            smtp.ContentType = contentType;
-
-            smtp.Subject = subject;
-            smtp.Message = messageText;
-            if (!smtp.SendMail())
+            message.To.Add(CreateMailboxAddress(recipient));
+            if (!noCCs)
             {
-                SetError(WebStoreBusinessResources.EmailFailure + ": " + smtp.ErrorMessage);
+                message.Bcc.Add(CreateMailboxAddress(emailConfig.CcList ));
+            }
+
+            message.Subject = subject;
+            message.Body = new TextPart ( emailMode.ToString() ) {
+                Text = messageText
+            };
+
+            try
+            {
+                using (var client = new SmtpClient())
+                {
+                    // Server and Port (ie. smtp.server.com:587)
+                    var serverTokens = emailConfig.MailServer.Split(':');
+                    var mailServer = serverTokens[0];
+                    var mailServerPort = 25;
+                    if (serverTokens.Length > 1)
+                        mailServerPort = Westwind.Utilities.StringUtils.ParseInt(serverTokens[1], 25);
+
+                    client.Connect(mailServer, mailServerPort, emailConfig.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+
+                    // Note: only needed if the SMTP server requires authentication
+                    if (!string.IsNullOrEmpty(emailConfig.MailServerUsername))
+                    {
+                        client.Authenticate(emailConfig.MailServerUsername,
+                            emailConfig.MailServerPassword);
+                    }
+
+                    client.Send(message);
+                    client.Disconnect(true);
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                SetError(ex);
                 return false;
             }
 
-            return true;
         }
 
 
@@ -56,34 +85,96 @@ namespace Westwind.Webstore.Business.Utilities
         /// <param name="messageText"></param>
         /// <param name="contentType"></param>
         /// <returns></returns>
-        public bool SendAdminEmail(string recipient, string subject, string messageText, string contentType = "text/plain")
+        public bool SendAdminEmail(string recipient, string subject, string messageText, EmailModes emailMode = EmailModes.plain, bool noCCs = false)
         {
-            // Set up the Email object - we'll use this for several emails
-            var smtp = new SmtpClientNative();
+            var emailConfig = wsApp.Configuration.Email;
 
-            smtp.MailServer = wsApp.Configuration.Email.MailServer;
-            smtp.UseSsl = wsApp.Configuration.Email.UseSsl;
-            smtp.SenderEmail = wsApp.Configuration.Email.SenderEmail;
-            smtp.SenderName = wsApp.Configuration.Email.SenderName;
-            smtp.Username = wsApp.Configuration.Email.MailServerUsername;
-            smtp.Password = wsApp.Configuration.Email.MailServerPassword;
-            smtp.Recipient = recipient;
+            var message = new MimeMessage();
+            message.From.Add(CreateMailboxAddress(emailConfig.SenderName,
+                emailConfig.SenderEmail));
 
-            // Also forward to admin (TEMPORARY)
-            smtp.BCC = wsApp.Configuration.Email.AdminCcList;
-            smtp.ContentType = contentType;
-
-            smtp.Subject = subject;
-            smtp.Message = messageText;
-            if (!smtp.SendMail())
+            message.To.Add(CreateMailboxAddress(recipient));
+            if (!noCCs)
             {
-                SetError(WebStoreBusinessResources.EmailFailure + ": " + smtp.ErrorMessage);
-                return false;
+                message.Bcc.Add(CreateMailboxAddress(emailConfig.AdminCcList ));
             }
 
-            return true;
+            message.Subject = subject;
+            message.Body = new TextPart ( emailMode.ToString() ) {
+                Text = messageText
+            };
+
+            try
+            {
+                using (var client = new SmtpClient())
+                {
+                    // Server and Port (ie. smtp.server.com:587)
+                    var serverTokens = emailConfig.MailServer.Split(':');
+                    var mailServer = serverTokens[0];
+                    var mailServerPort = 25;
+                    if (serverTokens.Length > 1)
+                        mailServerPort = Westwind.Utilities.StringUtils.ParseInt(serverTokens[1], 25);
+
+                    client.Connect(mailServer, mailServerPort, emailConfig.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+
+                    if (!string.IsNullOrEmpty(emailConfig.MailServerUsername))
+                    {
+                        // Note: only needed if the SMTP server requires authentication
+                        client.Authenticate(emailConfig.MailServerUsername,
+                            emailConfig.MailServerPassword);
+                    }
+
+                    client.Send(message);
+                    client.Disconnect(true);
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                SetError(ex);
+                return false;
+            }
         }
 
+
+        /// <summary>
+        /// Splits an email from "John Doe <doe@email.com>" into
+        /// name and email parts.
+        /// If only an email address is proved "doe@email.com"
+        /// both values are returned as the email address.
+        /// </summary>
+        /// <param name="emailAddress">Input email address either as Name <email> or just an email address</param>
+        /// <returns>Name and Address or only the Address or empty strings if null or empty passed in</returns>
+        public MailboxAddress CreateMailboxAddress(string emailAddress)
+        {
+            if (string.IsNullOrEmpty(emailAddress))
+                return new MailboxAddress("","");
+
+            string origEmail = emailAddress?.Trim();
+            string email = origEmail;
+            string name = email;
+
+            if (origEmail.Contains("<"))
+            {
+                var tokens = origEmail.Split(" <");
+                name = tokens[0]?.Trim();
+                email = tokens[1]?.TrimEnd(  ' ', '>');
+            }
+
+            return new MailboxAddress(name, email);
+        }
+
+        /// <summary>
+        /// Creates a new Mail Box address
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="emailAddress"></param>
+        /// <returns></returns>
+        public MailboxAddress CreateMailboxAddress(string name, string emailAddress)
+        {
+            return new MailboxAddress(name, emailAddress);
+        }
 
 
         #region Errors
@@ -122,5 +213,11 @@ namespace Westwind.Webstore.Business.Utilities
         }
 
         #endregion
+    }
+
+    public enum EmailModes
+    {
+        plain,
+        html
     }
 }
