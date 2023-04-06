@@ -141,11 +141,14 @@ namespace Westwind.Webstore.Web.Service
 
         [HttpGet]
         [Route("adminservice/customers/{customerId}/invoices")]
-        public IEnumerable<Invoice> GetInvoices(string customerId)
+        public IEnumerable<Invoice> GetCustomerInvoices(string customerId)
         {
             using (var invoiceBus = BusinessFactory.Current.GetInvoiceBusiness())
             {
                 return invoiceBus.Context.Invoices
+                    .Include("LineItems")
+                    .Include("Customer")
+                    .Include(i=> i.Customer.Addresses)
                     .Where(i => i.CustomerId == customerId && !i.IsTemporary)
                     .OrderByDescending(i => i.InvoiceDate).ToList();
             }

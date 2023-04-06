@@ -1,0 +1,10 @@
+POST https://localhost:5001/api/account/authenticate HTTP/2.0
+Accept-Encoding: gzip,deflate
+Accept: application/json
+Content-Type: application/json
+WebSurge-Request-CaptureAndSetAuthorizationBearerTokenFromJson: token
+
+{
+  "username": "rstrahl@west-wind.com",
+  "password": "cah-MWF_wyh2ywd_eqc"
+}

@@ -39,6 +39,22 @@ WebSurge-Request-Group: Application Lookups
 
 ------------------------------------------------------------------
 
+GET /adminservice/customers HTTP/2.0
+Accept-Encoding: gzip,deflate
+Authorization: Bearer
+Websurge-Request-Name: Customer List (complete - long list)
+WebSurge-Request-Group: Admin Service
+
+------------------------------------------------------------------
+
+GET /adminservice/products HTTP/2.0
+Accept-Encoding: gzip,deflate
+Authorization: Bearer
+Websurge-Request-Name: Product List
+WebSurge-Request-Group: Admin Service
+
+------------------------------------------------------------------
+
 
 ----- Start WebSurge Options -----
 
@@ -64,7 +80,7 @@ WebSurge-Request-Group: Application Lookups
   "ReplaceQueryStringValuePairs": null,
   "ReplaceCookieValue": "",
   "TrackPerSessionCookies": false,
-  "ReplaceAuthorization": "Bearer nfowzrx88vj8tv9",
+  "ReplaceAuthorization": "Bearer cb4uzdibcju3kph",
   "Username": null,
   "Password": null,
   "UsernamePasswordType": "Negotiate",

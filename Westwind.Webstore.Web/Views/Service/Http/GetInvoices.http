@@ -1,0 +1,4 @@
+GET https://localhost:5001/adminservice/invoices?q=recent HTTP/2.0
+Accept-Encoding: gzip,deflate
+Accept: application/json
+Authorization: Bearer
