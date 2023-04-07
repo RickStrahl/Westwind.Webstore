@@ -1,4 +1,4 @@
-# Web Store Specific
+# Web Store Specific Configuration Files that should not be checked in
 _webstore-configuration*.json
 applicationlog.txt
 appsettings.json

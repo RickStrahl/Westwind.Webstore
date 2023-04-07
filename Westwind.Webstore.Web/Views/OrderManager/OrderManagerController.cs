@@ -309,7 +309,7 @@ public class OrderManagerController : WebStoreBaseController
             confirmation,
             EmailModes.html);
 
-        var message = "Email confirmation sent.";
+        var message = "Order Confirmation Email sent.";
         var icon = "success";
         if (!result)
         {

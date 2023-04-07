@@ -1,27 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using Westwind.Utilities;
-using Westwind.Utilities.InternetTools;
-using Westwind.Webstore.Business.Properties;
 
 namespace Westwind.Webstore.Business.Utilities
 {
+
     public class Emailer
     {
+        /// <summary>
+        /// Resused Email Server configuration that is implicitly used.
+        ///
+        /// By default uses configuration settings from WebStore configuration
+        /// </summary>
+        public EmailServerConfiguration EmailServerConfiguration { get; set; } = new EmailServerConfiguration(wsApp.Configuration.Email);
+
         /// <summary>
         /// Send customer facing emails for confirmations, password validation and recovery
         /// etc.
         /// </summary>
-        /// <param name="recipient"></param>
-        /// <param name="subject"></param>
-        /// <param name="messageText"></param>
-        /// <param name="contentType"></param>
+        /// <param name="recipient">recipient email or `name &lt;email.com&gt;` ></param>
+        /// <param name="subject">title of the message</param>
+        /// <param name="messageText">body of the message</param>
+        /// <param name="emailMode">Plain or HTML modes</param>
         /// <returns></returns>
         public bool SendEmail(string recipient, string subject, string messageText, EmailModes emailMode = EmailModes.plain, bool noCCs = false)
         {
@@ -47,19 +48,19 @@ namespace Westwind.Webstore.Business.Utilities
                 using (var client = new SmtpClient())
                 {
                     // Server and Port (ie. smtp.server.com:587)
-                    var serverTokens = emailConfig.MailServer.Split(':');
+                    var serverTokens = EmailServerConfiguration.MailServer.Split(':');
                     var mailServer = serverTokens[0];
                     var mailServerPort = 25;
                     if (serverTokens.Length > 1)
                         mailServerPort = Westwind.Utilities.StringUtils.ParseInt(serverTokens[1], 25);
 
-                    client.Connect(mailServer, mailServerPort, emailConfig.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+                    client.Connect(mailServer, mailServerPort, EmailServerConfiguration.UseTls ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
 
                     // Note: only needed if the SMTP server requires authentication
-                    if (!string.IsNullOrEmpty(emailConfig.MailServerUsername))
+                    if (!string.IsNullOrEmpty(EmailServerConfiguration.MailServerUsername))
                     {
-                        client.Authenticate(emailConfig.MailServerUsername,
-                            emailConfig.MailServerPassword);
+                        client.Authenticate(EmailServerConfiguration.MailServerUsername,
+                            EmailServerConfiguration.MailServerPassword);
                     }
 
                     client.Send(message);
@@ -109,19 +110,19 @@ namespace Westwind.Webstore.Business.Utilities
                 using (var client = new SmtpClient())
                 {
                     // Server and Port (ie. smtp.server.com:587)
-                    var serverTokens = emailConfig.MailServer.Split(':');
+                    var serverTokens = EmailServerConfiguration.MailServer.Split(':');
                     var mailServer = serverTokens[0];
                     var mailServerPort = 25;
                     if (serverTokens.Length > 1)
                         mailServerPort = Westwind.Utilities.StringUtils.ParseInt(serverTokens[1], 25);
 
-                    client.Connect(mailServer, mailServerPort, emailConfig.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+                    client.Connect(mailServer, mailServerPort, EmailServerConfiguration.UseTls ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
 
                     if (!string.IsNullOrEmpty(emailConfig.MailServerUsername))
                     {
                         // Note: only needed if the SMTP server requires authentication
-                        client.Authenticate(emailConfig.MailServerUsername,
-                            emailConfig.MailServerPassword);
+                        client.Authenticate(EmailServerConfiguration.MailServerUsername,
+                            EmailServerConfiguration.MailServerPassword);
                     }
 
                     client.Send(message);
@@ -146,7 +147,7 @@ namespace Westwind.Webstore.Business.Utilities
         /// </summary>
         /// <param name="emailAddress">Input email address either as Name <email> or just an email address</param>
         /// <returns>Name and Address or only the Address or empty strings if null or empty passed in</returns>
-        public MailboxAddress CreateMailboxAddress(string emailAddress)
+        private MailboxAddress CreateMailboxAddress(string emailAddress)
         {
             if (string.IsNullOrEmpty(emailAddress))
                 return new MailboxAddress("","");
@@ -213,6 +214,26 @@ namespace Westwind.Webstore.Business.Utilities
         }
 
         #endregion
+    }
+
+    public class EmailServerConfiguration
+    {
+        /// <summary>
+        /// Format: `domainOrIp:port`
+        /// </summary>
+        public string MailServer { get; set; } = "localhost";
+        public bool UseTls { get; set;  }
+        public string MailServerUsername { get; set; }
+        public string MailServerPassword { get; set;  }
+
+        public EmailServerConfiguration(EmailConfiguration emailConfig)
+        {
+            MailServer = emailConfig.MailServer;
+            UseTls = emailConfig.UseTls;
+            MailServerUsername = emailConfig.MailServerUsername;
+            MailServerPassword = emailConfig.MailServerPassword;
+        }
+
     }
 
     public enum EmailModes

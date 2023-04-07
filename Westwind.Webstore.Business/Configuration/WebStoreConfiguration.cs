@@ -141,7 +141,7 @@ namespace Westwind.Webstore.Business
         public string MailServerPassword { get; set; }
         public string SenderEmail { get; set; }
         public string SenderName { get; set; }
-        public bool UseSsl { get; set; }
+        public bool UseTls { get; set; }
 
         /// <summary>
         /// Email Address(es) added to the CC list when confirmations are sent
