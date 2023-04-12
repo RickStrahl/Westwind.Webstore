@@ -437,6 +437,9 @@ INSERT [dbo].[Addresses] ([Id], [CustomerId], [AddressName], [StreetAddress], [C
 
         public Dictionary<string,string> GetCategoryList()
         {
+
+            if (BusinessFactory.Current == null) return default;
+
             var productBusiness = BusinessFactory.Current.GetProductBusiness(Context);
 
             var list = Context.Categories
