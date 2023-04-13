@@ -19,7 +19,7 @@
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="Westwind.Data.EfCore" Version="5.0.4" />
     <PackageReference Include="Westwind.AspNetCore" Version="3.7.0" />
-    <PackageReference Include="Westwind.Globalization.AspnetCore" Version="3.1.6" />
+    <PackageReference Include="Westwind.Globalization.AspnetCore" Version="3.1.7" />
   </ItemGroup>
 
   <ItemGroup>

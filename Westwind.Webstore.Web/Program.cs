@@ -99,13 +99,13 @@ services.AddWestwindGlobalization(opt =>
     // to the DI system (DbResourceConfiguration)
 
     // Resource Mode - from Database (or Resx for serving from Resources)
-    opt.ResourceAccessMode = ResourceAccessMode.Resx; //DbResourceManager;  // .DbResourceManager or .Resx
+    // opt.ResourceAccessMode = ResourceAccessMode.DbResourceManager;  // .DbResourceManager or .Resx
 
     // // Make sure the database you connect to exists
     // opt.ConnectionString = "host=localhost;database=localizations;uid=localizations;pwd=local";
 
     // Database provider used - Sql Server is the default
-    opt.DataProvider = DbResourceProviderTypes.SqlServer;
+    //opt.DataProvider = DbResourceProviderTypes.SqlServer;
 
     // The table in which resources are stored
     opt.ResourceTableName = "localizations";
@@ -146,6 +146,8 @@ services
 
 
 
+
+
 //services.AddRazorPages().AddRazorRuntimeCompilation();
 var aspnetServices = services.AddControllersWithViews()
     .AddNewtonsoftJson(opt =>
@@ -162,6 +164,7 @@ var aspnetServices = services.AddControllersWithViews()
     .AddDataAnnotationsLocalization();
 if (wsApp.Configuration.System.LiveReloadEnabled)
     aspnetServices.AddRazorRuntimeCompilation();
+
 
 // this *has to go here* after view localization has been initialized
 // so that Pages can localize - note required even if you're not using
@@ -216,19 +219,23 @@ if (wsApp.Configuration.System.RedirectToHttps)
     app.UseHsts();
 
 
-
 var supportedCultures = new[]
 {
     new CultureInfo("en-US"),
     new CultureInfo("en"),
-    // new CultureInfo("de-DE"),
-    // new CultureInfo("de")
+   //new CultureInfo("de-DE"),
+   // new CultureInfo("de")
 };
 app.UseRequestLocalization(options =>
 {
+    // Always display prices in the default currency symbol
     var cult = new RequestCulture("en-US");
-    //cult.Culture.NumberFormat.CurrencySymbol = wsApp.Configuration.CurrencySymbol;
+    cult.Culture.NumberFormat.CurrencySymbol = wsApp.Configuration.CurrencySymbol;
     options.DefaultRequestCulture = cult;
+    foreach (var culture in supportedCultures)
+    {
+        culture.NumberFormat.CurrencySymbol = wsApp.Configuration.CurrencySymbol;
+    }
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
 });
