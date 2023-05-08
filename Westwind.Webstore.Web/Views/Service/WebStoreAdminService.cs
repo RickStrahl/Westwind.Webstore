@@ -62,6 +62,7 @@ namespace Westwind.Webstore.Web.Service
 
             var customerBus = BusinessFactory.Current.GetCustomerBusiness();
             var customer = customerBus.AuthenticateAndRetrieveUser(authenticateRequest.Username, authenticateRequest.Password);
+
             if (customer == null)
                 throw new ApiException("Invalid credentials passed.", 401);
             if (!customer.IsAdminUser)

@@ -1,9 +1,18 @@
 # Migrations
 
+[Documentation](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli)
+
+
+### Install the Dotnet EF Core Tools
+
+```ps
+dotnet tool install --global dotnet-ef
+```
+
 ### Create New
 
 ```ps
-dotnet ef migrations add Invoice-Shipping-Adress-Added
+dotnet ef migrations add Initial-Migration
 ```
 
 ### Update Database

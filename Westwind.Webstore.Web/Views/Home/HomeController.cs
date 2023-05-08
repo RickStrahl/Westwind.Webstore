@@ -10,10 +10,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Braintree;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Westwind.AspNetCore;
+using Westwind.AspNetCore.Extensions;
 using Westwind.AspNetCore.Markdown;
+using Westwind.Globalization.AspnetCore.Utilities;
 using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Web.App;
@@ -26,13 +29,15 @@ namespace Westwind.Webstore.Web.Controllers
     public class HomeController : WebStoreBaseController
     {
         public BusinessFactory BusinessFactory { get; }
+        public IHttpContextAccessor ContextAccessor { get; }
 
 
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger,  BusinessFactory businessFactory)
+        public HomeController(ILogger<HomeController> logger,  BusinessFactory businessFactory, IHttpContextAccessor contextAccessor)
         {
             BusinessFactory = businessFactory;
+            ContextAccessor = contextAccessor;
             _logger = logger;
         }
 
@@ -53,7 +58,7 @@ namespace Westwind.Webstore.Web.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public async Task<IActionResult> Error()
         {
             var exceptionHandlerPath=  HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             var exceptionHandler =   HttpContext.Features.Get<IExceptionHandlerFeature>();
@@ -67,29 +72,64 @@ namespace Westwind.Webstore.Web.Controllers
                 StatusCode = (int) HttpStatusCode.InternalServerError
             };
 
+            var context = ContextAccessor.HttpContext;
+
             var header = StringUtils.GetLines(mainException.Message).FirstOrDefault();
 
             if (pathException is HttpRequestException httpEx)
             {
                 model.StatusCode = (int) httpEx.StatusCode.Value;
                 Response.StatusCode = (int) model.StatusCode;
+
             }
             else
             {
+                if (context?.Request != null)
+                {
+                    model.HttpVerb = context?.Request?.Method?.ToString();
+
+                    if (context != null &&
+                        model.HttpVerb.Equals("post", StringComparison.InvariantCultureIgnoreCase) ||
+                        model.HttpVerb.Equals("put", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        try
+                        {
+                            model.PostData = await context.Request.GetRawBodyStringAsync();
+                        }
+                        catch
+                        {
+                        }
+
+                        if (model.PostData is { Length: > 1000 })
+                        {
+                            model.PostData = model.PostData.GetMaxCharacters(1000);
+                        }
+                    }
+                }
+
                 var msg = $@"
 <style>
 body {{ font-family: sans-serif }}
 </style>
 # {header}
 
-**({(int) model.StatusCode}) {exceptionHandlerPath?.Path}**
+**({(int) model.StatusCode}) {model.HttpVerb} {exceptionHandlerPath?.Path}**
 
 ```
 {mainException.StackTrace}*
 ```
+{model.PostData}
 ---
 ";
-                _logger.LogCritical(pathException,msg);
+
+                var textMsg = $@"{header}
+({(int) model.StatusCode}) {model.HttpVerb} {exceptionHandlerPath?.Path}
+
+{mainException.StackTrace}
+
+{model.PostData}
+";
+                _logger.LogCritical(pathException,textMsg);
 
                 if (wsApp.Configuration.Email.SendAdminEmails)
                 {

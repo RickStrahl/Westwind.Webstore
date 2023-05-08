@@ -62,7 +62,7 @@ var logConfig = new LoggerConfiguration()
     .Enrich.FromLogContext()
     // .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}---{NewLine}")
     .WriteTo.File(
-        System.IO.Path.Combine(wsApp.Constants.WebRootFolder, "admin","applicationlog.txt"),
+        System.IO.Path.Combine(wsApp.Constants.WebRootFolder, "admin", "applicationlog.txt"),
         fileSizeLimitBytes: 3_000_000,
         retainedFileCountLimit: 5,
         rollOnFileSizeLimit: true,
@@ -165,6 +165,7 @@ var aspnetServices = services.AddControllersWithViews()
 if (wsApp.Configuration.System.LiveReloadEnabled)
     aspnetServices.AddRazorRuntimeCompilation();
 
+services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // this *has to go here* after view localization has been initialized
 // so that Pages can localize - note required even if you're not using
@@ -364,7 +365,7 @@ Console.WriteLine($" Runtime: {RuntimeInformation.FrameworkDescription} - {build
 Console.WriteLine($"Platform: {RuntimeInformation.OSDescription}");
 Console.WriteLine();
 
-//Console.WriteLine(config.ConnectionString);
+Console.WriteLine(config.ConnectionString);
 
 if (!System.IO.File.Exists("_webstore-configuration.json"))
 {

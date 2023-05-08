@@ -1,4 +1,4 @@
-﻿using Westwind.WebStore.Business;
+﻿using Westwind.Webstore.Business;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Westwind.Webstore.Business.Test

@@ -13,5 +13,8 @@ namespace Westwind.Webstore.Web.Controllers
         public Exception Error { get; set; }
 
         public int StatusCode { get; set; } = 500;
+        public string HttpVerb { get; set; }
+
+        public string PostData { get; set;  }
     }
 }

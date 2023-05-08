@@ -78,11 +78,13 @@
             <error-display alert-class="warning" message="@Model.Error.Message" icon="warning"></error-display>
         }
         
-        @if (env.IsDevelopment() || wsApp.Configuration.System.ErrorDisplayMode != ErrorDisplayModes.ApplicationPlusDetail)
+        @if (env.IsDevelopment() || wsApp.Configuration.System.ErrorDisplayMode == ErrorDisplayModes.ApplicationPlusDetail)
         {
             <label>Debug Info:</label>
             <pre style="font-size: 0.7em !important;">@Model.Error.StackTrace</pre>
         }
+        
+        <hr/>
     }
 
 </div>

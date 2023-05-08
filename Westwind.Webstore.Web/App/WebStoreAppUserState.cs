@@ -13,7 +13,6 @@ namespace Westwind.Webstore.Web.Models
     {
         //public ClaimsPrincipal User;
 
-
         /// <summary>
         /// Parameterless constructor required for serialization
         /// </summary>
