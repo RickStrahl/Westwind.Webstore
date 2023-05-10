@@ -55,6 +55,13 @@ WebSurge-Request-Group: Admin Service
 
 ------------------------------------------------------------------
 
+GET https://store.west-wind.com HTTP/2.0
+Accept-Encoding: gzip,deflate
+Websurge-Request-Name: Home Page
+WebSurge-Request-Group: Miscellaneous
+
+------------------------------------------------------------------
+
 
 ----- Start WebSurge Options -----
 

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Google.Authenticator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Westwind.AspNetCore.Extensions;
+using Westwind.Utilities;
 using Westwind.WebStore.App;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
@@ -53,12 +56,20 @@ namespace Westwind.Webstore.Web.Views
                 return View(model);
             }
 
+            // log user in - may have to provide two-factor as well
             SetAppUserFromCustomer(customer);
+
+
+            if (wsApp.Configuration.Security.UseTwoFactorAuthentication &&
+                !string.IsNullOrEmpty(customer.TwoFactorKey))
+            {
+                return Redirect("~/account/twofactor?ReturnUrl=" + model.ReturnUrl);
+            }
 
             if (!string.IsNullOrEmpty(model.ReturnUrl))
                 return Redirect(model.ReturnUrl);
 
-            return Redirect("~/");
+            return Redirect("/");
         }
 
         [AllowAnonymous]
@@ -141,6 +152,8 @@ namespace Westwind.Webstore.Web.Views
 
             // map to view model
             ApplicationMapper.Current.Map(customer, model.Customer);
+            model.Customer.UseTwoFactorAuth = !string.IsNullOrEmpty(customer.TwoFactorKey);
+
             model.BillingAddress = CustomerBusiness.GetBillingAddress(customer);
 
             return View(model);
@@ -312,7 +325,7 @@ namespace Westwind.Webstore.Web.Views
         #endregion
 
 
-        #region Email Validation and Recovery
+        #region Account and Email Validation and Recovery
 
         [AllowAnonymous]
         public ActionResult PasswordRecovery()
@@ -432,6 +445,117 @@ Regards,
 
             return View(model);
         }
+
+        [Route("/account/setuptwofactor")]
+        [HttpGet]
+        [HttpPost]
+        public IActionResult SetupTwoFactor(string task)
+        {
+            task = task ?? string.Empty;
+
+            var model = CreateViewModel<SetupTwoFactorViewModel>();
+
+            if (!AppUserState.IsAuthenticated())
+                return RedirectToAction("Profile", "Account");
+
+            var customerBus = BusinessFactory.GetCustomerBusiness();
+            var customer = customerBus.Load(AppUserState.UserId);
+
+            if (customer == null)
+                return RedirectToAction("Profile", "Account");
+
+            if(Request.IsFormVar("btnAbort") || task.Equals("remove", StringComparison.InvariantCultureIgnoreCase))
+            {
+                customer.TwoFactorKey = null;
+                customerBus.Save();
+                return RedirectToAction("Profile", "Account");
+            }
+
+            if (!string.IsNullOrEmpty(customer.TwoFactorKey))
+                return RedirectToAction("Profile", "Account");
+
+            var twoFactor = new TwoFactorAuthenticator();
+
+            var customerPrivateKey = DataUtils.GenerateUniqueId(16);
+
+            var setupInfo = twoFactor.GenerateSetupCode(
+                wsApp.Configuration.ApplicationName,
+                customer.Email,
+                        customerPrivateKey,
+                false, 5);
+
+            model.TwoFactorSetupKey = setupInfo.ManualEntryKey;
+            model.QrCodeImageData = setupInfo.QrCodeSetupImageUrl;
+
+            customer.TwoFactorKey = customerPrivateKey;
+            if (!customerBus.Save())
+            {
+                return RedirectToAction("Profile", "Account");
+            }
+
+            return View(model);
+        }
+
+        [Route("/account/twofactor")]
+        [HttpGet]
+        [HttpPost]
+        public IActionResult TwoFactorValidation(TwoFactorValidationViewModel model)
+        {
+            if (string.IsNullOrEmpty(AppUserState.UserId))
+                return RedirectToAction("Signin");
+
+            if (model == null)
+            {
+                model = CreateViewModel<TwoFactorValidationViewModel>();
+            }
+            else
+            {
+                InitializeViewModel(model);
+            }
+
+            model.ReturnUrl = Request.Query["ReturnUrl"];
+            if (string.IsNullOrEmpty(model.ReturnUrl))
+                model.ReturnUrl = "/";
+
+            
+            if (Request.IsPostback())
+            {
+                if (string.IsNullOrEmpty(model.ValidationCode))
+                {
+                    model.ErrorDisplay.ShowError("Please enter a validation code from your Authenticator app.");
+                    return View(model);
+                }
+
+                var customerBus = BusinessFactory.GetCustomerBusiness();
+                var customer = customerBus.Load(AppUserState.UserId);
+
+                var twoFactor = new TwoFactorAuthenticator();
+                AppUserState.IsTwoFactorValidated = twoFactor.ValidateTwoFactorPIN(customer.TwoFactorKey, model.ValidationCode.Replace(" ",""));
+
+                if (AppUserState.IsTwoFactorValidated)
+                {
+                    return Redirect(model.ReturnUrl);
+                    //ErrorDisplay.ShowSuccess("Code has been validated.");
+                }
+                else
+                {
+                    ErrorDisplay.ShowError("Invalid validation code. Please try again.");
+                }
+            }
+
+            return View(model);
+        }
+        //
+        // [Route("/account/setuptwofactor")]
+        // [HttpPost]
+        // public IActionResult SetupTwoFactor(string )
+        // {
+        //     if (!AppUserState.IsAuthenticated())
+        //         return RedirectToAction("Index", "Home");
+        //
+        //
+        //
+        // }
 
         #endregion
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Primitives;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 using Westwind.Webstore.Web.Models;
@@ -51,6 +52,10 @@ namespace Westwind.Webstore.Web.Views
         public string Company { get; set; }
 
         public string CustomerNotes { get; set;  }
+
+        // public string TwoFactorKey { get; set; }
+
+        public bool UseTwoFactorAuth { get; set; }
     }
 
     public class MvpPerksViewModel : CustomerViewModel
@@ -86,6 +91,22 @@ namespace Westwind.Webstore.Web.Views
 
         public bool RememberPassword { get; set; }
 
+        public string ReturnUrl { get; set; }
+
+        public string TwoFactorValidationCode { get; set; }
+    }
+
+
+    public class SetupTwoFactorViewModel : WebStoreBaseViewModel
+    {
+        public string TwoFactorSetupKey { get; set; }
+
+        public string QrCodeImageData { get; set; }
+    }
+
+    public class TwoFactorValidationViewModel : WebStoreBaseViewModel
+    {
+        public string ValidationCode { get; set; }
         public string ReturnUrl { get; set; }
     }
 
@@ -133,4 +154,5 @@ namespace Westwind.Webstore.Web.Views
 
 
     }
+
 }

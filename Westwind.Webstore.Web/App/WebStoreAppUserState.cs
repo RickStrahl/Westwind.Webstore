@@ -5,6 +5,7 @@ using Westwind.AspNetCore.Security;
 using Westwind.Webstore.Business.Entities;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Westwind.Webstore.Business;
 
 namespace Westwind.Webstore.Web.Models
 {
@@ -35,6 +36,9 @@ namespace Westwind.Webstore.Web.Models
 
         public int CartItemCount { get; set; }
 
+        public bool IsTwoFactorValidated { get; set; }
+
+
         /// <summary>
         /// Sets invoice related settings on the WebStoreAppUserState.
         /// You can also pass null to clear the items from userstate.
@@ -61,14 +65,15 @@ namespace Westwind.Webstore.Web.Models
         /// <returns></returns>
         public bool IsAuthenticated()
         {
-            return !string.IsNullOrEmpty(UserId);
+            
+            if (!wsApp.Configuration.Security.UseTwoFactorAuthentication)
+                return !string.IsNullOrEmpty(UserId);
+            else
+            {
+                return !string.IsNullOrEmpty(UserId) &&
+                       IsTwoFactorValidated;
+            }
 
-            //if(string.IsNullOrEmpty(UserId))
-
-            //if (User == null)
-            //    return false;
-
-            //return User.Identity.IsAuthenticated;
         }
 
         /// <summary>

@@ -2,23 +2,38 @@
   "profiles": {
     "Westwind.Webstore.Web": {
       "commandName": "Project",
-      "launchBrowser": true, 
-      "commandLineArgs": "",
+      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "hotReloadEnabled": false,
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:7001;http://localhost:7000"
+    },
     "WebStore -CreateDatabase": {
       "commandName": "Project",
-      "launchBrowser": true,
       "commandLineArgs": "-CreateDatabase",
+      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "hotReloadEnabled": false,
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:59031/",
+      "sslPort": 44311
     }
   }
 }

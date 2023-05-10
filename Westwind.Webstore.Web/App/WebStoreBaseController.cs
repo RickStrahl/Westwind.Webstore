@@ -161,12 +161,20 @@ namespace Westwind.Webstore.Web.Controllers
             AppUserState.Email = customer.Email;
             AppUserState.UserId = customer.Id;
             AppUserState.IsAdmin = customer.IsAdminUser;
+
+            if (string.IsNullOrEmpty(customer.TwoFactorKey))
+            {
+                AppUserState.IsTwoFactorValidated = true;
+            }
+            // otherwise we need to validate the user with the two-factor page
+            // after the initial sign in
         }
 
         public void ClearAppUser()
         {
             AppUserState.Clear();
             AppUserState.IsAuthenticated();
+            AppUserState.IsTwoFactorValidated = false;
         }
     }
 

@@ -178,6 +178,12 @@ namespace Westwind.Webstore.Business
         public bool ValidateEmailAddresses { get; set; } = true;
 
         /// <summary>
+        /// Determines whether two-factor authentication is optionally
+        /// used to validate accounts.
+        /// </summary>
+        public bool UseTwoFactorAuthentication { get; set; } = false;
+
+        /// <summary>
         /// Use ReCaptcha
         /// </summary>
         public bool UseOrderFormRecaptcha { get; set; } = true;

@@ -1,0 +1,44 @@
+﻿@model SetupTwoFactorViewModel 
+
+<div class="container" style="max-width: 640px">
+    <h1 class="page-header-text">
+        <i class="far fa-qrcode"></i>
+        Set up Two Factor Authentication
+    </h1>
+    
+    <error-display error-display-model="Model.ErrorDisplay" ></error-display>
+
+    <div class="alert alert-info mb-3">
+        <div class="d-flex">
+            <div>
+                <i class="fas fa-info-circle me-3 mt-1" style="font-size: 2.5em"></i>
+            </div>
+            <div>
+                 <b>Two Factor Authentication has been set up</b>
+                <br/>
+                Please set up your Authenticator app by scanning the QR Code
+                or entering the manual entry code below directly.
+                <p>
+                <p class="small fst-italic">
+                    If something goes wrong while trying to set up
+                    your Authenticator, click the button
+                    below to remove Two-Factor authentication 
+                    from your account now.
+                </p>
+                <button type="submit" name="btnAbort" class="btn btn-sm btn-secondary">
+                    <i class="fad fa-times-circle"></i>
+                    Remove Two-Factor Authentication
+                </button>
+            </div>
+        </div>
+        
+    </div>    
+
+    <div>
+        <label class="d-block fw-normal fst-italic">Scan this QR Code with your Authenticator app</label>
+        <img src="@Model.QrCodeImageData" style="width: 100%"/>
+        
+        <label class="mt-4 d-block mb-1 fst-italic fw-normal">Manual entry code</label>
+        <div class="fs-3">@Model.TwoFactorSetupKey</div>
+    </div>
+</div>

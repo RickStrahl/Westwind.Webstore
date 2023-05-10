@@ -49,6 +49,7 @@ namespace Westwind.Webstore.Web.Controllers
             var productList = bus.GetItems(new InventoryItemsFilter { ListOrder = InventoryListOrder.Specials});
 
             model.ItemList = productList;
+
             return View("Index", model);
         }
 

@@ -30,12 +30,10 @@ using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.Extensions;
 using Westwind.AspNetCore.LiveReload;
 using Westwind.AspNetCore.Middleware;
-using Westwind.Globalization;
 using Westwind.Globalization.AspnetCore;
 using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
-
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -144,10 +142,6 @@ services
         o.Cookie.Name = "ww_ws";
     });
 
-
-
-
-
 //services.AddRazorPages().AddRazorRuntimeCompilation();
 var aspnetServices = services.AddControllersWithViews()
     .AddNewtonsoftJson(opt =>
@@ -241,7 +235,10 @@ app.UseRequestLocalization(options =>
     options.SupportedUICultures = supportedCultures;
 });
 
+if (wsApp.Configuration.System.RedirectToHttps)
+    app.UseHttpsRedirection();
 
+// root path
 app.UseCustomHeaders((opt) =>
 {
     opt.PrimaryRequestsOnly = false; // only HTML/API requests
@@ -251,15 +248,11 @@ app.UseCustomHeaders((opt) =>
     opt.HeadersToAdd.Add("X-Content-Type-Options", "nosniff");
     opt.HeadersToAdd.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
 
-    opt.HeadersToRemove.Add("X-Powered-By");
-    opt.HeadersToRemove.Add("x-aspnet-version");
+    // Can't remove but we can 'replace'
+    opt.HeadersToAdd.Add("Server", "nginx");
 });
 
 
-if (wsApp.Configuration.System.RedirectToHttps)
-    app.UseHttpsRedirection();
-
-// root path
 
 var itemImagePath = wsApp.Configuration.ProductImageUploadFilePath;
 if (!string.IsNullOrEmpty(itemImagePath))
@@ -338,6 +331,8 @@ if (wsApp.Configuration.System.ShowConsoleRequestTimings)
     });
 }
 
+
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
@@ -345,7 +340,6 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Home}/{action=Index}/{id?}");
     //endpoints.MapRazorPages();
 });
-
 
 
 Console.ForegroundColor = ConsoleColor.DarkYellow;

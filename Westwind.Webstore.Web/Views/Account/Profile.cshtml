@@ -121,13 +121,50 @@
 
         @if (!Model.IsNewUser)
         {
-            <div class="float-end header-byline" style="display: @(!Model.IsNewUser ? "block" : "none")">
+            <div class="float-end header-byline bold" style="display: @(!Model.IsNewUser ? "block" : "none")">
                 <i class="fad fa-sign-in"></i>
                 <a href="@Url.Action("PasswordRecoverySendEmail")">Change your password</a>
             </div>
         }
+        <div class="header-byline ">used to verify your email address. <i class="text-info hidable">New emails or email changes need to be validated via the check button.</i></div>
         
-        <div class="header-byline ">used to verify your email address. <i class="text-info">New emails or email changes need to be validated via the check button.</i></div>
+        @if (Model.Configuration.Security.UseTwoFactorAuthentication)
+        {
+            @if (Model.Customer.UseTwoFactorAuth)
+            {
+                <div class="mt-2 fw-semibold" style="font-size: 1.1em">
+                    <i class="far fa-check-circle text-success"></i>
+                    Two-factor Authentication is turned on
+
+                    <a href="#x0" onclick="removeTwoFactor()"
+                       class="small fw-normal ps-1"
+                       style="font-size: 0.75em; cursor: pointer;"
+                       title="Remove two-factor authentication from this account.">
+                        <i class="far fa-times-circle text-danger"></i>
+                        remove
+                    </a>
+                </div>
+                <script>
+                function removeTwoFactor() {
+                    if (confirm("Are you sure you want to remove Two-Factor Authentication?")) {
+                        window.location.href = "/account/setuptwofactor?task=remove"; 
+                    }
+                }
+            </script>
+            }
+            else
+            {
+                <div class="mt-2" style="font-size: 1.1em; font-weight: 500">
+                    <i class="fad fa-shield-halved text-info"></i>
+                    <a id="lnkShowTwoFactor"
+                       title="Optionally set up two-factor authentication in your application."
+                       href="@Url.Action("SetupTwoFactor")">Enable Two-Factor Authentication</a>
+                </div>
+            }
+        }
+        
+        
+        
         </div>
 
             @if (Model.IsNewUser)

@@ -77,7 +77,16 @@ namespace Westwind.Webstore.Business.Entities
         }
 
 
+        /// <summary>
+        /// Customer's password used to log in
+        /// </summary>
         [Required] [StringLength(100)] public string Password { get; set; }
+
+        /// <summary>
+        /// Two Factor key if user enabled it
+        /// </summary>
+        [StringLength(30)] public string TwoFactorKey { get; set;  }
+
 
         /// <summary>
         /// Validation code set when verifying the user

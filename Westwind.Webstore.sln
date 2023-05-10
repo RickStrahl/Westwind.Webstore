@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LibrariesAndTests", "Librar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Westwind.CreditCardProcessing", "Westwind.CreditCardProcessing\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing.csproj", "{70C17269-373C-4E1C-8D71-B417985AE1EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Westwind.Utilities", "..\Westwind.Utilities\Westwind.Utilities\Westwind.Utilities.csproj", "{A8C7CA34-4A22-4231-A252-D059CF684C17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Westwind.Utilities", "..\Westwind.Utilities\Westwind.Utilities\Westwind.Utilities.csproj", "{A8C7CA34-4A22-4231-A252-D059CF684C17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

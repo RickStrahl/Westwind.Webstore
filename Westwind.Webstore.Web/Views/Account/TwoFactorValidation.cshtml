@@ -1,0 +1,50 @@
+﻿@model TwoFactorValidationViewModel 
+
+<div class="container" style="max-width: 640px">
+    <h1 class="page-header-text">
+        <i class="far fa-qrcode"></i>
+        Two-Factor Validation
+    </h1>
+    
+ 
+    <div class="alert alert-info mb-3">
+        <div class="d-flex">
+            <div>
+                <i class="fas fa-info-circle me-3 mt-1" style="font-size: 2.5em"></i>
+            </div>
+            <div>
+                Please enter the two-factor validation code from your Authenticator
+                app into the textbox below and click the <i>Validate</i> button.
+            </div>
+        </div>
+        
+    </div>    
+    
+    <error-display error-display-model="Model.ErrorDisplay" ></error-display>
+
+    <div class="mt-2">
+        <form id="form1" action="" method="POST">
+            <label class="d-block">
+                Enter your Authenticator Validation Code
+            </label>
+            <input id="txtValidationCode" asp-for="ValidationCode"
+                   class="form-control form-control-lg mt-2 mb-2"
+                   style="width: 11em" oninput="validationCodeChanged()"
+                   placeholder="Validation code: ### ###" />
+
+            <button type="submit" name="btnSubmit" id="btnSubmit"
+                    class="btn btn-primary btn-lg">
+                <i class="far fa-check-circle"></i>
+                Validate
+            </button>
+        </form>
+    </div>
+</div>
+<script>
+function validationCodeChanged() {
+    var val = document.getElementById('txtValidationCode').value.replace(/\s/g, "");    
+    if (val.length == 6) {        
+            setTimeout( ()=> document.getElementById('form1').submit(), 750);
+    }    
+}
+</script>
