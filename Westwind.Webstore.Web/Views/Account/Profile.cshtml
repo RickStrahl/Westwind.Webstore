@@ -127,21 +127,20 @@
             </div>
         }
         <div class="header-byline ">used to verify your email address. <i class="text-info hidable">New emails or email changes need to be validated via the check button.</i></div>
-        
-        @if (Model.Configuration.Security.UseTwoFactorAuthentication)
+
+                @if (Model.Configuration.Security.UseTwoFactorAuthentication && !Model.IsNewUser)
         {
-            @if (Model.Customer.UseTwoFactorAuth)
+            @if (Model.Customer.UseTwoFactorAuth )
             {
                 <div class="mt-2 fw-semibold" style="font-size: 1.1em">
                     <i class="far fa-check-circle text-success"></i>
                     Two-factor Authentication is turned on
 
                     <a href="#x0" onclick="removeTwoFactor()"
-                       class="small fw-normal ps-1"
-                       style="font-size: 0.75em; cursor: pointer;"
+                       class="fw-normalbtn btn-sm btn-link small"
+                       style="cursor: pointer;margin-top: -0.2em; padding-left: 0.1em"
                        title="Remove two-factor authentication from this account.">
                         <i class="far fa-times-circle text-danger"></i>
-                        remove
                     </a>
                 </div>
                 <script>

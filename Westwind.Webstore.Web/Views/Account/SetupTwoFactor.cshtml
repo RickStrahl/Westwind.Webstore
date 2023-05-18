@@ -1,44 +1,53 @@
 ﻿@model SetupTwoFactorViewModel 
 
-<div class="container" style="max-width: 640px">
+<div class="container" style="max-width: 800px">
     <h1 class="page-header-text">
         <i class="far fa-qrcode"></i>
         Set up Two Factor Authentication
     </h1>
     
-    <error-display error-display-model="Model.ErrorDisplay" ></error-display>
-
+    
     <div class="alert alert-info mb-3">
         <div class="d-flex">
             <div>
-                <i class="fas fa-info-circle me-3 mt-1" style="font-size: 2.5em"></i>
+                <i class="fad fa-info-circle me-3 mt-1" style="font-size: 2.5em"></i>
             </div>
-            <div>
-                 <b>Two Factor Authentication has been set up</b>
-                <br/>
-                Please set up your Authenticator app by scanning the QR Code
-                or entering the manual entry code below directly.
-                <p>
-                <p class="small fst-italic">
-                    If something goes wrong while trying to set up
-                    your Authenticator, click the button
-                    below to remove Two-Factor authentication 
-                    from your account now.
-                </p>
-                <button type="submit" name="btnAbort" class="btn btn-sm btn-secondary">
-                    <i class="fad fa-times-circle"></i>
-                    Remove Two-Factor Authentication
-                </button>
+            <div class="small">
+                <ul class="mt-0 mb-0">
+                    <li>Open your Authenticator app and add a new account</li>
+                    <li>Scan the QR Code or manually enter the setup code</li>
+                    <li>Enter the validation code from your Authenticator</li>
+                    <li>Click to <i>Turn on Two Factor Authentication<i/></li>
+                </ul>
             </div>
         </div>
-        
     </div>    
+    
+    <error-display error-display-model="Model.ErrorDisplay" ></error-display>
+
 
     <div>
-        <label class="d-block fw-normal fst-italic">Scan this QR Code with your Authenticator app</label>
-        <img src="@Model.QrCodeImageData" style="width: 100%"/>
+        <img src="@Model.QrCodeImageData" 
+             style="width: 100%; max-width: 220px"
+             title="Scan this QR Code with your Authenticator app"/>
         
-        <label class="mt-4 d-block mb-1 fst-italic fw-normal">Manual entry code</label>
-        <div class="fs-3">@Model.TwoFactorSetupKey</div>
+        <div title="Manual entry code to use instead of QR code"
+             class="text-secondary"
+             style="font-size: 1.02em; font-weight: 500;">
+            @Model.TwoFactorSetupKey
+        </div>
+    </div>
+    <div class="mt-3">
+        <form action="" method="POST">
+            <input class="form-control" style="width: 18em;"
+                   asp-for="ValidationKey"
+                   placeholder="Authententicator Validation Code: ### ###"  />
+            <button name="btnValidate" class="btn btn-primary mt-2">
+                <i class="fad fa-check-circle"></i>
+                Turn on Two Factor Authentication
+            </button>
+            
+            <input type="hidden" asp-for="CustomerSecretKey" />
+        </form>
     </div>
 </div>

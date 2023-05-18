@@ -29,7 +29,7 @@
             </label>
             <input id="txtValidationCode" asp-for="ValidationCode"
                    class="form-control form-control-lg mt-2 mb-2"
-                   style="width: 11em" oninput="validationCodeChanged()"
+                   style="width: 11em" xoninput="validationCodeChanged()"
                    placeholder="Validation code: ### ###" />
 
             <button type="submit" name="btnSubmit" id="btnSubmit"
@@ -44,7 +44,8 @@
 function validationCodeChanged() {
     var val = document.getElementById('txtValidationCode').value.replace(/\s/g, "");    
     if (val.length == 6) {        
-            setTimeout( ()=> document.getElementById('form1').submit(), 750);
+            setTimeout( ()=> document.getElementById('form1').submit(), 1100);
     }    
 }
+
 </script>

@@ -449,11 +449,14 @@ Regards,
         [Route("/account/setuptwofactor")]
         [HttpGet]
         [HttpPost]
-        public IActionResult SetupTwoFactor(string task)
+        public IActionResult SetupTwoFactor(string task, SetupTwoFactorViewModel model)
         {
             task = task ?? string.Empty;
 
-            var model = CreateViewModel<SetupTwoFactorViewModel>();
+            if (model == null)
+                model = CreateViewModel<SetupTwoFactorViewModel>();
+            else
+                InitializeViewModel(model);
 
             if (!AppUserState.IsAuthenticated())
                 return RedirectToAction("Profile", "Account");
@@ -464,7 +467,8 @@ Regards,
             if (customer == null)
                 return RedirectToAction("Profile", "Account");
 
-            if(Request.IsFormVar("btnAbort") || task.Equals("remove", StringComparison.InvariantCultureIgnoreCase))
+            // REMOVE operation
+            if (task.Equals("remove", StringComparison.InvariantCultureIgnoreCase))
             {
                 customer.TwoFactorKey = null;
                 customerBus.Save();
@@ -475,22 +479,33 @@ Regards,
                 return RedirectToAction("Profile", "Account");
 
             var twoFactor = new TwoFactorAuthenticator();
-
-            var customerPrivateKey = DataUtils.GenerateUniqueId(16);
+            if(string.IsNullOrEmpty(model.CustomerSecretKey))
+                model.CustomerSecretKey = DataUtils.GenerateUniqueId(16);
 
             var setupInfo = twoFactor.GenerateSetupCode(
                 wsApp.Configuration.ApplicationName,
                 customer.Email,
-                        customerPrivateKey,
-                false, 5);
+                model.CustomerSecretKey,
+                false, 10);
 
             model.TwoFactorSetupKey = setupInfo.ManualEntryKey;
             model.QrCodeImageData = setupInfo.QrCodeSetupImageUrl;
 
-            customer.TwoFactorKey = customerPrivateKey;
-            if (!customerBus.Save())
+            // Explicitly validate before saving
+            if (Request.IsFormVar("btnValidate") && !string.IsNullOrEmpty(model.ValidationKey))
             {
-                return RedirectToAction("Profile", "Account");
+                if (twoFactor.ValidateTwoFactorPIN(model.CustomerSecretKey, model.ValidationKey))
+                {
+                    customer.TwoFactorKey = model.CustomerSecretKey;
+                    if (customerBus.Save())
+                    {
+                        return RedirectToAction("Profile", "Account");
+                    }
+
+                    ErrorDisplay.ShowError("Unable to set up Two Factor Authentication");
+                }
+                else 
+                    ErrorDisplay.ShowError("Invalid Validation code.");
             }
 
             return View(model);
@@ -517,7 +532,6 @@ Regards,
             if (string.IsNullOrEmpty(model.ReturnUrl))
                 model.ReturnUrl = "/";
 
-            
             if (Request.IsPostback())
             {
                 if (string.IsNullOrEmpty(model.ValidationCode))
@@ -528,6 +542,8 @@ Regards,
 
                 var customerBus = BusinessFactory.GetCustomerBusiness();
                 var customer = customerBus.Load(AppUserState.UserId);
+                if (customer == null)
+                    return RedirectToAction("Signin");
 
                 var twoFactor = new TwoFactorAuthenticator();
                 AppUserState.IsTwoFactorValidated = twoFactor.ValidateTwoFactorPIN(customer.TwoFactorKey, model.ValidationCode.Replace(" ",""));
@@ -537,10 +553,8 @@ Regards,
                     return Redirect(model.ReturnUrl);
                     //ErrorDisplay.ShowSuccess("Code has been validated.");
                 }
-                else
-                {
-                    ErrorDisplay.ShowError("Invalid validation code. Please try again.");
-                }
+
+                ErrorDisplay.ShowError("Invalid validation code. Please try again.");
             }
 
             return View(model);

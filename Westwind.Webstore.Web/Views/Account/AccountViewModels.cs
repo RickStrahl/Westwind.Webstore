@@ -102,6 +102,8 @@ namespace Westwind.Webstore.Web.Views
         public string TwoFactorSetupKey { get; set; }
 
         public string QrCodeImageData { get; set; }
+        public string ValidationKey { get; set; }
+        public string CustomerSecretKey { get; set; }
     }
 
     public class TwoFactorValidationViewModel : WebStoreBaseViewModel
