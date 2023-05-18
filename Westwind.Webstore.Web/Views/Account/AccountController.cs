@@ -559,18 +559,6 @@ Regards,
 
             return View(model);
         }
-        //
-        // [Route("/account/setuptwofactor")]
-        // [HttpPost]
-        // public IActionResult SetupTwoFactor(string )
-        // {
-        //     if (!AppUserState.IsAuthenticated())
-        //         return RedirectToAction("Index", "Home");
-        //
-        //
-        //
-        // }
-
         #endregion
 
         #region Email Validation

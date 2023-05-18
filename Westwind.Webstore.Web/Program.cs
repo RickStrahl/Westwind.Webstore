@@ -194,7 +194,7 @@ Task.Run(() =>
     var lookups = app.Services.GetService<LookupBusiness>();
     var res = lookups.GetPromoCodePercentage("RESELLER");
     Console.WriteLine("EF pre-loading completed.");
-});
+}).FireAndForget();
 
 if(wsApp.Configuration.System.LiveReloadEnabled)
     app.UseLiveReload();
