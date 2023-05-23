@@ -65,7 +65,6 @@ namespace Westwind.Webstore.Web.Models
         /// <returns></returns>
         public bool IsAuthenticated()
         {
-            
             if (!wsApp.Configuration.Security.UseTwoFactorAuthentication)
                 return !string.IsNullOrEmpty(UserId);
             else
@@ -73,7 +72,6 @@ namespace Westwind.Webstore.Web.Models
                 return !string.IsNullOrEmpty(UserId) &&
                        IsTwoFactorValidated;
             }
-
         }
 
         /// <summary>

@@ -219,7 +219,7 @@ namespace Westwind.Webstore.Web.Controllers
             return Redirect("~/shoppingcart");
         }
 
-        #region Long Form Order Form
+        #region Order Form
 
         [HttpGet]
         [Route("shoppingcart/orderForm")]
@@ -687,10 +687,6 @@ Nonce:      {inv.CreditCard.Nonce}";
         }
 
 
-
-        #endregion
-
-        #region Short Form Order Form
 
         #endregion
 
