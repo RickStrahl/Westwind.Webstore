@@ -446,6 +446,11 @@ Regards,
             return View(model);
         }
 
+        #endregion
+
+
+        #region TwoFactor Authentication
+
         [Route("/account/setuptwofactor")]
         [HttpGet]
         [HttpPost]
@@ -479,7 +484,7 @@ Regards,
                 return RedirectToAction("Profile", "Account");
 
             var twoFactor = new TwoFactorAuthenticator();
-            if(string.IsNullOrEmpty(model.CustomerSecretKey))
+            if (string.IsNullOrEmpty(model.CustomerSecretKey))
                 model.CustomerSecretKey = DataUtils.GenerateUniqueId(16);
 
             var setupInfo = twoFactor.GenerateSetupCode(
@@ -504,7 +509,7 @@ Regards,
 
                     ErrorDisplay.ShowError("Unable to set up Two Factor Authentication");
                 }
-                else 
+                else
                     ErrorDisplay.ShowError("Invalid Validation code.");
             }
 
@@ -546,7 +551,7 @@ Regards,
                     return RedirectToAction("Signin");
 
                 var twoFactor = new TwoFactorAuthenticator();
-                AppUserState.IsTwoFactorValidated = twoFactor.ValidateTwoFactorPIN(customer.TwoFactorKey, model.ValidationCode.Replace(" ",""));
+                AppUserState.IsTwoFactorValidated = twoFactor.ValidateTwoFactorPIN(customer.TwoFactorKey, model.ValidationCode.Replace(" ", ""));
 
                 if (AppUserState.IsTwoFactorValidated)
                 {
@@ -560,6 +565,7 @@ Regards,
             return View(model);
         }
         #endregion
+
 
         #region Email Validation
 

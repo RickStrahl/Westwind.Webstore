@@ -25,7 +25,7 @@
                     color: white
                 }                
     </style>
-<div id="app" style="margin: 1.8em 1em 1em 1.5em;">
+<div id="app" class="container" style="margin-top: 2em; max-width:  800px">
     <div class="responsive-container">
         <img v-if="lineItem.itemImage && lineItem.itemImage != '.png'" id="ItemImage" v-bind:src="'/images/product-images/' + lineItem.itemImage"/>
 
@@ -39,6 +39,7 @@
             <div class="w-100">
                  <label>Sku</label>
                 <input type="text" id="Sku"
+                      
                        class="form-control"
                               v-model="lineItem.sku"
                               autocomplete="off"
@@ -153,6 +154,16 @@
      // globals object (globals.lineItem)
      @scriptVars.ToHtmlString()
     </script>
-    
+
     <script src="/scripts/LineItemEditor.js" type="module"></script>
+    <style>
+        #Sku {
+            width:  22em;
+        }
+        @@media(max-width: 760px) {        
+            .responsive-container input {
+                width:  10em;
+            }
+        }
+    </style>
 }

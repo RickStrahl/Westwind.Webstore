@@ -154,18 +154,19 @@
     var payClass = string.Empty;
     var paymentStatus = invoice.CreditCardResult.ToString();
     var rawPaymentStatus = invoice.CreditCardResult.ProcessingResult;
+    var isApproved = invoice.CreditCardResult.IsApproved();
     if (string.IsNullOrEmpty(paymentStatus))
         payClass = string.Empty;
-    else if (paymentStatus == "APPROVED")
+    else if (isApproved)
         payClass = "text-success";
     else if (paymentStatus == "AUTHENTICATED")
-        payClass = "text-danger";
-    else
         payClass = "text-warning";
+    else
+        payClass = "text-danger";
 }
 <div class="payment-status" class="@payClass mb-2">
     <div class="order-buttons-container">
-        @if (paymentStatus != "APPROVED" && invoice.InvoiceTotal > 0.001M && invoice.CanProcessCreditCard())
+        @if (!isApproved && invoice.InvoiceTotal > 0.001M && invoice.CanProcessCreditCard())
         {
             <button type="submit" name="btnProcessPayment" id="btnProcessPayment"
                     class="btn btn-warning btn-sm" onclick="return processPayment()"
@@ -183,7 +184,7 @@
                 </script>
         }
 
-        @if (rawPaymentStatus == "APPROVED")
+        @if (isApproved)
         {
             var buttonClass = "secondary";
             if (invoice.Completed == null)
