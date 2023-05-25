@@ -29,7 +29,7 @@
     <link rel="icon" href="/touch-icon.png" />
     <meta name="msapplication-TileImage" content="touch-icon.png">
     
-    <link href="/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     @* <script src="https://kit.fontawesome.com/5d2c82e4f2.js" crossorigin="anonymous"></script> *@
     <link href="/lib/fontawesome/css/all.min.css" rel="stylesheet" />
     
@@ -184,8 +184,8 @@
     <div class="main-view-container" style="flex: 1; flex-grow: initial">
 
 
-        <nav class="slide-menu">
-            <div style="padding: 10px 0 10px 0;">
+        <nav class="slide-menu"
+             style="padding: 10px 0 10px 0; overflow-y: auto" >
 
                 <a href="/">
                     <i class="fad fa-home-lg fa-fw"></i>
@@ -206,7 +206,6 @@
                         </span>
                     }
                 </a>
-
 
 
                 @if (!Model.AppUserState.IsAuthenticated())
@@ -241,8 +240,6 @@
                         </a>
                     }
                 }
-
-
 
 
                 <div class="header">Product Categories</div>
@@ -295,18 +292,19 @@
                         Product Manager
                     </a>
                     
-                    <a href="/LocalizationAdmin/index.html" target="LocalizationAdministration">
-                        <i class="fad fa-flag fa-fw"></i>
-                        Localization
-                    </a>
-                    
+                    @if (Model.Configuration.System.ShowLocalization)
+                    {
+                        <a href="/LocalizationAdmin/index.html" target="LocalizationAdministration">
+                            <i class="fad fa-flag fa-fw"></i>
+                            Localization
+                        </a>
+                    }
+
                     <a href="/admin">
                         <i class="fad fa-gears fa-fw"></i>
                         Administration
                     </a>
-
                 }
-            </div>
         </nav>
         <div id="MainView">
             @RenderBody()

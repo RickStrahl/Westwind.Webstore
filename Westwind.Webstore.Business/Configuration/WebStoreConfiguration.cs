@@ -223,6 +223,8 @@ namespace Westwind.Webstore.Business
         public bool LiveReloadEnabled { get; set; }
         public bool RedirectToHttps { get; set; }
 
+        public bool ShowLocalization { get; set; } = true;
+
         public ErrorDisplayModes ErrorDisplayMode { get; set; } = ErrorDisplayModes.Application;
         public int CookieTimeoutDays { get; set; } = 2;
 
