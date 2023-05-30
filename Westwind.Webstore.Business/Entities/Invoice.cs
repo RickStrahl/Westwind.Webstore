@@ -454,10 +454,9 @@ namespace Westwind.Webstore.Business.Entities
         public bool IsApproved()
         {
             return ProcessingResult != null &&
-                   ProcessingResult.Equals("APPROVED", StringComparison.OrdinalIgnoreCase) ||
-                   ProcessingResult.Equals("PAID IN FULL", StringComparison.OrdinalIgnoreCase);
+                   (ProcessingResult.Equals("APPROVED", StringComparison.OrdinalIgnoreCase) ||
+                    ProcessingResult.Equals("PAID IN FULL", StringComparison.OrdinalIgnoreCase));
         }
-
 
         public override string ToString()
         {
