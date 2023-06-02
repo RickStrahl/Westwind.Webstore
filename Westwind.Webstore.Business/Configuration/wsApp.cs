@@ -17,7 +17,17 @@ namespace Westwind.Webstore.Business
 
         public static bool IsDevelopment { get; set; }
 
-        public static string Version { get; } = Assembly.GetEntryAssembly().GetName().Version.ToString();
+        public static string Version
+        {
+            get
+            {
+                if (_version == null)
+                    _version = Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+                return _version;
+            }
+        }
+        public static string _version;
 
         public static Dictionary<string, string> Categories
         {

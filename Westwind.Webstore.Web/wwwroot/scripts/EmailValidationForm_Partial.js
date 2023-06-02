@@ -57,12 +57,11 @@ $(function () {
 
         emailValidationModel.email = email;
 
-        $.get("/api/account/validate/send?email=" + encodeURIComponent(email),
+        ajaxJson("/api/account/validate/send", { email: email, vk: vmKey },
             function (result) {
-                toastr.success("Validation code emailed to provided email address.");
+                toastr.success("Validation code has been emailed.");
             });
-
-
+        
         $("#EmailValidatorModal").modal("show");
     }
 

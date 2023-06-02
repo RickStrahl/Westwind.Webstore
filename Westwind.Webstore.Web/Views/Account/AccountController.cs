@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Google.Authenticator;
@@ -570,14 +572,45 @@ Regards,
         #region Email Validation
 
         /// <summary>
+        /// Keep track of
+        /// </summary>
+        private static List<EmailValidationLogEntry> EmailValidationLog = new();
+
+        public class EmailValidationLogEntry
+        {
+            public string Vk { get; set; }
+            public DateTime Timestamp { get; set; }
+
+            public override string ToString() => Vk + " " + Timestamp.ToString("HH:mm:ss");
+        }
+
+
+        public class EmailValidationRequest
+        {
+            public string Email { get; set; }
+            public string Vk { get; set; }
+        }
+
+        /// <summary>
         /// https://localhost:5001/api/account/validate/send?email=rickstrahl@west-wind.com
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
         [AllowAnonymous]
+        [HttpPost]
         [Route("api/account/validate/send")]
-        public ActionResult SendValidation([FromQuery] string email)
+        public ActionResult SendValidation([FromBody] EmailValidationRequest request)
         {
+            if (!Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase) ||
+                string.IsNullOrEmpty(request?.Email) ||
+                !CheckEmailRequestForFraud(request.Vk) )
+            {
+                Response.StatusCode = 404;
+                return Json(new { isError = true, message = "No email address was provided." });
+            }
+
+            string email = request.Email;
+
             if (string.IsNullOrEmpty(email))
             {
                 return Json(new { isError = true, message = "No email address was provided." });
@@ -636,6 +669,62 @@ The {wsApp.Configuration.ApplicationCompany} Team
 
             result = customerBus.ValidateEmailAddress(customer.IsNew, customer);
             return Json(new { isValidated = result, message = customerBus.ValidationErrors.ToString()});
+        }
+
+
+        /// <summary>
+        /// Check for fraud by storing to a dictionary and checking for repeated use
+        /// and too fast processing.
+        /// </summary>
+        /// <param name="vkKey"></param>
+        /// <returns></returns>
+        private bool CheckEmailRequestForFraud(string vkKey, int listSize = 2000, double minuteTimeout = 5F)
+        {
+            if (string.IsNullOrEmpty(vkKey) || vkKey != AppUserState.SecurityToken)
+                return false;
+
+            var list = EmailValidationLog.Where(l => l.Timestamp > DateTime.UtcNow.AddMinutes( minuteTimeout * -1))
+                .OrderByDescending(t => t.Timestamp)
+                .ToList();
+
+            // Console.WriteLine(list.Count);
+
+            if (list.Count > 0)
+            {
+                if (list.Count > 5)
+                {
+                    //Console.WriteLine("More than 5!");
+                    return false;
+                }
+
+                var le = list.FirstOrDefault(l => l.Vk == vkKey);
+
+                if (le != null && le.Timestamp > DateTime.UtcNow.AddSeconds(-35))
+                {
+                    //Console.WriteLine("Time out! " + le);
+                    return false;
+                }
+            }
+
+            // Trim list to size
+            if (EmailValidationLog.Count > listSize)
+            {
+                lock (EmailValidationLog)
+                {
+                    if (list.Count > listSize)
+                        EmailValidationLog.RemoveRange(0, 500);
+                }
+            }
+
+            // add new entry for each successful attempt
+            EmailValidationLog.Add(new EmailValidationLogEntry()
+            {
+                Vk = vkKey,
+                Timestamp = DateTime.UtcNow
+            });
+
+            //Console.WriteLine("No Fraud");
+            return true;
         }
 
         #endregion
