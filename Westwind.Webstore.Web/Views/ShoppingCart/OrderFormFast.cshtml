@@ -1,6 +1,7 @@
 ﻿@using Westwind.Webstore.Web.App
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using System.ComponentModel.DataAnnotations
+
 @model Westwind.Webstore.Web.Views.OrderFormFastViewModel
 
 @{
@@ -277,6 +278,7 @@
     @if (wsApp.Configuration.Security.ValidateEmailAddresses)
     {
         var model = new ProfileViewModel();
+        model.UserState = Model.UserState;
         model.Customer.Email = Model.Email;
         
         <partial name="/Views/Account/EmailValidationForm_Partial.cshtml" id="EmailValidationForm" model="model"/>
