@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Westwind.Utilities;
 using Westwind.Webstore.Business.Entities;
 
 namespace Westwind.Webstore.Business
@@ -113,6 +114,34 @@ namespace Westwind.Webstore.Business
                 return false;
 
             return product.Categories.Contains(kvKey);
+        }
+
+        /// <summary>
+        /// Creates a copy of an existing item based on sku
+        /// and saves it to disk.
+        /// </summary>
+        /// <param name="sku">Sku to copy from</param>
+        /// <returns>the new instance</returns>
+        public Product CopyProduct(string sku, bool dontSave = false)
+        {
+            var orig = LoadBySku(sku);
+            if (orig == null)
+            {
+                SetError("Can't find product Sku to copy.");
+                return null;
+            }
+
+            var newProduct = Create();
+            DataUtils.CopyObjectData(orig, newProduct, excludedProperties: "Id");
+            newProduct.Sku = orig.Sku + "_New_" + DataUtils.GenerateUniqueId(5);
+
+            if (!dontSave)
+            {
+                if (!Save())
+                    return null;
+            }
+
+            return newProduct;
         }
 
     }

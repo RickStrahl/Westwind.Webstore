@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 using Westwind.AspNetCore.Extensions;
 using Westwind.AspNetCore.Markdown.Utilities;
@@ -169,6 +170,15 @@ public class ProductManagerController : WebStoreBaseController
         }
 
         return View("ProductEditor",model);
+    }
+
+    [HttpGet, Route("/admin/ProductManager/{sku}/copy")]
+    public ActionResult CopyItem(string sku)
+    {
+        var productBusiness = BusinessFactory.GetProductBusiness();
+        var prod = productBusiness.CopyProduct(sku);
+
+        return Redirect("/admin/ProductManager/" + WebUtility.UrlEncode(prod?.Sku ?? sku));
     }
 
     private IActionResult DeleteProduct(ProductEditorViewModel model)
