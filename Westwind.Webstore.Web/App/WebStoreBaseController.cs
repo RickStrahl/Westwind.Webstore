@@ -35,6 +35,8 @@ namespace Westwind.Webstore.Web.Controllers
         /// </summary>
         private string _initialAppUserState = null;
 
+        private const string CookieName = "ww_ws_us";
+
         protected override void Initialize(ActionExecutingContext context)
         {
             ViewBag.ErrorDisplay = ErrorDisplay;
@@ -58,7 +60,7 @@ namespace Westwind.Webstore.Web.Controllers
         protected void CreateUserState()
        {
             // Create UserState
-            var rawCookie = HttpContext.Request.Cookies["ww_ws_us"];
+            var rawCookie = HttpContext.Request.Cookies[CookieName];
 
             if (string.IsNullOrEmpty(rawCookie))
             {
@@ -94,11 +96,11 @@ namespace Westwind.Webstore.Web.Controllers
                 //var rawCookie = DataProtector.Protect(updatedUserState);
                 //var rawCookie = updatedUserState;
 
-                HttpContext.Response.Cookies.Delete("ww_ws_us");
+                HttpContext.Response.Cookies.Delete("CookieName");
 
                 var cookieTimeoutDays = !AppUserState.IsAdmin ? wsApp.Configuration.System.CookieTimeoutDays :5;
 
-                HttpContext.Response.Cookies.Append("ww_ws_us", rawCookie, new CookieOptions
+                HttpContext.Response.Cookies.Append("CookieName", rawCookie, new CookieOptions
                 {
                      SameSite = SameSiteMode.Strict,
                      HttpOnly = true,
