@@ -26,6 +26,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Serilog;
+using Westwind.AspNetCore;
 using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.Extensions;
 using Westwind.AspNetCore.LiveReload;
@@ -141,6 +142,16 @@ services
         o.ExpireTimeSpan = new TimeSpan(30, 0, 0, 0);
         o.Cookie.Name = "ww_ws";
     });
+
+// Configure UserState object to automatically fill for base controllers
+UserStateWebSettings.Current = new UserStateWebSettings()
+{
+    IsUserStateEnabled = true,
+    PersistanceMode = UserStatePersistanceModes.IdentityClaims,
+    CookieEncryptionKey = "djad3ad4ad9Qd4W3td#2pI0o@--",
+    CookieTimeoutDays = 5
+};
+
 
 //services.AddRazorPages().AddRazorRuntimeCompilation();
 var aspnetServices = services.AddControllersWithViews()

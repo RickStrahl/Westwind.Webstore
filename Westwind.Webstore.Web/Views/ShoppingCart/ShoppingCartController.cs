@@ -33,20 +33,20 @@ namespace Westwind.Webstore.Web.Controllers
             var busInvoice = BusinessFactory.GetInvoiceBusiness();
             Invoice invoice;
 
-            if (string.IsNullOrEmpty(AppUserState.InvoiceId))
+            if (string.IsNullOrEmpty(UserState.InvoiceId))
             {
                 invoice = busInvoice.Create();
             }
             else
             {
-                invoice = busInvoice.Load(AppUserState.InvoiceId);
+                invoice = busInvoice.Load(UserState.InvoiceId);
                 if (invoice == null)
                 {
                     invoice = busInvoice.Create();
                     invoice.IsTemporary = true;
-                    if (string.IsNullOrEmpty(AppUserState.InvoiceId))
+                    if (string.IsNullOrEmpty(UserState.InvoiceId))
                         invoice.Id = null;
-                    invoice.Id = AppUserState.InvoiceId;
+                    invoice.Id = UserState.InvoiceId;
                 }
 
                 if (!invoice.IsTemporary)
@@ -60,7 +60,7 @@ namespace Westwind.Webstore.Web.Controllers
             // always update the customer references from actual profile record
             // in case it was changed so we display tax/shipping correctly
             var busCustomer = BusinessFactory.GetCustomerBusiness(busInvoice.Context);
-            var customer = busCustomer.Load(AppUserState.UserId);
+            var customer = busCustomer.Load(UserState.UserId);
             if (customer != null)
             {
                 // update invoice's customer and billing address refs
@@ -77,7 +77,7 @@ namespace Westwind.Webstore.Web.Controllers
             };
 
             model.InvoiceId = invoice.Id;
-            model.AppUserState.CartItemCount = invoice.LineItems.Count;
+            model.UserState.CartItemCount = invoice.LineItems.Count;
 
             // form inputs
             if (HttpContext.Request.Method == HttpMethods.Post)
@@ -147,20 +147,20 @@ namespace Westwind.Webstore.Web.Controllers
             var busInvoice = BusinessFactory.GetInvoiceBusiness();
             Invoice invoice;
 
-            if (string.IsNullOrEmpty(AppUserState.InvoiceId))
+            if (string.IsNullOrEmpty(UserState.InvoiceId))
             {
                 invoice = busInvoice.Create();
             }
             else
             {
-                invoice = await busInvoice.LoadAsync(AppUserState.InvoiceId);
+                invoice = await busInvoice.LoadAsync(UserState.InvoiceId);
                 if (invoice == null)
                 {
                     invoice = busInvoice.Create();
-                    if (string.IsNullOrEmpty(AppUserState.InvoiceId))
+                    if (string.IsNullOrEmpty(UserState.InvoiceId))
                         invoice.Id = null;
                     else
-                        invoice.Id = AppUserState.InvoiceId;
+                        invoice.Id = UserState.InvoiceId;
                 }
             }
 
@@ -176,7 +176,7 @@ namespace Westwind.Webstore.Web.Controllers
             if (invoice.LineItems.Count > 0)
             {
                 // We need to force the id and count stored in cookie to be updated with the new invoice id
-                AppUserState.SetInvoiceSettings(invoice);
+                UserState.SetInvoiceSettings(invoice);
 
                 if (!await busInvoice.SaveAsync())
                 {
@@ -192,14 +192,14 @@ namespace Westwind.Webstore.Web.Controllers
         [Route("shoppingcart/remove/{lineItemId}/{quantity?}")]
         public async Task<ActionResult> RemoveItem(string lineItemId, decimal quantity = 0)
         {
-            if (string.IsNullOrEmpty(AppUserState.InvoiceId))
+            if (string.IsNullOrEmpty(UserState.InvoiceId))
                 return Redirect("/");
 
             var model = CreateViewModel<ShoppingCartViewModel>();
             var busInvoice = BusinessFactory.GetInvoiceBusiness();
 
             Invoice invoice;
-            invoice = await busInvoice.LoadAsync(AppUserState.InvoiceId);
+            invoice = await busInvoice.LoadAsync(UserState.InvoiceId);
             if (invoice == null)
             {
                 return Redirect("/");
@@ -207,7 +207,7 @@ namespace Westwind.Webstore.Web.Controllers
 
             busInvoice.RemoveLineItem(lineItemId, invoice);
 
-            AppUserState.SetInvoiceSettings(invoice);
+            UserState.SetInvoiceSettings(invoice);
 
             if (!await busInvoice.SaveAsync())
             {
@@ -229,12 +229,12 @@ namespace Westwind.Webstore.Web.Controllers
             model.dtto = OrderValidation.EncodeCurrentDate();
 
             var busCustomer = BusinessFactory.GetCustomerBusiness();
-            var customer = busCustomer.Load(AppUserState.UserId);
+            var customer = busCustomer.Load(UserState.UserId);
             if (customer == null)
                 return Redirect("~/");
 
             var busInvoice = BusinessFactory.GetInvoiceBusiness();
-            var invoice = busInvoice.Load(AppUserState.InvoiceId);
+            var invoice = busInvoice.Load(UserState.InvoiceId);
             if (invoice == null)
                 return Redirect("~/");
 
@@ -263,8 +263,8 @@ namespace Westwind.Webstore.Web.Controllers
 
             bool isRecalculate = Request.IsFormVar("btnRecalculate");
 
-            var custId = AppUserState.UserId;
-            var invoiceId = AppUserState.InvoiceId;
+            var custId = UserState.UserId;
+            var invoiceId = UserState.InvoiceId;
 
             if (string.IsNullOrEmpty(custId) || string.IsNullOrEmpty(invoiceId))
             {
@@ -360,7 +360,7 @@ namespace Westwind.Webstore.Web.Controllers
                 return Redirect("/");
 
             var busCustomer = BusinessFactory.GetCustomerBusiness(busProduct.Context);
-            var customer = busCustomer.Load(AppUserState.UserId);
+            var customer = busCustomer.Load(UserState.UserId);
             if (customer == null)
                 customer = busCustomer.Create();
 
@@ -399,7 +399,7 @@ namespace Westwind.Webstore.Web.Controllers
                 return Redirect("/");
 
             var customerBusiness = BusinessFactory.GetCustomerBusiness(productBusiness.Context);
-            var customer = customerBusiness.Load(AppUserState.UserId);
+            var customer = customerBusiness.Load(UserState.UserId);
             if (customer == null)
                 customer = customerBusiness.Create();
 
@@ -483,7 +483,7 @@ namespace Westwind.Webstore.Web.Controllers
 
             // log in the user (if new and update if changed)
             SetAppUserFromCustomer(customer);
-            AppUserState.InvoiceId = invoice.Id;
+            UserState.InvoiceId = invoice.Id;
 
             return Redirect("/shoppingcart/orderform");
         }
@@ -605,7 +605,7 @@ Nonce:      {inv.CreditCard.Nonce}";
         public async Task<ActionResult> OrderConfirmation(string invoiceNo)
         {
             var model = CreateViewModel<OrderFormViewModel>();
-            var userId = AppUserState.UserId;
+            var userId = UserState.UserId;
 
             bool isPrintInvoice = Request.Path.Value?.Contains("/invoice/", StringComparison.OrdinalIgnoreCase) ?? false;
 
@@ -620,7 +620,7 @@ Nonce:      {inv.CreditCard.Nonce}";
             }
 
             // Only allow access for user who created this invoice - or admin
-            if (!AppUserState.IsAdmin && invoice.CustomerId != userId)
+            if (!UserState.IsAdmin && invoice.CustomerId != userId)
             {
                 if (isPrintInvoice)
                 {
@@ -672,7 +672,7 @@ Nonce:      {inv.CreditCard.Nonce}";
             }
 
             // Only allow access for user who created this invoice - or admin
-            if (!AppUserState.IsAdmin && invoice.CustomerId != AppUserState.UserId)
+            if (!UserState.IsAdmin && invoice.CustomerId != UserState.UserId)
             {
                 response.Message = "Cannot access invoice - please log in first.";
                 return response;
@@ -696,8 +696,8 @@ Nonce:      {inv.CreditCard.Nonce}";
 
         private void ClearInvoiceAppUserState()
         {
-            AppUserState.InvoiceId = null;
-            AppUserState.CartItemCount = 0;
+            UserState.InvoiceId = null;
+            UserState.CartItemCount = 0;
         }
 
         #endregion

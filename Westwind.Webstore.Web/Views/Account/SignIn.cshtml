@@ -32,7 +32,7 @@
                    spellcheck="false"
                    autocorrect="off" required />
         </div>
-    
+        
 
         <div class="input-group">
             <span class="input-group-text"><i class="fad fa-fw fa-unlock-alt"></i></span>
@@ -49,14 +49,14 @@
         
 
         <div class="mt-3">
-            <button class="btn btn-lg btn-primary  " style="display: block;"
+            <button class="btn btn-lg btn-primary d-block" 
                     type="submit"
                     [disabled]="form1.invalid || form1.pristine">
                 <i class="far fa-sign-in" style="font-size: 1.1em"></i>
                 @AppResources.Account.SignInButton
             </button>
 
-            @if (Model.User.Identity.IsAuthenticated)
+            @if (!Model.UserState.IsEmpty())
             {
                 <div class="float-right" *ngIf="!isForgotPassword">
                     <a asp-action="Signout" class="btn btn-default btn-sm float-right"
@@ -74,7 +74,8 @@
 
         <p>@AppResources.Account.DontHaveAnAccount</p>
 
-        <a asp-action="Profile" class="btn btn-warning" routerLink="/account/profile/new">
+        <a asp-action="Profile" 
+           class="btn btn-warning" routerLink="/account/profile/new">
             <i class="fad fa-user"></i>
             @AppResources.Account.CreateANewAccount
         </a>

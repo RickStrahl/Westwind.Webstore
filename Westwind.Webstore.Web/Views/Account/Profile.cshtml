@@ -21,7 +21,7 @@
         }
         else
         {
-            <text>@Model.AppUserState.Name: Your Profile</text>
+            <text>@Model.UserState.Name: Your Profile</text>
         }
 
     </h1>
@@ -34,7 +34,7 @@
         <form href="" method="post">
         
             <div class="float-end" style="margin-top: -0.5em" >
-                @if (@Model.AppUserState.IsAuthenticated())
+                @if (@Model.UserState.IsAuthenticated())
                 {
                     <a href="~/account/signout"
                        class="btn btn-warning btn-sm">
@@ -53,7 +53,7 @@
             
             
 
-                @if (!@Model.AppUserState.IsAuthenticated())
+                @if (!@Model.UserState.IsAuthenticated())
                 {
                     <a href="~/account/signin?ReturnUrl=@Context.Request.Path"
                        class="btn btn-primary btn-sm ">

@@ -7,29 +7,19 @@ using Westwind.Webstore.Business;
 
 namespace Westwind.Webstore.Web.Models
 {
-    public class WebStoreBaseViewModel : BaseViewModel
+    public class WebStoreBaseViewModel : BaseViewModel<WebStoreAppUserState>
     {
         public WebStoreConfiguration Configuration { get; } = wsApp.Configuration;
 
-        /// <summary>
-        /// Hold information about the currently logged in user if any
-        /// </summary>
-        public UserState UserState { get; set;  }
-
-        public WebStoreAppUserState AppUserState {get; set;}
-
-        public ClaimsPrincipal User { get; set; }
-
-
+        
         public WebStoreBaseViewModel()
         {
             ErrorDisplay = new ErrorDisplayModel();
         }
 
-        public WebStoreBaseViewModel(UserState userState)
+        public WebStoreBaseViewModel(WebStoreAppUserState userState)
         {
             UserState = userState;
-            AppUserState = userState as WebStoreAppUserState;            
         }
 
 

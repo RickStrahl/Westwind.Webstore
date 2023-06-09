@@ -111,15 +111,15 @@
                 Products
             </a>
             
-            @if (Model.AppUserState.CartItemCount > 0)
+            @if (Model.UserState.CartItemCount > 0)
             {
                 <a href="/shoppingcart">
                     <i class="fad fa-shopping-cart"></i>
-                    <span class="badge bg-info badge-pill badge-super">@Model.AppUserState.CartItemCount</span>
+                    <span class="badge bg-info badge-pill badge-super">@Model.UserState.CartItemCount</span>
                 </a>
             }
             
-            @if (!Model.AppUserState.IsAuthenticated())
+            @if (!Model.UserState.IsAuthenticated())
             {
                 <a href="/account/signin">
                     <i class="fad fa-sign-in"></i>
@@ -132,14 +132,14 @@
                      id="ProfileMenuLink">
                     <span role="button"  data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fad fa-user"></i>
-                        @Model.AppUserState.Name
+                        @Model.UserState.Name
                         <i class="fas fa-caret-down ps-1"></i>
                     </span>
                
                     <ul class="dropdown-menu" aria-labelledby="ProfileMenuLink" style="margin-top: 0">
                         <li><a class="dropdown-item" href="/account/profile">My Profile</a></li>
                         <li><a class="dropdown-item" href="/account/signout">Sign out</a></li>
-                        @if (Model.AppUserState.IsAdmin)
+                        @if (Model.UserState.IsAdmin)
                         {
                             <li class="separator"></li>
                             <li><a class="dropdown-item" href="/admin">Administration</a></li>
@@ -199,16 +199,16 @@
                 <a href="/shoppingcart">
                     <i class="fad fa-shopping-cart fa-fw"></i>
                     Shopping Cart
-                    @if (Model.AppUserState.CartItemCount > 0)
+                    @if (Model.UserState.CartItemCount > 0)
                     {
                         <span class="badge bg-info badge-pill badge-super">
-                            @Model.AppUserState.CartItemCount
+                            @Model.UserState.CartItemCount
                         </span>
                     }
                 </a>
 
 
-                @if (!Model.AppUserState.IsAuthenticated())
+                @if (!Model.UserState.IsAuthenticated())
                 {
                     <a href="/account/signin">
                         <i class="fad fa-sign-in fa-fw"></i>
@@ -219,7 +219,7 @@
                 {
                     <a href="/account/profile">
                         <i class="fad fa-user fa-fw"></i>
-                        @Model.AppUserState.Name
+                        @Model.UserState.Name
                     </a>
                     <a href="/account/signout">
                         <i class="fad fa-sign-out fa-fw"></i>
@@ -278,7 +278,7 @@
                 @*     Network Tools *@
                 @* </a> *@
 
-                @if (Model.AppUserState.IsAdmin)
+                @if (Model.UserState.IsAdmin)
                 {
                     <div class="header">Administration</div>
                     

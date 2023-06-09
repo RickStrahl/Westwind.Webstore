@@ -39,7 +39,7 @@ public class ProductManagerController : WebStoreBaseController
     {
         base.OnActionExecuting(context);
 
-        if (!AppUserState.IsAdmin)
+        if (!UserState.IsAdmin)
         {
             context.HttpContext.Response.Redirect("/account/signin");
             await context.HttpContext.Response.CompleteAsync();

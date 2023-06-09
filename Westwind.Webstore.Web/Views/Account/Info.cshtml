@@ -21,15 +21,15 @@
     <tbody>
     <tr>
         <td>Logged in</td>
-        <td>@Model.User.Identity.IsAuthenticated or: @(!Model.AppUserState.IsEmpty())</td>
+        <td> @(!Model.UserState.IsEmpty())</td>
     </tr>
     <tr>
         <td>Name</td>
-        <td>@Model.AppUserState.Name</td>
+        <td>@Model.UserState.Name</td>
     </tr>
     <tr>
         <td></td>
-        <td>@Model.AppUserState.UserIdGuid</td>
+        <td>@Model.UserState.UserIdGuid</td>
     </tr>
     <tr>
         <td></td>

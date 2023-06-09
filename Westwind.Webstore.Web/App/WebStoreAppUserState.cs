@@ -40,7 +40,7 @@ namespace Westwind.Webstore.Web.Models
 
 
         /// <summary>
-        /// Sets invoice related settings on the WebStoreAppUserState.
+        /// Sets invoice related settings on the WebStoreUserState.
         /// You can also pass null to clear the items from userstate.
         /// </summary>
         /// <param name="invoice"></param>
@@ -63,7 +63,7 @@ namespace Westwind.Webstore.Web.Models
         /// in or an anonymous user.
         /// </summary>
         /// <returns></returns>
-        public bool IsAuthenticated()
+        public override bool IsAuthenticated()
         {
             if (!wsApp.Configuration.Security.UseTwoFactorAuthentication)
                 return !string.IsNullOrEmpty(UserId);

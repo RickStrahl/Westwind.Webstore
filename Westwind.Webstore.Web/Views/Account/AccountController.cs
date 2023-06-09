@@ -90,7 +90,7 @@ namespace Westwind.Webstore.Web.Views
         [Route("api/isAuthenticated")]
         public bool IsAuthenthenticated()
         {
-            return User.Identity.IsAuthenticated;
+            return UserState.IsAuthenticated() || User.Identity.IsAuthenticated;
         }
 
 
@@ -99,10 +99,9 @@ namespace Westwind.Webstore.Web.Views
         [Route("api/isAuthenticated/{userToken}")]
         public bool IsAuthenthenticatedToken(string userToken)
         {
-            return User.Identity.IsAuthenticated;
+            return UserState.IsAuthenticated() || User.Identity.IsAuthenticated;
         }
-
-
+        
 
         [AllowAnonymous]
         [HttpGet]
@@ -126,7 +125,7 @@ namespace Westwind.Webstore.Web.Views
         {
             var isNewRequest = Request.Path.Value.Contains("/new");
 
-            var userId = AppUserState.UserId;
+            var userId = UserState.UserId;
 
             var model = CreateViewModel<ProfileViewModel>();
 
@@ -136,9 +135,9 @@ namespace Westwind.Webstore.Web.Views
 
             var customerBusiness = BusinessFactory.GetCustomerBusiness();
             Customer customer;
-            if (!isNewRequest && !AppUserState.IsAuthenticated())
+            if (!isNewRequest && !UserState.IsAuthenticated())
                 return Redirect("/account/signin?returnurl=/account/profile");
-            if (isNewRequest && !AppUserState.IsAuthenticated())
+            if (isNewRequest && !UserState.IsAuthenticated())
             {
                 customer = customerBusiness.Create();
                 model.IsNewUser = true;
@@ -176,9 +175,9 @@ namespace Westwind.Webstore.Web.Views
             if (string.IsNullOrEmpty(model.ReturnUrl))
                 model.ReturnUrl = HttpContext.Request.Query["ReturnUrl"].FirstOrDefault();
 
-            var userId = AppUserState.UserId;
+            var userId = UserState.UserId;
 
-            if (string.IsNullOrEmpty(model.Customer.Id) || model.Customer.Id != AppUserState.UserId)
+            if (string.IsNullOrEmpty(model.Customer.Id) || model.Customer.Id != UserState.UserId)
             {
                 model.IsNewUser = true;
                 model.Customer.Id = wsApp.NewId();
@@ -297,7 +296,7 @@ namespace Westwind.Webstore.Web.Views
         [HttpGet, HttpPost]
         public async Task<ActionResult> OrderHistory(string displayMode = null)
         {
-            var userId = AppUserState.UserId;
+            var userId = UserState.UserId;
             if (string.IsNullOrEmpty(userId))
                 return Redirect("~/");
 
@@ -465,11 +464,11 @@ Regards,
             else
                 InitializeViewModel(model);
 
-            if (!AppUserState.IsAuthenticated())
+            if (!UserState.IsAuthenticated())
                 return RedirectToAction("Profile", "Account");
 
             var customerBus = BusinessFactory.GetCustomerBusiness();
-            var customer = customerBus.Load(AppUserState.UserId);
+            var customer = customerBus.Load(UserState.UserId);
 
             if (customer == null)
                 return RedirectToAction("Profile", "Account");
@@ -523,7 +522,7 @@ Regards,
         [HttpPost]
         public IActionResult TwoFactorValidation(TwoFactorValidationViewModel model)
         {
-            if (string.IsNullOrEmpty(AppUserState.UserId))
+            if (string.IsNullOrEmpty(UserState.UserId))
                 return RedirectToAction("Signin");
 
             if (model == null)
@@ -548,14 +547,14 @@ Regards,
                 }
 
                 var customerBus = BusinessFactory.GetCustomerBusiness();
-                var customer = customerBus.Load(AppUserState.UserId);
+                var customer = customerBus.Load(UserState.UserId);
                 if (customer == null)
                     return RedirectToAction("Signin");
 
                 var twoFactor = new TwoFactorAuthenticator();
-                AppUserState.IsTwoFactorValidated = twoFactor.ValidateTwoFactorPIN(customer.TwoFactorKey, model.ValidationCode.Replace(" ", ""));
+                UserState.IsTwoFactorValidated = twoFactor.ValidateTwoFactorPIN(customer.TwoFactorKey, model.ValidationCode.Replace(" ", ""));
 
-                if (AppUserState.IsTwoFactorValidated)
+                if (UserState.IsTwoFactorValidated)
                 {
                     return Redirect(model.ReturnUrl);
                     //ErrorDisplay.ShowSuccess("Code has been validated.");
@@ -680,7 +679,7 @@ The {wsApp.Configuration.ApplicationCompany} Team
         /// <returns></returns>
         private bool CheckEmailRequestForFraud(string vkKey, int listSize = 2000, double minuteTimeout = 5F)
         {
-            if (string.IsNullOrEmpty(vkKey) || vkKey != AppUserState.SecurityToken)
+            if (string.IsNullOrEmpty(vkKey) || vkKey != UserState.SecurityToken)
                 return false;
 
             var list = EmailValidationLog.Where(l => l.Timestamp > DateTime.UtcNow.AddMinutes( minuteTimeout * -1))

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Version>1.0.5.1</Version>
+    <Version>1.0.5.2</Version>
     <RazorCompileOnPublish>true</RazorCompileOnPublish>
     <!--    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>-->
     <DebugSymbols>true</DebugSymbols>
@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.5" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="Westwind.Data.EfCore" Version="5.0.4" />
-    <PackageReference Include="Westwind.AspNetCore" Version="3.7.0" />
+    <PackageReference Include="Westwind.AspNetCore" Version="3.8.3" />
     <PackageReference Include="Westwind.Globalization.AspnetCore" Version="3.1.7" />
   </ItemGroup>
 
@@ -46,27 +46,5 @@
     <Folder Include="wwwroot\temp" />
   </ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\all.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\all.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\brands.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\brands.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\duotone.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\duotone.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\fontawesome.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\fontawesome.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\light.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\light.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\regular.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\regular.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\solid.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\solid.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\v4-shims.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\css\v4-shims.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\webfonts\fa-brands-400.woff2" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\webfonts\fa-duotone-900.woff2" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\webfonts\fa-light-300.woff2" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\webfonts\fa-regular-400.woff2" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\fontawesome_5\webfonts\fa-solid-900.woff2" />
-  </ItemGroup>
+
 </Project>
