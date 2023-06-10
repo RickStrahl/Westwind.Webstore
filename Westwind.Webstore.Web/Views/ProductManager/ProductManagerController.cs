@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
+using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.Extensions;
 using Westwind.AspNetCore.Markdown.Utilities;
 using Westwind.AspNetCore.Messages;
@@ -186,12 +187,23 @@ public class ProductManagerController : WebStoreBaseController
         var productBusiness = BusinessFactory.GetProductBusiness();
         if (!productBusiness.DeleteDirect(model.Product.Id))
         {
-            model.ErrorDisplay.ShowError($"Invoice deletion failed: {productBusiness.ErrorMessage}");
+            model.ErrorDisplay.ShowError($"Couldn't delete Product: {productBusiness.ErrorMessage}");
             return View("ProductEditor",model);
         }
 
         var msg = WebUtility.UrlEncode($"Item '{model.Product.Description}' has been deleted.");
         return Redirect($"/admin/productmanager?error-message={msg}&error-icon=info");
+    }
+
+    [HttpDelete]
+    [Route("/admin/productmanager/product/delete/{productId}")]
+    public JsonResult DeleteProduct(string productId)
+    {
+        var productBusiness = BusinessFactory.GetProductBusiness();
+        if (!productBusiness.DeleteDirect(productId))
+            return JsonError($"Couldn't delete Product: {productBusiness.ErrorMessage}");
+
+        return Json(new ApiError("Product has been deleted") { isError = false });
     }
 
     #region Product Upload
