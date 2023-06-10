@@ -356,7 +356,7 @@ namespace Westwind.Webstore.Web.Controllers
 
             var busProduct = BusinessFactory.GetProductBusiness();
             model.Product = busProduct.LoadBySku(sku);
-            if (model.Product == null)
+            if (model.Product == null || (model.Product.InActive))
                 return Redirect("/");
 
             var busCustomer = BusinessFactory.GetCustomerBusiness(busProduct.Context);
