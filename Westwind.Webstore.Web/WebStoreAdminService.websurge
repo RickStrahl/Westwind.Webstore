@@ -8,7 +8,7 @@ WebSurge-Request-Group: Authentication
 
 {
   "username": "rstrahl@west-wind.com",
-  "password": "cah-MWF_wyh2ywd_eqc"
+  "password": "kqm3ube0jnm!QKC9wcx"
 }
 
 ------------------------------------------------------------------
@@ -62,6 +62,13 @@ WebSurge-Request-Group: Miscellaneous
 
 ------------------------------------------------------------------
 
+GET /admin/productmanager/product/delete/1231233 HTTP/2.0
+Accept-Encoding: gzip,deflate
+Websurge-Request-Name: Delete Product by Id
+WebSurge-Request-Group: Product
+
+------------------------------------------------------------------
+
 
 ----- Start WebSurge Options -----
 
@@ -86,8 +93,8 @@ WebSurge-Request-Group: Miscellaneous
   "RemoveStartAndEndPercentile": 0,
   "ReplaceQueryStringValuePairs": null,
   "ReplaceCookieValue": "",
-  "TrackPerSessionCookies": false,
-  "ReplaceAuthorization": "Bearer cb4uzdibcju3kph",
+  "TrackPerSessionCookies": true,
+  "ReplaceAuthorization": "Bearer xu9pwn5ej711tii",
   "Username": null,
   "Password": null,
   "UsernamePasswordType": "Negotiate",
