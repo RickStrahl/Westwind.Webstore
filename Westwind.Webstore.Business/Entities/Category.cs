@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Westwind.Webstore.Business.Entities
 {
     /// <summary>
     /// A list of categories.
     /// </summary>
+    [Table("Categories")]
     public class Category
     {
         [Key()]

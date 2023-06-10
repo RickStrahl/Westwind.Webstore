@@ -15,6 +15,7 @@ namespace Westwind.Webstore.Business.Entities
     /// Customer information
     /// </summary>
     [DebuggerDisplay("{Lastname}, {Firstname} - {Company} - {Id}")]
+    [Table("Customers")]
     public class Customer
     {
         public Customer()

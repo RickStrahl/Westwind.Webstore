@@ -6,6 +6,8 @@ using Westwind.Utilities;
 
 namespace Westwind.Webstore.Business.Entities
 {
+
+    [Table("LineItems")]
     public class LineItem
     {
         public LineItem()

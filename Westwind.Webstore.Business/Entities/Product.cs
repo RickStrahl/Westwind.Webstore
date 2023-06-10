@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Westwind.Webstore.Business.Entities
 {
+    [Table("Products")]
     public class Product
     {
         [Key()]

@@ -13,6 +13,7 @@ using Westwind.Webstore.Business.Entities;
 namespace Westwind.Webstore.Business.Entities
 {
 
+    [Table("Invoices")]
     public class Invoice
     {
         public Invoice()

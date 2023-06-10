@@ -10,7 +10,8 @@ namespace Westwind.Webstore.Business.Entities
     /// Lookup item used from a key list of stored in the database
     /// </summary>
 
-    
+
+    [Table("Lookups")]
     public class Lookup
     {
         [Key()]
@@ -21,10 +22,10 @@ namespace Westwind.Webstore.Business.Entities
 
         /// <summary>
         /// Group identitifier for lookups. Each set of items
-        /// has a shared key (ie. "promo", 
+        /// has a shared key (ie. "promo",
         /// </summary>
         public string Key { get; set; }
-        
+
         public string CData { get; set;  }
         public string CData1 { get; set; }
 
