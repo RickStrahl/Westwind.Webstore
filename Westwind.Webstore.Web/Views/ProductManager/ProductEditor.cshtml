@@ -420,9 +420,9 @@
 </button>
 
 <div class="float-end">
-    <button type="submit" name="btnDeleteInvoice" id="btnDeleteProduct"
+    <button type="submit" name="btnDeleteProduct" id="btnDeleteProduct"
             title="Delete this product"
-            onclick="if(!confirm('Are you sure you want to delete this item?')) return false;"
+            onclick="if(!confirm('Are you sure you want to delete this item?\n\n @Model.Product.Sku - @Model.Product.Description')) return false;"
             class="btn btn-secondary btn-sm">
         <i class="fas fa-times text-danger"></i>
         Delete
