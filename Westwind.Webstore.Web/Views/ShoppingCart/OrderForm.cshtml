@@ -29,16 +29,19 @@
         
         <partial name="ShoppingCartItems_Partial" model="Model.InvoiceModel"   />
 
+        @if (@invoice.InvoiceTotal > 0.1M)
+        {
+            <h3 class="page-header-text mt-4">
+                <i class="fad fa-credit-card"></i>
+                @AppResources.ShoppingCart.PaymentInformation
 
-        <h3 class="page-header-text mt-4">
-            <i class="fad fa-credit-card"></i>
-            @AppResources.ShoppingCart.PaymentInformation
+                <img src="/images/ccCards.png" class="float-end hidable-xs" alt="Credit Cards">
+            </h3>
 
-            <img src="/images/ccCards.png" class="float-end hidable-xs" alt="Credit Cards">
-        </h3>
-
-        <partial name="CreditCardPayment_BrainTree_Partial" model="Model"/>
+            <partial name="CreditCardPayment_BrainTree_Partial" model="Model"/>
+        }
         
+
         <h3 class="page-header-text mb-0">
             <i class="fad fa-info-circle"></i>
             @AppResources.ShoppingCart.NotesAndInformation
