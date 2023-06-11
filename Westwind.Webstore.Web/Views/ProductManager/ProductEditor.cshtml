@@ -28,7 +28,7 @@
                    title="Copy Item">
                     <i class="fad fa-copy text-warning" ></i>
         </a>
-        <a href="/admin/productmanager" class="btn btn-secondary btn-sm "
+        <a href="@Model.PreviousListUrl" class="btn btn-secondary btn-sm "
            title="Product list">
             <i class="fad fa-list text-warning" ></i>
         </a>
@@ -443,6 +443,8 @@
 @scriptVars.ToHtmlString(true)
 
 <input type="hidden" asp-for="Product.Id" />
+<input type="hidden" asp-for="PreviousListUrl" />
+
 </form>
 
 

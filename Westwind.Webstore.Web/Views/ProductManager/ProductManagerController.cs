@@ -5,19 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Primitives;
 using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.Extensions;
-using Westwind.AspNetCore.Markdown.Utilities;
 using Westwind.AspNetCore.Messages;
-using Westwind.Globalization.AspNetCore.Extensions;
-using Westwind.Globalization.AspnetCore.Utilities;
 using Westwind.Utilities;
-using Westwind.Web;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 using Westwind.WebStore.Utilities;
@@ -83,6 +76,11 @@ public class ProductManagerController : WebStoreBaseController
     public IActionResult ProductEditor(string sku)
     {
         var model = CreateViewModel<ProductEditorViewModel>();
+        var referer  = Request.Headers["Referer"].FirstOrDefault();
+        if (!string.IsNullOrEmpty(referer) && referer.Contains("ProductManager?", StringComparison.OrdinalIgnoreCase))
+            model.PreviousListUrl = referer;
+        else
+            model.PreviousListUrl = "/admin/ProductManager";
 
         var productBus = BusinessFactory.GetProductBusiness();
 
@@ -115,6 +113,8 @@ public class ProductManagerController : WebStoreBaseController
     public IActionResult ProductEditorUpdate(ProductEditorViewModel model, string sku)
     {
         InitializeViewModel(model);
+        if (string.IsNullOrEmpty(model.PreviousListUrl))
+            model.PreviousListUrl = "/admin/ProductManager";
 
         if (Request.IsFormVar("btnDeleteProduct"))
             return DeleteProduct(model);
@@ -335,6 +335,7 @@ public class ProductEditorViewModel : WebStoreBaseViewModel
 
     public Product Product { get; set; }
 
+    public string PreviousListUrl { get; set; }
 }
 
 public class ProductEditorListViewModel : WebStoreBaseViewModel
