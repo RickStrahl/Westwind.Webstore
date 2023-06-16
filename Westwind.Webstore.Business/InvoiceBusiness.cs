@@ -658,7 +658,7 @@ namespace Westwind.Webstore.Business
                     return false;
 
                 string countryCode = Entity.BillingAddress.CountryCode;
-                string[] whiteList = { "US", "CA", "DE", "GB", "AU", "NZ", "AT", "CH", "FR", "NL", "BE", "IT", "DK", "SE", "NO", "GR", "ES","IE", "SI" };
+                string[] whiteList = { "US", "CA", "DE", "GB", "AU", "NZ", "AT", "CH", "FR", "NL", "BE", "IT", "DK", "SE", "NO", "GR", "ES","IE", "SI", "CZ", "IS", "IL", "CL", "BR", "AR" };
                 if (!whiteList.Any(w => w == countryCode))
                     return false;
 
