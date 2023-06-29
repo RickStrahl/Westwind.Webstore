@@ -136,7 +136,7 @@ var vm = null;
                function searchProducts(e) {
                    var val = this.value;
                    console.log(val);
-                   ajaxJson("/api/product/search/" + encodeURIComponent(this.value), null,
+                   ajaxJson("/api/product/searchall/" + encodeURIComponent(this.value), null,
                        function (result) {
                            $sku.data('typeahead').source = result;
                        }, null, { method: "GET" });

@@ -112,6 +112,23 @@ namespace Westwind.Webstore.Web.Controllers
             return Json(list);
         }
 
+        [HttpGet, Route("api/product/searchall/{searchText}")]
+        public IActionResult ApiProductSearchAll(string searchText)
+        {
+            List<object> list = new List<object>();
+            using (var busItem = BusinessFactory.GetProductBusiness())
+            {
+                var filter = new InventoryItemsFilter() { SearchTerm = searchText };
+                var matches = busItem.GetItems(filter, true)
+                    .Select(p => new { id = p.Sku, name = p.Description });
+
+                foreach(var prod in matches)
+                    list.Add(prod);
+            }
+
+            return Json(list);
+        }
+
         public IActionResult AddToShoppingCart()
         {
             return null;
