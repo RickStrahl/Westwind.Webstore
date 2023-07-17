@@ -32,10 +32,19 @@ namespace Westwind.Webstore.Business.Utilities
             message.From.Add(CreateMailboxAddress(emailConfig.SenderName,
                 emailConfig.SenderEmail));
 
-            message.To.Add(CreateMailboxAddress(recipient));
-            if (!noCCs)
+            var tokens = recipient.Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            foreach (var email in tokens)
             {
-                message.Bcc.Add(CreateMailboxAddress(emailConfig.CcList ));
+                message.To.Add(CreateMailboxAddress(email));
+            }
+
+            if (!noCCs && !string.IsNullOrEmpty(emailConfig.CcList))
+            {
+                tokens = emailConfig.CcList.Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                foreach (var email in tokens)
+                {
+                    message.Cc.Add(CreateMailboxAddress(email));
+                }
             }
 
             message.Subject = subject;
@@ -160,7 +169,7 @@ namespace Westwind.Webstore.Business.Utilities
             {
                 var tokens = origEmail.Split(" <");
                 name = tokens[0]?.Trim();
-                email = tokens[1]?.TrimEnd(  ' ', '>');
+                email = tokens[1]?.TrimEnd(  ' ', '>',';',',');
             }
 
             return new MailboxAddress(name, email);
