@@ -82,11 +82,21 @@
 
     <p>
         Below is a summary of your order. This document serves as a record for your transaction.
-        You will receive this same confirmation via email. If you ordered software, a separate confirmation
-        with information on where to download the software will be sent once the order
-        has been processed successfully.
+        A separate confirmation with information on where to download any purchased software 
+        will be sent once the order has been processed successfully.
     </p>
 
+     @if (Model.InvoiceModel.Invoice.Completed != null)
+        {
+            <i>
+                Please note that on some orders and upgrades, payment is not immediately processed.
+                This applies to upgrades and some foreign orders. These orders are typically processed within
+                a full business day. If you don't hear from us within two business days, it probably means
+                that there was a problem with sending the confirmation email to you, and you should
+                <a href="mailto:@wsApp.Configuration.Email.SenderEmail">contact us</a>.
+            </i>
+        }
+    
     <blockquote>
         <b>Important Note:</b><br/>
         Please ensure that you can receive email at the address you specified.
@@ -98,16 +108,15 @@
         <br/>
         You can also access this and previous orders through your <a href="@(wsApp.Configuration.ApplicationHomeUrl)account/profile">@wsApp.Configuration.Company.CompanyName profile</a>
         where you can confirm order status, order history and retrieve license codes.
+        @if(Model.InvoiceModel.Invoice.Completed!=null) 
+        {
+            <text>
+            <br/>
+            A printable invoice with updated order status is also available <a href="@(wsApp.Configuration.ApplicationHomeUrl + "invoice/" + invoice.InvoiceNumber)">from here</a>.
+            </text>
+        }
     </blockquote>
-
-    <p>
-        Please note that on some orders and upgrades credit cards are not immediately processed.
-        This applies to upgrades and some foreign orders. These orders are typically processed within
-        a full business day. If you don't hear from us within two business days, it probably means
-        that there was a problem with sending the confirmation email to you, and you should
-        <a href="mailto:@wsApp.Configuration.Email.SenderEmail">contact us</a>.
-    </p>
-
+    
     <p>
         Thank you again,
     </p>
