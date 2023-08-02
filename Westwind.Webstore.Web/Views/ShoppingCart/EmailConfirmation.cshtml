@@ -138,14 +138,14 @@
         Thank you for your order in the West Wind Web Store.
         Your order number is <b>@invoice.InvoiceNumber</b> for a total of <b>$@invoice.InvoiceTotal.ToString("n2")</b>.
     </p>
-
+    
     <p>
         Below is a summary of your order. This document serves as a record for your transaction.
-        A separate confirmation with information on where to download any purchased software 
+        A separate confirmation with information on where to download any purchased software
         will be sent once the order has been processed successfully.
     </p>
-    
-    @if (Model.InvoiceModel.Invoice.Completed != null)
+
+    @if (Model.InvoiceModel.Invoice.Completed == null)
     {
         <i>
             Please note that on some orders and upgrades, payment is not immediately processed.
