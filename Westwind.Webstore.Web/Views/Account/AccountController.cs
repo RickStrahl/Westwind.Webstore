@@ -101,7 +101,7 @@ namespace Westwind.Webstore.Web.Views
         {
             return UserState.IsAuthenticated() || User.Identity.IsAuthenticated;
         }
-        
+
 
         [AllowAnonymous]
         [HttpGet]
@@ -136,7 +136,11 @@ namespace Westwind.Webstore.Web.Views
             var customerBusiness = BusinessFactory.GetCustomerBusiness();
             Customer customer;
             if (!isNewRequest && !UserState.IsAuthenticated())
-                return Redirect("/account/signin?returnurl=/account/profile");
+            {
+                var redirectUrl = model.IsOrderProfile ? "/shoppingcart/orderprofile" : "/account/profile";
+                return Redirect($"/account/signin?returnurl={redirectUrl}");
+            }
+
             if (isNewRequest && !UserState.IsAuthenticated())
             {
                 customer = customerBusiness.Create();
