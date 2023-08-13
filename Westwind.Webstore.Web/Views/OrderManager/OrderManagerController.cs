@@ -183,6 +183,7 @@ public class OrderManagerController : WebStoreBaseController
         invoice.PoNumber = minvoice.PoNumber;
         invoice.CreditCardResult.ProcessingResult = minvoice.CreditCardResult.ProcessingResult;
         invoice.PromoCode = minvoice.PromoCode;
+        invoice.Notes = minvoice.Notes;
 
         invoice.Customer.Firstname = minvoice.Customer.Firstname;
         invoice.Customer.Lastname = minvoice.Customer.Lastname;

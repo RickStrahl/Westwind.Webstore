@@ -53,7 +53,7 @@ namespace Westwind.Webstore.Business.Entities
 
         /// <summary>
         /// Allows creating a new WebStore Context outside of DI for a few
-        /// edge case scnearios (like app startup) where DI may not be
+        /// edge case scenarios (like app startup) where DI may not be
         /// available.
         /// </summary>
         /// <param name="connectionString"></param>
