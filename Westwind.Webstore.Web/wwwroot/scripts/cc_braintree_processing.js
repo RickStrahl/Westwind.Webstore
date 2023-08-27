@@ -34,7 +34,8 @@ brainTree = {
                     kount: true
                 },
                 card: {
-                    amount: amount,
+                    cardholderName: true,
+                    //amount: amount,
                     currency: "USD"
                 },
                 paypal: {

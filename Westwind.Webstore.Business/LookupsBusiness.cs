@@ -60,6 +60,32 @@ namespace Westwind.Webstore.Business
                 .FirstOrDefault();
         }
 
+         /// <summary>
+         ///
+         /// </summary>
+         /// <param name="key"></param>
+         /// <returns></returns>
+        public List<Lookup> GetAllItems(string key = null, bool noStateOrCountry = false)
+        {
+            IQueryable<Lookup> list = Context.Lookups;
+            if (!string.IsNullOrEmpty(key))
+            {
+                list = list.Where(lk => lk.Key ==  key);
+            }
+            else
+            {
+                if (noStateOrCountry)
+                {
+                    list = list.Where(lk => lk.Key != "COUNTRY" &&
+                                            lk.Key != "STATE"
+                    );
+                }
+            }
+
+            list = list.OrderBy(lk => lk.Key).ThenBy(lk => lk.CData);
+            return list.ToList();
+        }
+
         /// <summary>
         /// Returns a list of selected items
         /// </summary>
@@ -418,6 +444,7 @@ INSERT [dbo].[Addresses] ([Id], [CustomerId], [AddressName], [StreetAddress], [C
 
             return true;
         }
+
     }
 
     public class FeaturedProduct

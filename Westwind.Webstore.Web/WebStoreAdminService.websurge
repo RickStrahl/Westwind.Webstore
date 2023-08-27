@@ -69,11 +69,59 @@ WebSurge-Request-Group: Product
 
 ------------------------------------------------------------------
 
+POST /admin/lookupsmanager HTTP/2.0
+Accept-Encoding: gzip,deflate
+Content-Type: application/json
+Websurge-Request-Name: Save Lookup Change
+WebSurge-Request-Group: Lookups
+
+{
+  "cdata": "MM_FREE_UPGRADE",
+  "cdata1": "sss",
+  "ndata": 99
+}
+
+------------------------------------------------------------------
+
+POST /admin/lookupsmanager HTTP/2.0
+Accept-Encoding: gzip,deflate
+Content-Type: application/json
+Websurge-Request-Name: Save New Lookup
+WebSurge-Request-Group: Lookups
+
+{
+  "cdata": "MM_FREE_UPGRADE",
+  "cdata1": "sss",
+  "ndata": 99,
+  "key":"PROMO",
+  "id": "new"
+}
+
+------------------------------------------------------------------
+
+DELETE /admin/lookupsmanager/d500pf1b0g HTTP/2.0
+Accept-Encoding: gzip,deflate
+Accept: application/json
+Websurge-Request-Name: Delete Lookup
+WebSurge-Request-Group: Lookups
+
+{
+  "cdata": "MM_FREE_UPGRADE",
+  "cdata1": "sss",
+  "ndata": 99,
+  "key":"PROMO",
+  "id": "new"
+}
+
+------------------------------------------------------------------
+
 
 ----- Start WebSurge Options -----
 
 {
   "SiteBaseUrl": "https://localhost:5001/",
+  "OnlineSessionId": null,
+  "SessionVariables": {},
   "RecentSiteBaseUrlList": [
     "https://localhost:5001/"
   ],

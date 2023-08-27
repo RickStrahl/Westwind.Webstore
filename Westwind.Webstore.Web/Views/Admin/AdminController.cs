@@ -46,7 +46,7 @@ namespace Westwind.Webstore.Web.Views.Admin
             await next();
 
             // Clear out temp folder files older than 5 minutes
-            FileUtils.DeleteTimedoutFiles(Path.Combine(Request.MapPath("/temp"), "*.*"), 300);
+            FileUtils.DeleteTimedoutFiles(Path.Combine(HttpContext.MapPath("/temp"), "*.*"), 300);
         }
 
 
@@ -171,9 +171,9 @@ namespace Westwind.Webstore.Web.Views.Admin
             var adminBus = BusinessFactory.GetAdminBusiness();
 
 
-            var basePath = Request.MapPath("/temp");
+            var basePath = HttpContext.MapPath("/temp");
             var outFile =
-                Request.MapPath($"{basePath}/Backup-WebStore-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm")}.bak");
+                HttpContext.MapPath($"{basePath}/Backup-WebStore-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm")}.bak");
 
             if (Directory.Exists(basePath))
                 FileUtils.DeleteFiles(basePath, "*.*", true);

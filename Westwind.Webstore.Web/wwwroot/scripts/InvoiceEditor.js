@@ -10,8 +10,6 @@ page = {
         return ajaxJson("/admin/ordermanager/api/invoice/" + globals.invoiceNumber,
             function(inv) {
                 page.invoice = invoice;
-                
-                debugger;
             },
             function(err) {
                 toastr.error("failed to load api invoice: " + err.message);

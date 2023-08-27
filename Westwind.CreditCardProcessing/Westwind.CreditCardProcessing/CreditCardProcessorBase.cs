@@ -10,24 +10,24 @@ namespace Westwind.CreditCardProcessing
 
 {
     /// <summary>
-    /// The ccProcessing class provides a base class for provider processing of 
-    /// requests. The class aims at providing a simple, common interface to Credit 
+    /// The ccProcessing class provides a base class for provider processing of
+    /// requests. The class aims at providing a simple, common interface to Credit
     /// Card Processing so it's easy to swap providers.
-    /// 
+    ///
     /// This class acts as an abstract class that requires subclassing and use of a
-    /// specific provider implementation class. However, because the functionality is 
+    /// specific provider implementation class. However, because the functionality is
     /// so common amongst providers a single codebase can usually accomodate all requests.
     /// </summary>
     public abstract class CreditCardProcessorBase
     {
         protected CreditCardProcessorBase()
-        {            
+        {
             Result = new CreditCardProcessingResult();
             Merchant = new CreditCardMerchantInfo();
             BillingInfo = new CreditCardBillingInfo();
             Order = new CreditCardOrderInfo();
             Configuration = new CreditCardProcessingConfiguration();
-            
+
             Order.ProcessType = ccProcessTypes.Sale;
             Configuration.UseLocalMod10Check = true;
             Configuration.Timeout = 50;
@@ -49,7 +49,7 @@ namespace Westwind.CreditCardProcessing
         public CreditCardBillingInfo BillingInfo { get; set;  }
 
         public CreditCardOrderInfo Order { get; set; }
-        
+
 
         public CreditCardProcessingConfiguration Configuration { get; set;  }
 
@@ -64,28 +64,28 @@ namespace Westwind.CreditCardProcessing
         /// for processor failures or more general API/HTTP failure messages.
         /// </summary>
         public string ErrorMessage { get; set; }
-        
+
 
         /// <summary>
-        /// Factory method that creates an instance of the appropriate processor. Use 
+        /// Factory method that creates an instance of the appropriate processor. Use
         /// this method to create the appropriate provider.
-        /// 
+        ///
         /// &lt;&lt;code lang=&quot;C#&quot;&gt;&gt;
         /// ccProcessing CC = ccProcessing.CreateProcessor(CCType);
         /// if (CC == null)
         /// {
-        ///     SetError(&quot;Invalid Credit Card Processor or Processor not 
+        ///     SetError(&quot;Invalid Credit Card Processor or Processor not
         /// supported&quot;);
         ///     return false;
         /// }
-        /// 
+        ///
         /// CC.MerchantId = App.PaymentConfiguration.CCMerchantId;
         /// CC.MerchantPassword = App.PaymentConfiguration.CCMerchantPassword;
-        /// 
+        ///
         /// // ...  set other properties
-        /// 
+        ///
         /// bool Result = CC.ValidateCard();
-        /// 
+        ///
         /// // *** deal with the results
         /// Inv.Ccresult = CC.ValidatedResult;
         /// if (!Result)
@@ -93,7 +93,7 @@ namespace Westwind.CreditCardProcessing
         ///     ErrorMessage = CC.Message;
         ///     Inv.Ccerror = ErrorMessage;
         /// }
-        /// 
+        ///
         /// // *** Always write out the raw response
         /// if (string.IsNullOrEmpty(CC.RawProcessorResult))
         ///     Inv.Ccresultx = CC.Message;
@@ -142,21 +142,21 @@ namespace Westwind.CreditCardProcessing
 
 
         /// <summary>
-        /// Base ValidateCard method that provides the core CreditCard checking. Should 
+        /// Base ValidateCard method that provides the core CreditCard checking. Should
         /// always be called at the beginning of the subclassed overridden method.
         /// </summary>
         /// <param name="preAuthCodeOrTransactionId">PreAuth code if you are doing an AuthCapture</param>
         /// <returns>bool</returns>
         public virtual CreditCardProcessingResult Process(string preAuthCodeOrTransactionId = null)
         {
-            if (!string.IsNullOrEmpty(Order.CardNumber) && 
+            if (!string.IsNullOrEmpty(Order.CardNumber) &&
                 Configuration.UseLocalMod10Check && !Mod10Check(Order.CardNumber))
             {
                 ErrorMessage = "Invalid Credit Card Number";
                 Result.Message = ErrorMessage;
                 Result.ValidatedResult = ccProcessResults.Declined;
                 LogTransaction();
-                return Result;                
+                return Result;
             }
 
             Result.IsSuccess = true;
@@ -167,7 +167,7 @@ namespace Westwind.CreditCardProcessing
         /// <summary>
         /// Logs the information of the current request into the log file specified.
         /// If the log file is empty no logging occurs.
-        /// </summary>		
+        /// </summary>
         protected virtual void LogTransaction()
         {
             if (!string.IsNullOrEmpty(Configuration.LogFile))
@@ -312,7 +312,7 @@ namespace Westwind.CreditCardProcessing
                 // Multiply by 2 if the position is odd
                 digit = digit * ((pos + 1) % 2 == 0 ? 1 : 2);
 
-                // If the result is larger than 10, the two digits have to be added. This can be done 
+                // If the result is larger than 10, the two digits have to be added. This can be done
                 // by adding the results of the integer division by 10 and then mod by 10.
                 digit = (digit / 10) + (digit % 10);
 
@@ -378,12 +378,12 @@ namespace Westwind.CreditCardProcessing
     }
 
     /// <summary>
-    /// The ccProcessing class provides a base class for provider processing of 
-    /// requests. The class aims at providing a simple, common interface to Credit 
+    /// The ccProcessing class provides a base class for provider processing of
+    /// requests. The class aims at providing a simple, common interface to Credit
     /// Card Processing so it's easy to swap providers.
-    /// 
+    ///
     /// This class acts as an abstract class that requires subclassing and use of a
-    /// specific provider implementation class. However, because the functionality is 
+    /// specific provider implementation class. However, because the functionality is
     /// so common amongst providers a single codebase can usually accomodate all requests.
     /// </summary>
     [DebuggerDisplay("{ValidatedResult} - {Message}")]
@@ -408,13 +408,13 @@ namespace Westwind.CreditCardProcessing
 
         /// <summary>
         /// Holds raw instance to the processors result object
-        /// where available. 
+        /// where available.
         /// </summary>
         public object ProcessorResultObject { get; set; }
 
         /// <summary>
         /// The raw response from the Credit Card Processor Server.
-        /// 
+        ///
         /// You can use this result to manually parse out error codes
         /// and messages beyond the default parsing done by this class.
         /// </summary>
@@ -475,15 +475,15 @@ namespace Westwind.CreditCardProcessing
         public string SubscriptionId { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string CreditCardToken { get; set; }
 
         public string CustomerId { get; set; }
-        
+
 
         public decimal ProcessedAmount { get; set;  }
-        
+
     }
 
 
@@ -503,25 +503,25 @@ namespace Westwind.CreditCardProcessing
         /// Public key for the merchant account. Not always used
         /// </summary>
         public string PublicKey { get; set; }
-        
+
         /// <summary>
         /// Private key for the merchant account. Not always used
         /// </summary>
         public string PrivateKey { get; set; }
 
-        
+
 
         /// <summary>
-        /// The link to hit on the server. Depending on the interface this can be a 
+        /// The link to hit on the server. Depending on the interface this can be a
         /// URL or domainname or domainname:Port combination.
-        /// 
+        ///
         /// Applies only to providers that use HTTP POST operations directly.
         /// </summary>
         public string HttpLink { get; set; }
 
 
         /// <summary>
-        /// Optional Url that determines a test server url         
+        /// Optional Url that determines a test server url
         /// </summary>
         public string TestLink { get; set; }
     }
@@ -541,13 +541,13 @@ namespace Westwind.CreditCardProcessing
 
 
         /// <summary>
-        /// If available for the processor use client token processing 
+        /// If available for the processor use client token processing
         /// for the credit card. Authorize.NET, BrainTree
         /// </summary>
         public bool UseClientTokenProcessing { get; set; }
 
         /// <summary>
-        /// Determines whether a Mod10Check is performed before sending the 
+        /// Determines whether a Mod10Check is performed before sending the
         /// credit card to the processor. Turn this off for testing so you
         /// can at least get to the provider.
         /// </summary>
@@ -582,8 +582,8 @@ namespace Westwind.CreditCardProcessing
         {
             get
             {
-                if (_Name == "")
-                    return ((string)(FirstName + " " + LastName)).Trim();
+                if (string.IsNullOrWhiteSpace(_Name))
+                    return (FirstName + " " + LastName).Trim();
 
                 return _Name;
             }
@@ -592,8 +592,8 @@ namespace Westwind.CreditCardProcessing
         string _Name = "";
 
         /// <summary>
-        /// First Name of customer's name on the card. Can be used in lieu of Name 
-        /// property. If FirstName and LastName are used they get combined into a name 
+        /// First Name of customer's name on the card. Can be used in lieu of Name
+        /// property. If FirstName and LastName are used they get combined into a name
         /// IF Name is blank.
         /// <seealso>Class ccProcessing</seealso>
         /// </summary>
@@ -601,11 +601,11 @@ namespace Westwind.CreditCardProcessing
 
 
         /// <summary>
-        /// Last Name of customer's name on the card. Can be used in lieu of Name 
-        /// property. If FirstName and LastName are used they get combined into a name 
+        /// Last Name of customer's name on the card. Can be used in lieu of Name
+        /// property. If FirstName and LastName are used they get combined into a name
         /// IF Name is blank.
-        /// 
-        /// AuthorizeNet requires both first and last names, while the other providers 
+        ///
+        /// AuthorizeNet requires both first and last names, while the other providers
         /// only use a single Name property.
         /// <seealso>Class ccProcessing</seealso>
         /// </summary>
@@ -644,9 +644,9 @@ namespace Westwind.CreditCardProcessing
         public string CountryCode { get; set; }
 
         public string Country { get; set; }
-        
+
         /// <summary>
-        /// Billing Phone Number 
+        /// Billing Phone Number
         /// </summary>
         public string Phone { get; set; }
 
@@ -657,13 +657,13 @@ namespace Westwind.CreditCardProcessing
 
         // Client IP Address
         public string IpAddress { get; set; }
-        
+
     }
 
     public class CreditCardOrderInfo
     {
         /// <summary>
-        /// The credit card number. Number can contain spaces and other markup 
+        /// The credit card number. Number can contain spaces and other markup
         /// characters which are stripped for processing later.
         /// </summary>
         public string CardNumber { get; set; }
@@ -765,12 +765,12 @@ namespace Westwind.CreditCardProcessing
     public enum ccProcessors
     {
         AuthorizeNet,
-        Braintree,        
+        Braintree,
         PayFlowPro,
         AuthorizeNetClassic,
-        AccessPoint,        
+        AccessPoint,
         LinkPoint,
-        Navigate,        
+        Navigate,
         BluePay
     }
 
@@ -795,6 +795,6 @@ namespace Westwind.CreditCardProcessing
         Declined,
         Failed,
         Fraud
-    }    
+    }
 
 }

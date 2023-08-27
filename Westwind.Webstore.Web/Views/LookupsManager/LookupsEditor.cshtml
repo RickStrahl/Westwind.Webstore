@@ -1,0 +1,120 @@
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model Westwind.Webstore.Web.Views.LookupsManager.LookupsManagerViewModel
+
+@{
+    ViewBag.Title = "Lookup Editor";
+    Layout = "_Layout";
+}
+
+<div class="container">
+
+    <h2 class="page-header-text">
+        <button class="btn btn-sm btn-secondary float-end"
+                onclick="page.showNewItem()">
+            <i class="fas fa-circle-plus text-warning"></i>
+            Add item
+        </button>
+        <li class="fas fa-list-alt"></li>
+        Lookups Editor
+    </h2>
+
+
+    @{
+        var lastKey = string.Empty; 
+    }
+    <table class="table table-bordered table-dark-headers">
+        <tbody>
+        
+        <tr id="new" style="display:none">
+            <td>
+                <input id="key-new"
+                       placeholder="Key"
+                       value="" class="form-control"/>
+            </td>
+            <td>
+                <input id="cdata-new" 
+                       placeholder = "CData"
+                       value="" class="form-control"/>
+            </td>
+            <td>
+                <input id="cdata1-new"
+                       placeholder = "CData1"
+                       value="" class="form-control"/>
+            </td>
+            <td>
+                <input id="ndata-new" 
+                       placeholder = "NData"
+                       value="" class="form-control number"/>
+                
+                 <button class="btn btn-secondary btn-sm mt-1 "
+                                   onclick="page.saveItem('new')">
+                     <i class="fas fa-circle-check text-warning"></i>
+                     Save
+                 </button>
+            </td>
+        </tr>
+
+        @foreach (var item in Model.LookupItems)
+        {
+            if (!lastKey.Equals(item.Key, StringComparison.InvariantCultureIgnoreCase))
+            {
+
+                <tr>
+                    <th colspan="3">
+                        @(item.Key ?? @item.Type)
+                    </th>
+                    <th class="right">
+                        <a class="btn btn-secondary btn-sm mt-1 p-0"
+                           title="Add new @item.Key item"
+                           onclick="page.showNewItem('@item.Key')">
+                            <i class="fas fa-circle-plus text-warning"></i>
+                        </a>
+                    </th>
+                </tr>
+
+                lastKey = item.Key ?? string.Empty;
+            }
+
+            <tr id="@item.Id">
+                <td>
+                    <input id="cdata-@item.Id"
+                           placeholder="CData"
+                           value="@item.CData" class="form-control"/>
+                </td>
+                <td>
+                    <input id="cdata1-@item.Id" 
+                           placeholder = "CData1"
+                           value="@item.CData1" class="form-control"/>
+                </td>
+                <td>
+                    <input id="ndata-@item.Id" 
+                           placeholder = "NData"
+                           value="@item.NData" class="form-control number"/>
+                </td>
+                <td style="width: 6.6em">
+                    <a class="btn btn-link text-info"
+                       onclick="page.saveItem('@item.Id')">
+                        <i class="fas fa-circle-check text-success"></i>
+                    </a>
+                    <a class="btn btn-link" onclick="page.deleteItem('@item.Id')">
+                        <i class="fas fa-xmark text-danger"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+
+</div>
+
+<style>
+    .lookup-item {
+    padding:  0.5em 0.5em 0 0;
+    }
+</style>
+
+@section Scripts
+{
+    <script src="/scripts/LookupsEditor.js"></script>
+}
