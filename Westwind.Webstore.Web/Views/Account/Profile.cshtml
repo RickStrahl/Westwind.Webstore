@@ -8,7 +8,10 @@
 
     bool isOrderProfile = Context.Request.Path.Value.Contains("/shoppingcart/");
     if (isOrderProfile)
+    {
         Model.ReturnUrl = "/shoppingcart/orderform";
+        ViewData["Title"] = "Order Profile - " + wsApp.Configuration.Company.CompanyName;
+    }
 }
 
 <div class="container">
