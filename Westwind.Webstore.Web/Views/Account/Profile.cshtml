@@ -1,7 +1,4 @@
-﻿
-@using Westwind.Webstore.Web.Views
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model  ProfileViewModel
+﻿@model  ProfileViewModel
 @inject BusinessFactory BusinessFactory
 @{
     ViewData["Title"] = "My Profile - " + wsApp.Configuration.Company.CompanyName;
@@ -10,7 +7,7 @@
     if (isOrderProfile)
     {
         Model.ReturnUrl = "/shoppingcart/orderform";
-        ViewData["Title"] = "Order Profile - " + wsApp.Configuration.Company.CompanyName;
+        ViewData["Title"] = "Order Billing Information";
     }
 }
 
@@ -22,11 +19,14 @@
         {
             <text>Create a new Profile</text>
         }
-        else
-        {
+        else if(isOrderProfile)
+        { 
+            <text>Order Billing Information</text>
+        }
+        else 
+        { 
             <text>@Model.UserState.Name: Your Profile</text>
         }
-
     </h1>
 
     <error-display error-display-model="Model.ErrorDisplay">
@@ -117,7 +117,13 @@
                 <button id="btnSendValidationEmail"
                         type="button"
                         class="btn btn-sm btn-secondary"
-                        title="Validate the email address. Re-sends an email with a confirmation code.">
+                        title="Validate your email address. 
+  * Use only if you're updating your email address 
+    or you need to resend a verification code
+  * Shows a validation form
+  * Sends an email with a verification code
+  * Follow the instructions to verify the code
+">
                     <i style="font-size: 1.3em" class="far fa-check-circle text-warning"></i>
                 </button>
             </div>
@@ -129,7 +135,18 @@
                 <a href="@Url.Action("PasswordRecoverySendEmail")">Change your password</a>
             </div>
         }
-        <div class="header-byline ">used to verify your email address. <i class="text-info hidable">New emails or email changes need to be validated via the check button.</i></div>
+        <div class="header-byline"
+        title="Validate your email address. 
+  * Use only if you're updating your email address 
+    or you need to resend a verification code
+  * Shows a validation form
+  * Sends an email with a verification code
+  * Follow the instructions to verify the code
+        "
+        
+             >used to verify your email address. <i class="text-info hidable">
+            Use the Check button to verify a new or updated email address
+        </i></div>
 
                 @if (Model.Configuration.Security.UseTwoFactorAuthentication && !Model.IsNewUser)
         {
