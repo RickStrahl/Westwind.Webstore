@@ -262,7 +262,7 @@ namespace Westwind.Webstore.Web.Controllers
             InitializeViewModel(model);
 
             bool isRecalculate = Request.IsFormVar("btnRecalculate");
-            
+
             var custId = UserState.UserId;
             var invoiceId = UserState.InvoiceId;
 
@@ -286,7 +286,7 @@ namespace Westwind.Webstore.Web.Controllers
             }
 
             bool isNoCharge = invoice.InvoiceTotal < 0.1M && invoice.LineItems.Count > 0;
-            
+
 
             // We just re-display data from stored invoice
             invoice.Notes = model.InvoiceModel.Notes;
@@ -321,7 +321,7 @@ namespace Westwind.Webstore.Web.Controllers
 
             invoiceBusiness.CalculateTotals();
 
-            
+
 
             if (!isNoCharge && !ProcessCreditCard(model, invoiceBusiness))
             {
