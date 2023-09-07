@@ -273,7 +273,7 @@ body {{ font-family: sans-serif }}
                 invoice.Notes = model.MvpLink + "\n\n" + model.CustomerNotes;
 
                 if (model.ReceiveMarkdownMonster)
-                    invoiceBus.AddLineItem("markdown_monster_2_mvp");
+                    invoiceBus.AddLineItem("markdown_monster_3_mvp");
                 if (model.ReceiveWebSurge)
                     invoiceBus.AddLineItem("websurge_2_mvp");
                 invoice.PromoCode = "MVP_REQUEST";
