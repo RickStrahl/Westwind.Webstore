@@ -118,8 +118,6 @@
        #TotalsTable td, th {
          border:  none;
        }
-
-      
     </style>
 </head>
 <body>
@@ -133,13 +131,13 @@
     </div>
     
     <h2 class="page-header-text">
-        @if (Model.InvoiceModel.Invoice.Completed == null)
+        @if (Model.InvoiceModel.Invoice.CreditCardResult.IsApproved())
         {
-            <span>Pending Order Receipt #@invoice.InvoiceNumber</span>
+            <span>Order Confirmation #@invoice.InvoiceNumber</span>
         }
         else
         {
-            <span>Order Confirmation #@invoice.InvoiceNumber</span>
+            <span>Pending Order Receipt #@invoice.InvoiceNumber</span>
         }
     </h2>
 

@@ -454,7 +454,7 @@ namespace Westwind.Webstore.Business.Entities
 
         public bool IsApproved()
         {
-            return ProcessingResult != null &&
+            return !string.IsNullOrEmpty(ProcessingResult) &&
                    (ProcessingResult.Equals("APPROVED", StringComparison.OrdinalIgnoreCase) ||
                     ProcessingResult.Equals("PAID IN FULL", StringComparison.OrdinalIgnoreCase));
         }
@@ -467,7 +467,7 @@ namespace Westwind.Webstore.Business.Entities
             if (ProcessingResult.Equals("AUTHORIZED"))
                 return "Payment Pending";
 
-            return ProcessingResult ?? "Unprocessed";
+            return ProcessingResult;
         }
     }
 
