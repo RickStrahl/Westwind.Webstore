@@ -10,6 +10,9 @@
     // Full InvoiceModel Entity from View Model
     var invoice = Model.InvoiceModel.Invoice;
     Model.InvoiceModel.NoLineItemImages = false;
+
+    if (Model.InvoiceModel.Invoice.Completed == null)
+        title = "Pending Order Receipt - " + config.ApplicationName;    
 }
 <!DOCTYPE html>
 <html>
@@ -130,7 +133,14 @@
     </div>
     
     <h2 class="page-header-text">
-        Order Confirmation #@invoice.InvoiceNumber
+        @if (Model.InvoiceModel.Invoice.Completed == null)
+        {
+            <span>Pending Order Receipt #@invoice.InvoiceNumber</span>
+        }
+        else
+        {
+            <span>Order Confirmation #@invoice.InvoiceNumber</span>
+        }
     </h2>
 
 
@@ -157,10 +167,10 @@
     }
     
     <blockquote>
-        You can also access this and previous orders through your <a href="@(wsApp.Configuration.ApplicationHomeUrl)account/profile">@wsApp.Configuration.Company.CompanyName profile</a>
+        You can also access this and previous orders through your <a href="@(wsApp.Configuration.ApplicationHomeUrl)account/profile" class="bold">@wsApp.Configuration.Company.CompanyName profile</a>
         where you can confirm order status, order history and retrieve license codes.
         <p>
-        A printable invoice with updated order status is also available <a href="@(config.ApplicationHomeUrl + "invoice/" + invoice.InvoiceNumber)">from here</a>.
+        A <a href="@(config.ApplicationHomeUrl + "invoice/" + invoice.InvoiceNumber)" class="bold">printable invoice</a> with updated order status is also available.
         </p>
     </blockquote>
     
