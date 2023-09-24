@@ -103,7 +103,7 @@ var vm = null;
                    $sku.typeahead({
                        source: [],
                        autoselect: true,
-                       items: 10,
+                       items: 15,
                        fitToElement: false,
                        delay: 200,
                        minLength: 0,

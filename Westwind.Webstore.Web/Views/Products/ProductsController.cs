@@ -120,10 +120,16 @@ namespace Westwind.Webstore.Web.Controllers
             {
                 var filter = new InventoryItemsFilter() { SearchTerm = searchText };
                 var matches = busItem.GetItems(filter, true)
-                    .Select(p => new { id = p.Sku, name = p.Description });
+                    .Select(p => new { id = p.Sku, name = p.Description, inactive = p.InActive })
+                    .OrderBy(p => p.inactive)
+                    .ThenBy(p => p.name?.ToLower());
 
-                foreach(var prod in matches)
+                foreach(var prod in matches.Where(m=> !m.inactive))
                     list.Add(prod);
+                foreach (var prod in matches.Where(m => m.inactive))
+
+                    list.Add(new { name = prod.name + "*", prod.inactive, prod.id});
+
             }
 
             return Json(list);

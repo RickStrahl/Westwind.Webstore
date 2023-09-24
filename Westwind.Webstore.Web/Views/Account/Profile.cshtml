@@ -1,4 +1,5 @@
-﻿@model  ProfileViewModel
+﻿@using Microsoft.EntityFrameworkCore
+@model  ProfileViewModel
 @inject BusinessFactory BusinessFactory
 @{
     ViewData["Title"] = "My Profile - " + wsApp.Configuration.Company.CompanyName;
@@ -304,7 +305,7 @@
     }
     else
     {
-        invoiceList = invoiceBus.GetInvoices(Model.Customer.Id, 15000).ToList();
+        invoiceList = await invoiceBus.GetInvoices(Model.Customer.Id, 15000).ToListAsync();
     }
 }
 

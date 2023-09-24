@@ -170,7 +170,7 @@
         {
             <button type="submit" name="btnProcessPayment" id="btnProcessPayment"
                     class="btn btn-warning btn-sm" onclick="return processPayment()"
-                    >
+            >
                 <i class="fad fa-credit-card"></i>
                 Process Payment
             </button>
@@ -214,7 +214,9 @@
                 </ul>
                 
                 <button type="submit" name="btnEmailProductConfirmations" id="btnEmailProductConfirmations"
-                        class="btn btn-@buttonClass btn-sm" title="Send item license confirmation emails">
+                        class="btn btn-@buttonClass btn-sm" 
+                        onclick="$(this).find('i.fas').removeClass('fa-inbox-out').addClass('fa-spin').addClass('fa-spinner');"
+                        title="Send item license confirmation emails">
                     <i class="fas fa-inbox-out"></i>
                     Product Confirmations
                 </button>
@@ -225,7 +227,9 @@
         @*      rawPaymentStatus == "AUTHORIZED") *@
         @* { *@
         <button type="submit" name="btnEmailOrderConfirmation" id="btnEmailOrderConfirmation"
-                class="btn btn-secondary btn-sm" title="Send order summary confirmation email.">
+                class="btn btn-secondary btn-sm" title="Send order summary confirmation email."
+                onclick="$(this).find('i.fas').removeClass('fa-inbox-out').addClass('fa-spin').addClass('fa-spinner');"
+                >
             <i class="fas fa-inbox-out"></i>
             Order Confirmation
         </button>
@@ -285,24 +289,24 @@
         <input asp-for="Invoice.BillingAddress.City" class="form-control" style="min-width: 280px" placeholder="City" />
         <select asp-for="Invoice.BillingAddress.State"
                 class="form-select"
-               style="max-width: 15em"
+                style="max-width: 15em"
                 asp-items="@(new SelectList(wsApp.States,"StateCode","State"))">
         </select>
         <input asp-for="Invoice.BillingAddress.PostalCode" class="form-control"
                style="max-width: 10em"
                placeholder="Postal code" />
         
-           <select asp-for="Invoice.BillingAddress.CountryCode"
-                    class="form-select"
-                    asp-items="@(new SelectList(wsApp.Countries,"CountryCode","Country"))">
-            </select>
+        <select asp-for="Invoice.BillingAddress.CountryCode"
+                class="form-select"
+                asp-items="@(new SelectList(wsApp.Countries,"CountryCode","Country"))">
+        </select>
     </div>
 </div>
     
 <div class="responsive-container">
     <div class="form-group mt-2">
-            <input asp-for="Invoice.BillingAddress.Email"
-                   class="form-control" placeholder="email used for this invoice"/>
+        <input asp-for="Invoice.BillingAddress.Email"
+               class="form-control" placeholder="email used for this invoice"/>
     </div>
     <div class="form-group mt-2">
         <input asp-for="Invoice.BillingAddress.Telephone"
@@ -332,7 +336,6 @@
     </button>
 </div>
 
- 
         
 <div class="mt-4">
     <a href="#0" onclick="$('#InvoiceDetail').toggle();">
@@ -350,6 +353,7 @@
 <input type="hidden" asp-for="Invoice.InvoiceNumber" />
 <input type="hidden" asp-for="ListSearchTerm" />
 </form>
+
 </div>
 @section BottomOfBody
 {

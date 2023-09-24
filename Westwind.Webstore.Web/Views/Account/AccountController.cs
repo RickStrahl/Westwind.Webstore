@@ -396,7 +396,7 @@ Regards,
 
                 ClearAppUser();
 
-                Response.Headers.Add("Refresh", "15;url=" + Url.Action("Signin", "Account"));
+                Response.Headers["Refresh"] =  "15;url=" + Url.Action("Signin", "Account");
             }
 
             return View(model);
@@ -442,7 +442,7 @@ Regards,
             }
             else
             {
-                Response.Headers.Add("Refresh", "2;url=" + Url.Action("Signin", "Account"));
+                Response.Headers["Refresh"] = "2;url=" + Url.Action("Signin", "Account");
                 model.ErrorDisplay.ShowSuccess("Password updated. Sign in with your new password.");
 
                 ClearAppUser();

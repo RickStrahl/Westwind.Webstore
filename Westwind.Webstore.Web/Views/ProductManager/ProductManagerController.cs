@@ -167,7 +167,7 @@ public class ProductManagerController : WebStoreBaseController
         model.ErrorDisplay.ShowSuccess("Product saved.");
         if (isNewItem)
         {
-            Response.Headers.Add("Refresh", "1,url=/admin/productmanager/" + WebUtility.UrlEncode(product.Sku));
+            Response.Headers["Refresh"] = "1,url=/admin/productmanager/" + WebUtility.UrlEncode(product.Sku);
         }
 
         return View("ProductEditor",model);

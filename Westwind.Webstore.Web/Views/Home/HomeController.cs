@@ -281,7 +281,7 @@ body {{ font-family: sans-serif }}
                 invoiceBus.Save();
             }
 
-            Response.Headers.Add("Refresh","3,url=/");
+            Response.Headers["Refresh"] = "3,url=/";
             return View(model);
         }
     }
