@@ -152,7 +152,7 @@ body {{ font-family: sans-serif }}
         public IActionResult MvpPerks(MvpPerksViewModel model)
         {
             var viewName = "MvpPerks";
-            if (Request.Path.Value.Contains("/discountpricing", StringComparison.OrdinalIgnoreCase))
+            if (Request.Path.Value?.Contains("/discountpricing", StringComparison.OrdinalIgnoreCase) ?? false)
             {
                 model.IsDiscountRequest = true;
                 viewName = "DiscountPricing";
@@ -273,7 +273,7 @@ body {{ font-family: sans-serif }}
                 invoice.Notes = model.MvpLink + "\n\n" + model.CustomerNotes;
 
                 if (model.ReceiveMarkdownMonster)
-                    invoiceBus.AddLineItem("markdown_monster_3_mvp");
+                    invoiceBus.AddLineItem("markdown_monster_mvp_3");
                 if (model.ReceiveWebSurge)
                     invoiceBus.AddLineItem("websurge_2_mvp");
                 invoice.PromoCode = "MVP_REQUEST";
