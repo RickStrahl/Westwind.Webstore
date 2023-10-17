@@ -13,7 +13,7 @@ namespace Westwind.Webstore.Business
     {
         public static WebStoreConfiguration Configuration { get; set; }
 
-        public static wsAppConstants Constants = new wsAppConstants();
+        public static wsAppConstants Constants { get; } = new wsAppConstants();
 
         public static bool IsDevelopment { get; set; }
 
@@ -35,8 +35,7 @@ namespace Westwind.Webstore.Business
             {
                 if (_categories != null && _categories.Count > 0) return _categories;
 
-                if (BusinessFactory.Current == null) return default;
-                var productBus = BusinessFactory.Current.GetProductBusiness();
+                if (BusinessFactory.Current == null) return default;                
 
                 try
                 {
@@ -98,8 +97,7 @@ namespace Westwind.Webstore.Business
 
         private static void LoadLists(WebStoreContext context = null)
         {
-            if (context == null)
-                context = WebStoreContext.CreateContext();
+            context ??= WebStoreContext.CreateContext();
 
             try
             {
