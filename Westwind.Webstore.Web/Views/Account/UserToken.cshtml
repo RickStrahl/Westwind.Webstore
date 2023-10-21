@@ -1,0 +1,43 @@
+﻿@model ProfileViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2 class="page-header-text">
+    <i class="fad fa-sign-in-alt"></i>
+    Login Information 
+</h2>
+
+
+
+<table class="table table-small table-striped table-dark table-dark-headers">
+    <thead><tr>
+        <td>Setting</td>
+        <td>Value</td>
+        </tr></thead>
+    
+    <tbody>
+    <tr>
+        <td>Logged in</td>
+        <td> @(!Model.UserState.IsEmpty())</td>
+    </tr>
+    <tr>
+        <td>Name</td>
+        <td>@Model.UserState.Name</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>@Model.UserState.UserIdGuid</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
