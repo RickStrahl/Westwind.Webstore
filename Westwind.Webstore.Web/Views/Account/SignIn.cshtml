@@ -2,7 +2,11 @@
 @model SigninViewModel
 
 @{
-    ViewData["Title"] = "Sign in";    
+    ViewData["Title"] = "Sign in";
+    if (Model.IsTokenRequest)
+    {
+        ViewData["NoSearchBar"] = true;
+    }
 
 }
 
@@ -18,7 +22,7 @@
         @AppResources.Account.PleaseSignInToYourAccount
     </p>
 
-    <form name="form1" asp-action="Signin">
+    <form name="form1" method="post" >
 
         <div class="input-group mb-2">
             <span class="input-group-text"><i class="fa fa-fw fa-envelope"></i></span>
@@ -49,23 +53,25 @@
         
 
         <div class="mt-3">
-            <button class="btn btn-lg btn-primary d-block" 
+        
+            <button class="btn btn-lg btn-primary" 
                     type="submit"
                     [disabled]="form1.invalid || form1.pristine">
                 <i class="far fa-sign-in" style="font-size: 1.1em"></i>
                 @AppResources.Account.SignInButton
             </button>
-
-            @if (!Model.UserState.IsEmpty())
-            {
-                <div class="float-right" *ngIf="!isForgotPassword">
-                    <a asp-action="Signout" class="btn btn-default btn-sm float-right"
-                       style="display: block; ">
-                        <i class="fa fa-lock-alt"></i>
-                        @AppResources.Account.SignOut
-                    </a>
-                </div>
-            }
+            
+                @if (!Model.UserState.IsEmpty())
+                {
+                    <div class="float-end" *ngIf="!isForgotPassword">
+                        <a asp-action="Signout" class="btn btn-secondary btn-sm float-right"
+                           style="display: block; ">
+                            <i class="fa fa-lock-alt"></i>
+                            @AppResources.Account.SignOut
+                        </a>
+                    </div>
+                }
+            
         </div>
         <div class="mt-3">
             <a asp-action="PasswordRecoverySendEmail">@AppResources.Account.IForgotMyPassword</a>

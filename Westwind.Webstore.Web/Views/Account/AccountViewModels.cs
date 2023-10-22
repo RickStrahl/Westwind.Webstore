@@ -83,17 +83,27 @@ namespace Westwind.Webstore.Web.Views
 
         public string Username { get; set; }
 
-        [Required]
-        public string Email { get; set; }
+        [Required] public string Email { get; set; }
 
-        [Required]
-        public string Password { get; set; }
+        [Required] public string Password { get; set; }
 
         public bool RememberPassword { get; set; }
 
         public string ReturnUrl { get; set; }
 
         public string TwoFactorValidationCode { get; set; }
+
+        #region Token Return
+
+        public bool IsTokenRequest { get; set; }
+
+        public string App { get; set; }
+
+        public string UserToken { get; set; }
+
+        public StringValues TokenReturnUrl { get; set; }
+
+        #endregion
     }
 
 
@@ -110,6 +120,18 @@ namespace Westwind.Webstore.Web.Views
     {
         public string ValidationCode { get; set; }
         public string ReturnUrl { get; set; }
+
+        #region Token Return
+
+        public bool IsTokenRequest { get; set; }
+
+        public string App { get; set; }
+
+        public string UserToken { get; set; }
+
+        public StringValues TokenReturnUrl { get; set; }
+
+        #endregion
     }
 
     public class PasswordRecoveryModel : WebStoreBaseViewModel
@@ -126,6 +148,8 @@ namespace Westwind.Webstore.Web.Views
 
         [Required]
         public string ValidationId { get; set; }
+
+
 
     }
 

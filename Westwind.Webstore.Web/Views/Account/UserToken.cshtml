@@ -1,43 +1,49 @@
-﻿@model ProfileViewModel
-
+﻿@model UserTokenModel
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "User Token for " + Model.App;
     Layout = "_Layout";
+
+    ViewData["NoSearchBar"] = true;
 }
 
 <h2 class="page-header-text">
     <i class="fad fa-sign-in-alt"></i>
-    Login Information 
+    @Model.App User Token
 </h2>
 
+<p>
+    Here's the user token generated for @Model.App:
+</p>
 
+<h2 id="UserToken">@Model.Token</h2>
 
-<table class="table table-small table-striped table-dark table-dark-headers">
-    <thead><tr>
-        <td>Setting</td>
-        <td>Value</td>
-        </tr></thead>
     
-    <tbody>
-    <tr>
-        <td>Logged in</td>
-        <td> @(!Model.UserState.IsEmpty())</td>
-    </tr>
-    <tr>
-        <td>Name</td>
-        <td>@Model.UserState.Name</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>@Model.UserState.UserIdGuid</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-    </tr>
-    </tbody>
-</table>
+<button  class="btn btn-secondary btn-sm mb-3" style=" vertical-align:top; padding: 1px 6px 2px 6px"  title="Copy token to clipboard" onclick="copyToClip()">
+    <i class="fad fa-copy text-warning"></i>
+    Copy to clipboard
+</button>   
+
+
+<p>
+    Please copy the user token to the clipboard and paste it into your 
+    application as directed. 
+</p>
+
+
+<script>
+        function copyToClip() {
+            /* Get the text field */
+            var copyText = document.getElementById("UserToken");
+            var text = copyText.innerText;
+
+            var el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            toastr.success("Token copied to clipboard.");
+        }
+</script>
