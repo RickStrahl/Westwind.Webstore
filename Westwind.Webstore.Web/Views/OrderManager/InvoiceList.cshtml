@@ -193,7 +193,7 @@
         event.cancelBubble = true;
         event.preventDefault();        
         copyToClipboard(hrefText);
-        toastr.success("Email has been copied to clipboard.");
+        toastr.success("Email for '{hrefText}' has been copied to clipboard.");
         return false;
     }
     function onClickDelete(invNo, ev) {                
