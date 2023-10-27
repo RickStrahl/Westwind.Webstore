@@ -131,8 +131,8 @@ namespace Westwind.Webstore.Business
                 }
                 else if (lsearch == "unapproved" || lsearch == "unpaid")
                 {
-                    invBase = invBase.Where(inv => inv.CreditCardResult.ProcessingResult != "APPROVED" &&
-                                                         inv.CreditCardResult.ProcessingResult != "PAID IN FULL" &&
+                    invBase = invBase.Where(inv => (inv.CreditCardResult.ProcessingResult == "UNAPPROVED" ||
+                                                         inv.CreditCardResult.ProcessingResult == "DUE AND PAYABLE") &&
                                                          inv.InvoiceDate > DateTime.Now.AddMonths(-18)) ;
                 }
                 else if (lsearch == "authorized")
