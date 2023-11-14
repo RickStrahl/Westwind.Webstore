@@ -5,7 +5,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 
 namespace Westwind.Webstore.Business.Entities
@@ -43,6 +45,11 @@ namespace Westwind.Webstore.Business.Entities
                             .CommandTimeout(15)
                             .MigrationsAssembly("Westwind.WebStore.Business");
                     });
+            if (wsApp.IsDevelopment)
+            {
+                builder.LogTo((errMsg) => { Console.WriteLine(errMsg); });
+                //.EnableSensitiveDataLogging();
+            }
 
             if (loggerFactory != null)
                 builder.UseLoggerFactory(loggerFactory);
@@ -62,6 +69,8 @@ namespace Westwind.Webstore.Business.Entities
         {
             var builder = new DbContextOptionsBuilder<WebStoreContext>();
             builder.UseSqlServer(connectionString ?? wsApp.Configuration.ConnectionString);
+            if(wsApp.IsDevelopment)
+                builder.LogTo(Console.WriteLine);
 
             var context = new WebStoreContext(builder.Options);
             return context;
@@ -107,6 +116,8 @@ namespace Westwind.Webstore.Business.Entities
             // Auto configuration
             ConnectionString = wsApp.Configuration.ConnectionString;
             optionsBuilder.UseSqlServer(ConnectionString);
+            if (wsApp.IsDevelopment)
+                optionsBuilder.LogTo(Console.WriteLine);
         }
 
     }
