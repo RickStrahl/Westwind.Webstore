@@ -24,8 +24,7 @@ namespace Westwind.Webstore.Business.Entities.Context
                 opt.CommandTimeout(15);
                 opt.EnableRetryOnFailure();
             });
-            if (wsApp.IsDevelopment)
-                optionsBuilder.LogTo(Console.WriteLine);
+
 
             return new WebStoreContext(optionsBuilder.Options);
         }

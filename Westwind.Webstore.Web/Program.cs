@@ -57,7 +57,7 @@ if (CommandLineProcessor.CreateDatabase(args))
 
 // logging
 var logConfig = new LoggerConfiguration()
-    .MinimumLevel.Information()
+    .MinimumLevel.Warning()
     .Enrich.FromLogContext()
     // .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}---{NewLine}")
     .WriteTo.File(
