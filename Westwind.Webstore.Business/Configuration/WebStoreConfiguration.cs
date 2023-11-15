@@ -229,6 +229,9 @@ namespace Westwind.Webstore.Business
         public int CookieTimeoutDays { get; set; } = 2;
 
         public bool ShowConsoleRequestTimings { get; set; }
+
+
+        public bool ShowConsoleDbCommands { get; set; }
     }
 
     public enum ErrorDisplayModes

@@ -24,7 +24,9 @@ namespace Westwind.Webstore.Business.Entities.Context
                 opt.CommandTimeout(15);
                 opt.EnableRetryOnFailure();
             });
-
+            if (wsApp.Configuration.System.ShowConsoleDbCommands)
+                optionsBuilder.LogTo(Console.WriteLine)
+                    .EnableSensitiveDataLogging();
 
             return new WebStoreContext(optionsBuilder.Options);
         }
