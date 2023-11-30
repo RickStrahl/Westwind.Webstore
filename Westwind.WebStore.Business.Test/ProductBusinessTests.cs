@@ -26,8 +26,12 @@ namespace Westwind.WebStore.Business.Test
             {
                 var item = bus.LoadBySku("wconnect");
 
-                Assert.IsNotNull(item);
-                Assert.AreEqual(item.Sku, "wconnect");
+                Assert.That(item, Is.Not.Null);
+                Assert.That(item.Sku, Is.EqualTo("wconnect"));
+                //
+                //
+                // ClassicAssert.IsNotNull(item);
+                // ClassicAssert.AreEqual(item.Sku, "wconnect");
             }
         }
 
@@ -50,12 +54,9 @@ namespace Westwind.WebStore.Business.Test
         {
             using (var bus = BusinessFactory.GetProductBusiness())
             {
-
                 var list = bus.GetItems(new InventoryItemsFilter() {Category = "Modeling Tools"});
-
                 Assert.IsNotNull(list);
                 Assert.IsTrue(list.Count > 0);
-
                 Console.WriteLine(list.Count);
             }
         }

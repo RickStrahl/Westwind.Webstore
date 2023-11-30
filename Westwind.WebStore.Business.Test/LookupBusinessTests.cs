@@ -15,7 +15,7 @@ namespace Westwind.WebStore.Business.Test
     public class CustomerBusinessTests
     {
         private string ConnectionString = wsApp.Configuration.ConnectionString;
-        string EMAIL_TOCHECK ="rickstrahl@west-wind.com";
+        string EMAIL_TOCHECK ="rstrahl@west-wind.com";
 
         public BusinessFactory BusinessFactory { get; set; }
 
@@ -130,10 +130,10 @@ namespace Westwind.WebStore.Business.Test
         {
             using (var bus = BusinessFactory.GetCustomerBusiness())
             {
-                
+
                 var id = bus.Context.Customers.Select(c => c.Id).FirstOrDefault();
 
-                
+
                 Console.WriteLine(id);
 
                 if (string.IsNullOrEmpty(id))
@@ -178,11 +178,11 @@ namespace Westwind.WebStore.Business.Test
 
                 item.Expected = DateTime.Now;
 
-                
+
                 Assert.IsTrue(bus.SaveChanges() > -1,bus.ErrorMessage);
 
                 // reload
-                
+
                 item = bus.Context.Products
                     .FirstOrDefault(i => i.Sku == "wconnect60");
 
@@ -223,7 +223,7 @@ namespace Westwind.WebStore.Business.Test
 
             using (var bus = BusinessFactory.GetCustomerBusiness())
             {
-                
+
                 var invoices = bus.Context.Invoices
                     //.Where(i => i.Items.Any(i => i.Sku.Contains(sku, StringComparison.OrdinalIgnoreCase))) // Unsupported Operation
 
@@ -296,10 +296,12 @@ namespace Westwind.WebStore.Business.Test
             {
                 cust = bus.GetCustomerByEmailAddress(EMAIL_TOCHECK);
 
+                Assert.That(cust, Is.Not.Null);
+
                 nameUpdate = "Rick " + DateTime.Now;
                 cust.Firstname = nameUpdate;
 
-                Assert.IsTrue(bus.SaveChanges() > -1);
+                Assert.That( bus.SaveChanges(), Is.GreaterThan(-1));
             }
 
             // reload everything
@@ -307,8 +309,8 @@ namespace Westwind.WebStore.Business.Test
             {
                 cust = bus.GetCustomerByEmailAddress(EMAIL_TOCHECK);
             }
-
-            Assert.AreEqual(cust.Firstname,nameUpdate);
+            
+            Assert.That(nameUpdate, Is.EqualTo(cust.Firstname));
         }
 
         [Test]
@@ -326,14 +328,14 @@ namespace Westwind.WebStore.Business.Test
             }
             using (var bus = BusinessFactory.GetCustomerBusiness()) {
                 var cust = bus.Context.Customers.FirstOrDefault(c => c.Email == EMAIL_TOCHECK);
-                Assert.AreEqual(cust.Firstname, nameUpdate);
+                Assert.That(nameUpdate, Is.EqualTo(cust.Firstname));
             }
         }
 
         [Test]
         public void UpdateCustomerBusObjectTest()
         {
-            
+
             var newValue = "Werx " + DateTime.Now.ToString();
 
             using (var bus = BusinessFactory.GetCustomerBusiness())
@@ -349,7 +351,7 @@ namespace Westwind.WebStore.Business.Test
                 var entry = bus.Context.Entry(cust);
                 Console.WriteLine(entry.State);
 
-                Assert.AreEqual(cust.Company, newValue);
+                Assert.That(newValue, Is.EqualTo(cust.Company));
                 Console.WriteLine(cust.Company);
             }
         }
