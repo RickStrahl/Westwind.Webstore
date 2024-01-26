@@ -3,7 +3,7 @@
     ViewBag.Title = "User Token for " + Model.App;
     Layout = "_Layout";
 
-    ViewData["NoSearchBar"] = true;
+    ViewData["NoSearchBar"] = false;
 }
 
 <h2 class="page-header-text">
@@ -18,15 +18,17 @@
 <h2 id="UserToken">@Model.Token</h2>
 
     
-<button  class="btn btn-secondary btn-sm mb-3" style=" vertical-align:top; padding: 1px 6px 2px 6px"  title="Copy token to clipboard" onclick="copyToClip()">
+<button  class="btn btn-secondary btn mb-3" 
+         style=" vertical-align:top; "  title="Copy token to clipboard" onclick="copyToClip()">
     <i class="fad fa-copy text-warning"></i>
     Copy to clipboard
 </button>   
 
 
 <p>
-    Please copy the user token to the clipboard and paste it into your 
-    application as directed. 
+    You can copy this user token to the clipboard and paste it into your 
+    application as directed or the application may automatically detect
+    the token and continue. 
 </p>
 
 

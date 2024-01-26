@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Braintree;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Westwind.AspNetCode.Security;
+using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.Extensions;
 using Westwind.Utilities;
 using Westwind.WebStore.App;
 using Westwind.Webstore.Business;
-using Westwind.Webstore.Business.Entities;
 using Westwind.Webstore.Web.App;
 using Westwind.Webstore.Web.Controllers;
 using Westwind.Webstore.Web.Models;
+using Customer = Westwind.Webstore.Business.Entities.Customer;
 
 
 namespace Westwind.Webstore.Web.Views
@@ -30,6 +32,15 @@ namespace Westwind.Webstore.Web.Views
 
         #region Authentication
 
+        /// <summary>
+        /// igns in a user via the UI.
+        ///
+        /// Optionally poss `isTokenRequest=true&tokenId={yourId}`
+        /// The token id can be used to retrieve a token that was generated
+        /// after authorization.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Signin(SigninViewModel model)
         {
@@ -41,7 +52,8 @@ namespace Westwind.Webstore.Web.Views
             if (model.IsTokenRequest && model.UserState.IsAuthenticated())
             {
                 var tokenManager = new UserTokenManager(wsApp.Configuration.ConnectionString);
-                var userToken = tokenManager.CreateNewToken(model.UserState.UserId);
+                model.TokenId = Request.Query["tokenId"];
+                var userToken = tokenManager.CreateNewToken(model.UserState.UserId, tokenIdentifier: model.TokenId);
 
                 // go to return url if provided
                 if (!string.IsNullOrEmpty(model.TokenReturnUrl))
@@ -50,7 +62,7 @@ namespace Westwind.Webstore.Web.Views
                                     $"userToken={userToken}");
 
                 // display on page
-                return Redirect($"~/account/UserToken?app={model.App}&userToken={userToken}");
+                return Redirect($"~/account/UserToken?app={model.App}&userToken={userToken}&tokenId={model.TokenId}");
             }
 
             return View("SignIn", model);
@@ -64,7 +76,8 @@ namespace Westwind.Webstore.Web.Views
 
             // won't read both from Form and Query - so manually
             model.IsTokenRequest = !string.IsNullOrEmpty(Request.Query["IsTokenRequest"]);
-            model.TokenReturnUrl = Request.Query["TokenReturnUrl"];
+            model.TokenId = Request.Query["tokenId"];
+            model.TokenReturnUrl = Request.Query["tokenReturnUrl"];
             model.App = Request.Query["App"];
 
             if (!ModelState.IsValid)
@@ -97,7 +110,7 @@ namespace Westwind.Webstore.Web.Views
             if (model.IsTokenRequest)
             {
                 var tokenManager = new UserTokenManager(wsApp.Configuration.ConnectionString);
-                var userToken = tokenManager.CreateNewToken(customer.Id);
+                var userToken = tokenManager.CreateNewToken(customer.Id, null, tokenIdentifier: model.TokenId);
 
                 // go to return url if provided
                 if (!string.IsNullOrEmpty(model.TokenReturnUrl))
@@ -296,6 +309,32 @@ namespace Westwind.Webstore.Web.Views
             }
 
             return View(model);
+        }
+        #endregion
+
+        #region UserToken Validation
+
+
+        /// <summary>
+        /// Retrieves a user Token based on a token identifier.
+        ///
+        /// Also set when using /account/signin?
+        /// </summary>
+        /// <param name="tokenIdentitifier">A previously passed token identifier which is created as part
+        /// of the signin</param>
+        /// <returns></returns>
+        [Route("api/account/usertokenretrieval/{tokenIdentifier}")]
+        public object UserTokenRetrievalByTokenIdentifier(string tokenIdentifier)
+        {
+            var manager = new UserTokenManager(wsApp.Configuration.ConnectionString);
+            var userToken =  manager.GetTokenByTokenIdentifier(tokenIdentifier);
+            if (userToken == null)
+            {
+                Response.StatusCode = 404;
+                return new ApiException(manager.ErrorMessage, 404);
+            }
+
+            return new { userToken = userToken.Id };
         }
         #endregion
 

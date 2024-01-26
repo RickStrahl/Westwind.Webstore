@@ -590,6 +590,11 @@ input[type=number]::-webkit-inner-spin-button {
     .slide-menu.active {
         width: 250px;
     }
+    .slide-menu.nosearchbar
+    {
+        top: 4.03em;
+    }
+       
 .slide-menu a, .slide-menu a:visited, .slide-menu a:hover {
     text-decoration: none;
     color: white;

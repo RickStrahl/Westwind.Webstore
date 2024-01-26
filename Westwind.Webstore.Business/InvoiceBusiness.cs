@@ -129,7 +129,11 @@ namespace Westwind.Webstore.Business
                     var dt = DateTime.Now.AddDays(-30);
                     invBase = invBase.Where(inv => inv.InvoiceDate >= dt);
                 }
-                else if (lsearch == "unapproved" || lsearch == "unpaid")
+                else if(lsearch == "unprocessed")
+                {
+                    invBase = invBase.Where(inv => inv.CreditCardResult.ProcessingResult == "UNPROCESSED");
+                }
+                else if (lsearch == "unapproved" || lsearch == "unpaid" )
                 {
                     invBase = invBase.Where(inv => (inv.CreditCardResult.ProcessingResult == "UNAPPROVED" ||
                                                          inv.CreditCardResult.ProcessingResult == "DUE AND PAYABLE") &&

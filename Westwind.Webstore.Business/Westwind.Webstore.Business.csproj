@@ -37,8 +37,8 @@
     <!-- private package in ./_SupportPackages folder -->
     <PackageReference Include="Westwind.Licensing" Version="1.0.5" />
     
-    <PackageReference Include="Westwind.Utilities" Version="4.0.8" />
-    <PackageReference Include="Westwind.Utilities.Data" Version="4.0.8" />
+    <PackageReference Include="Westwind.Utilities" Version="4.0.11" />
+    <PackageReference Include="Westwind.Utilities.Data" Version="4.0.9" />
    </ItemGroup>
 
   <ItemGroup>

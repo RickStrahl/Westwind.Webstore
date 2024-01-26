@@ -101,7 +101,8 @@ namespace Westwind.Webstore.Web.Views
 
         public string UserToken { get; set; }
 
-        public StringValues TokenReturnUrl { get; set; }
+        public string TokenReturnUrl { get; set; }
+        public string TokenId { get; set; }
 
         #endregion
     }

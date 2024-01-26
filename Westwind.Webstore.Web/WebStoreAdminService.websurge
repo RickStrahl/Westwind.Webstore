@@ -115,16 +115,23 @@ WebSurge-Request-Group: Lookups
 
 ------------------------------------------------------------------
 
+GET api/usertokenretrieval/1234 HTTP/2.0
+Accept-Encoding: gzip,deflate
+Websurge-Request-Name: User Token Retrieval by Token ID
+WebSurge-Request-Group: User Token
+
+------------------------------------------------------------------
+
 
 ----- Start WebSurge Options -----
 
 {
   "SiteBaseUrl": "https://localhost:5001/",
-  "OnlineSessionId": null,
-  "SessionVariables": {},
   "RecentSiteBaseUrlList": [
     "https://localhost:5001/"
   ],
+  "OnlineSessionId": null,
+  "SessionVariables": {},
   "UseCustomUsers": true,
   "HttpProtocolVersion": "1.1",
   "IgnoreCertificateErrors": false,

@@ -17,14 +17,14 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
     
-    <PackageReference Include="Westwind.AspNetCore" Version="3.8.7" />
+<!--    <PackageReference Include="Westwind.AspNetCore" Version="3.9.0" />-->
     <PackageReference Include="Westwind.AspnetCore.Markdown" Version="3.15.0" />
     <PackageReference Include="Westwind.Globalization.AspnetCore" Version="3.1.7" />
     <PackageReference Include="Westwind.AspNetCore.LiveReload" Version="0.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <!--<ProjectReference Include="..\..\Westwind.AspNetCore\Westwind.AspNetCore\Westwind.AspNetCore.csproj" />-->
+    <ProjectReference Include="..\..\Westwind.AspNetCore\Westwind.AspNetCore\Westwind.AspNetCore.csproj" />
     <ProjectReference Include="..\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing.csproj" />
     <ProjectReference Include="..\Westwind.Webstore.Business\Westwind.Webstore.Business.csproj" />
     
