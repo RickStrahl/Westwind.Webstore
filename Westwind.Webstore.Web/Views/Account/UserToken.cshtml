@@ -1,24 +1,24 @@
 ﻿@model UserTokenModel
 @{
-    ViewBag.Title = "User Token for " + Model.App;
+    ViewBag.Title = "User Token for " + Model.Scope;
     Layout = "_Layout";
 
     ViewData["NoSearchBar"] = false;
 }
 
 <h2 class="page-header-text">
-    <i class="fad fa-sign-in-alt"></i>
-    @Model.App User Token
+    <i class="fad fa-file-certificate"></i>
+    @Model.Scope Authentication Token
 </h2>
 
 <p>
-    Here's the user token generated for @Model.App:
+    The following is your generated authentication token:
 </p>
 
 <h2 id="UserToken">@Model.Token</h2>
 
     
-<button  class="btn btn-secondary btn mb-3" 
+<button  class="btn btn-secondary btn mb-3 mt-2" 
          style=" vertical-align:top; "  title="Copy token to clipboard" onclick="copyToClip()">
     <i class="fad fa-copy text-warning"></i>
     Copy to clipboard
@@ -27,8 +27,8 @@
 
 <p>
     You can copy this user token to the clipboard and paste it into your 
-    application as directed or the application may automatically detect
-    the token and continue. 
+    application as directed, or the application may automatically detect
+    the new token and continue. 
 </p>
 
 

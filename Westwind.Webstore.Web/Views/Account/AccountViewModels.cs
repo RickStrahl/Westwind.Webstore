@@ -97,7 +97,7 @@ namespace Westwind.Webstore.Web.Views
 
         public bool IsTokenRequest { get; set; }
 
-        public string App { get; set; }
+        public string Scope { get; set; }
 
         public string UserToken { get; set; }
 

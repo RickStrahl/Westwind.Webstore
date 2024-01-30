@@ -35,7 +35,7 @@ namespace Westwind.Webstore.Web.Views
         /// <summary>
         /// igns in a user via the UI.
         ///
-        /// Optionally poss `isTokenRequest=true&tokenId={yourId}`
+        /// Optionally poss `isTokenRequest=true&tokenId={yourId}&scope=WebSurge`
         /// The token id can be used to retrieve a token that was generated
         /// after authorization.
         /// </summary>
@@ -62,7 +62,7 @@ namespace Westwind.Webstore.Web.Views
                                     $"userToken={userToken}");
 
                 // display on page
-                return Redirect($"~/account/UserToken?app={model.App}&userToken={userToken}&tokenId={model.TokenId}");
+                return Redirect($"~/account/UserToken?scope={model.Scope}&userToken={userToken}&tokenId={model.TokenId}");
             }
 
             return View("SignIn", model);
@@ -78,7 +78,7 @@ namespace Westwind.Webstore.Web.Views
             model.IsTokenRequest = !string.IsNullOrEmpty(Request.Query["IsTokenRequest"]);
             model.TokenId = Request.Query["tokenId"];
             model.TokenReturnUrl = Request.Query["tokenReturnUrl"];
-            model.App = Request.Query["App"];
+            model.Scope = Request.Query["Scope"];
 
             if (!ModelState.IsValid)
             {
@@ -103,7 +103,7 @@ namespace Westwind.Webstore.Web.Views
             {
                 var url = $"~/account/twofactor?ReturnUrl={model.ReturnUrl}";
                 if (model.IsTokenRequest)
-                    url += $"&isTokenRequest=true&app={model.App}&tokenReturnUrl={model.TokenReturnUrl}";
+                    url += $"&isTokenRequest=true&scope={model.Scope}&tokenId={model.TokenId}&tokenReturnUrl={model.TokenReturnUrl}";
                 return Redirect(url);
             }
 
@@ -119,7 +119,7 @@ namespace Westwind.Webstore.Web.Views
                                     $"userToken={userToken}");
 
                 // display on page
-                return Redirect($"~/account/UserToken?app={model.App}&userToken={userToken}");
+                return Redirect($"~/account/UserToken?scope={model.Scope}&userToken={userToken}");
             }
 
             if (!string.IsNullOrEmpty(model.ReturnUrl))
@@ -140,9 +140,9 @@ namespace Westwind.Webstore.Web.Views
         }
 
         [HttpGet]
-        public IActionResult UserToken([FromQuery] string userToken, [FromQuery] string app)
+        public IActionResult UserToken([FromQuery] string userToken, [FromQuery] string scope)
         {
-            var model = new UserTokenModel { Token = userToken, App = app };
+            var model = new UserTokenModel { Token = userToken, Scope = scope };
             InitializeViewModel(model);
 
             return View( model );
@@ -846,6 +846,6 @@ The {wsApp.Configuration.ApplicationCompany} Team
     public class UserTokenModel : WebStoreBaseViewModel
     {
         public string Token { get; set; }
-        public string App { get; set;  }
+        public string Scope { get; set;  }
     }
 }
