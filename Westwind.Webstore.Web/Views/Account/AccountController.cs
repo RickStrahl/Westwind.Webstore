@@ -6,10 +6,11 @@ using Braintree;
 using Google.Authenticator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Westwind.AspNetCode.Security;
+
 using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.Extensions;
 using Westwind.Utilities;
+using Westwind.Utilities.Data.Security;
 using Westwind.WebStore.App;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Web.App;
@@ -23,7 +24,6 @@ namespace Westwind.Webstore.Web.Views
     public class AccountController : WebStoreBaseController
     {
         public BusinessFactory BusinessFactory { get; }
-
 
         public AccountController(BusinessFactory businessFactory)
         {
@@ -59,7 +59,7 @@ namespace Westwind.Webstore.Web.Views
                 if (!string.IsNullOrEmpty(model.TokenReturnUrl))
                     return Redirect(model.TokenReturnUrl +
                                     (model.TokenReturnUrl.Contains("?") ? "&" : "?") +
-                                    $"userToken={userToken}");
+                                    $"userToken={userToken}&tokenId={model.TokenId}");
 
                 // display on page
                 return Redirect($"~/account/UserToken?scope={model.Scope}&userToken={userToken}&tokenId={model.TokenId}");
@@ -109,17 +109,21 @@ namespace Westwind.Webstore.Web.Views
 
             if (model.IsTokenRequest)
             {
-                var tokenManager = new UserTokenManager(wsApp.Configuration.ConnectionString);
+                var tokenManager = new UserTokenManager(wsApp.Configuration.ConnectionString)
+                {
+                    TokenTimeoutSeconds = 60 * 60 * 60 * 24 * 7
+                };
                 var userToken = tokenManager.CreateNewToken(customer.Id, null, tokenIdentifier: model.TokenId);
+
 
                 // go to return url if provided
                 if (!string.IsNullOrEmpty(model.TokenReturnUrl))
                     return Redirect(model.TokenReturnUrl +
                                     (model.TokenReturnUrl.Contains("?") ? "&" : "?") +
-                                    $"userToken={userToken}");
+                                    $"userToken={userToken}&tokenId={model.TokenId}");
 
                 // display on page
-                return Redirect($"~/account/UserToken?scope={model.Scope}&userToken={userToken}");
+                return Redirect($"~/account/UserToken?scope={model.Scope}&userToken={userToken}&tokenId={model.TokenId}");
             }
 
             if (!string.IsNullOrEmpty(model.ReturnUrl))
@@ -262,6 +266,7 @@ namespace Westwind.Webstore.Web.Views
 
             model.ReturnUrl = Request.Query["ReturnUrl"];
             model.IsTokenRequest = !string.IsNullOrEmpty(Request.Query["IsTokenRequest"]);
+            model.TokenId = Request.Query["TokenId"];
             model.App = Request.Query["App"];
             model.TokenReturnUrl = Request.Query["TokenReturnUrl"];
 
@@ -289,7 +294,7 @@ namespace Westwind.Webstore.Web.Views
                     if (model.IsTokenRequest)
                     {
                         var tokenManager = new UserTokenManager(wsApp.Configuration.ConnectionString);
-                        var userToken = tokenManager.CreateNewToken(customer.Id);
+                        var userToken = tokenManager.CreateNewToken(customer.Id, tokenIdentifier: model.TokenId);
 
                         // go to return url if provided
                         if (!string.IsNullOrEmpty(model.TokenReturnUrl))
@@ -298,7 +303,7 @@ namespace Westwind.Webstore.Web.Views
                                 $"app={model.App}&userToken={userToken}");
 
                         // display as page
-                        return Redirect($"~/account/UserToken?app={model.App}&userToken={userToken}");
+                        return Redirect($"~/account/UserToken?app={model.App}&userToken={userToken}&tokenId={model.TokenId}");
                     }
 
                     return Redirect(model.ReturnUrl);
@@ -847,5 +852,7 @@ The {wsApp.Configuration.ApplicationCompany} Team
     {
         public string Token { get; set; }
         public string Scope { get; set;  }
+
+        public string TokenId { get; set; }
     }
 }

@@ -6,31 +6,38 @@
     ViewData["NoSearchBar"] = false;
 }
 
-<h2 class="page-header-text">
-    <i class="fad fa-file-certificate"></i>
-    @Model.Scope Authentication Token
-</h2>
+<div class="container">
 
-<p>
-    The following is your generated authentication token:
-</p>
+    <h2 class="page-header-text">
+        <i class="fa-solid fa-check-circle" style="font-size: 1.5em; color:  forestgreen"></i>
+        @Model.Scope Authentication Token Generated
+    </h2>
 
-<h2 id="UserToken">@Model.Token</h2>
+    <p>
+        The following is your generated authentication token:
+    </p>
+
+    <h2 id="UserToken">@Model.Token</h2>
 
     
-<button  class="btn btn-secondary btn mb-3 mt-2" 
-         style=" vertical-align:top; "  title="Copy token to clipboard" onclick="copyToClip()">
-    <i class="fad fa-copy text-warning"></i>
-    Copy to clipboard
-</button>   
+    <button  class="btn btn-secondary btn mb-3 mt-2" 
+             style=" vertical-align:top; "  title="Copy token to clipboard" onclick="copyToClip()">
+        <i class="fad fa-copy text-warning"></i>
+        Copy to clipboard
+    </button>   
 
+    <div style="max-width: 700px">
+        <p>
+            Please return to the calling application, and complete sign in there.
+        </p>
+        <p>
+            The application may automatically detect the new token and continue,
+            or you can copy this user token to the clipboard and paste it into your
+            application manually as directed.
+        </p>
+    </div>
 
-<p>
-    You can copy this user token to the clipboard and paste it into your 
-    application as directed, or the application may automatically detect
-    the new token and continue. 
-</p>
-
+</div>
 
 <script>
         function copyToClip() {
