@@ -36,12 +36,12 @@
     var clientToken = cc.GenerateClientToken();
 }
 
-<script src="https://js.braintreegateway.com/web/dropin/1.33.4/js/dropin.min.js"></script>
+<script src="https://js.braintreegateway.com/web/dropin/1.42.0/js/dropin.min.js"></script>
 <script>
     var ccConfig = {
         cardProcessor: "Braintree",
         useClientProcessing: true,
-        amount: @invoice.InvoiceTotal.ToString("n2"),
+        amount: @invoice.InvoiceTotal.ToString("F2"),
         clientToken: "@clientToken"
     };
 </script>
