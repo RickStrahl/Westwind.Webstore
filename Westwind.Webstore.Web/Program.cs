@@ -24,15 +24,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
-using Newtonsoft.Json;
-using Serilog;
 using Westwind.AspNetCore;
 using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.Extensions;
-using Westwind.AspNetCore.LiveReload;
 using Westwind.AspNetCore.Middleware;
-using Westwind.Globalization.AspnetCore;
-using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 

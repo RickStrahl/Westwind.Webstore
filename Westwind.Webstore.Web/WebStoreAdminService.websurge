@@ -115,9 +115,23 @@ WebSurge-Request-Group: Lookups
 
 ------------------------------------------------------------------
 
-GET api/usertokenretrieval/1234 HTTP/2.0
+GET api/authentication/usertokenvalidation/rc8i65u605t29f7 HTTP/2.0
+Accept-Encoding: gzip,deflate
+Websurge-Request-Name: Validate token
+WebSurge-Request-Group: User Token
+
+------------------------------------------------------------------
+
+GET api/authentication/usertokenverification/rc8i65u605t29f7 HTTP/2.0
 Accept-Encoding: gzip,deflate
 Websurge-Request-Name: User Token Retrieval by Token ID
+WebSurge-Request-Group: User Token
+
+------------------------------------------------------------------
+
+GET https://store.west-wind.com/account/login?isTokenRequest=true&tokenId={_idToken}&scope=WebSurge HTTP/2.0
+Accept-Encoding: gzip,deflate
+Websurge-Request-Name: Login UI With Token
 WebSurge-Request-Group: User Token
 
 ------------------------------------------------------------------
