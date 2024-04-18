@@ -11,7 +11,7 @@ namespace Westwind.Webstore.Business
     ///
     /// If permissions allow this file is auto-created on startup.
     /// </summary>
-    public class WebStoreConfiguration : Westwind.Utilities.Configuration.AppConfiguration
+    public class WebStoreConfiguration : AppConfiguration
     {
         public string ApplicationCompany { get; set; } = "West Wind Technologies";
 

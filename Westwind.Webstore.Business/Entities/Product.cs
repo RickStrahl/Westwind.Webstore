@@ -262,6 +262,25 @@ namespace Westwind.Webstore.Business.Entities
 
         #endregion
 
+        #region Subscription
+
+        /// <summary>
+        /// Duration of the Subscription in months
+        /// </summary>
+        public int SubscriptionRenewalMonths { get; set; } = 0;
+
+        /// <summary>
+        /// A discount percentage between 0-100% when the subscription renews
+        /// </summary>
+        public int SubscriptionRenewalDiscountPercent { get; set;  }
+
+        /// <summary>
+        /// Text to use for renewal request emails to users
+        /// </summary>
+        public string SubscriptionRenewalRequestText { get; set; }
+
+        #endregion
+
 
         #region Properties and State
 

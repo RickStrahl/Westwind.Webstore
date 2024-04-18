@@ -75,7 +75,15 @@
                     <i class="fas fa-fw @icon"></i>
                     @product.Sku
                 </td>
-                <td><b><a href="@productEditUrl">@product.Description</a></b></td>
+                <td>
+                    <b><a href="@productEditUrl">@product.Description</a></b>
+                    @if (!string.IsNullOrEmpty(product.RedirectUrl))
+                    {
+                        <div style="font-size: 0.75em; font-style: italic">
+                            @product.RedirectUrl
+                        </div>
+                    }
+                </td>
                 <td class="right error">$@product.Price.ToString("n2")</td>
                 <td class="ps-2">
                     <a  onclick="onDeleteClick('@product.Id',this, event)" href='#x'>

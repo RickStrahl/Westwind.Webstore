@@ -24,10 +24,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
+using Serilog;
 using Westwind.AspNetCore;
 using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.Extensions;
+using Westwind.AspNetCore.LiveReload;
 using Westwind.AspNetCore.Middleware;
+using Westwind.Globalization.AspnetCore;
+using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 
@@ -119,7 +124,12 @@ services.AddWestwindGlobalization(opt =>
 services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
-        builder => builder.WithOrigins(wsApp.Configuration.ApplicationHomeUrl)
+        builder => builder
+            .WithOrigins(wsApp.Configuration.ApplicationHomeUrl,
+                    "http://localhost:5173",
+                    "https://localhost:5174",
+                    "https://websurgeserver.west-wind.com")
+            //.AllowAnyOrigin()  // doesn't work with AllowCredentials
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());
@@ -197,7 +207,7 @@ Task.Run(() =>
     // DI doesn't work here because no request scope (DbContextOptions)
     //var factory = BusinessFactory.CreateFactoryWithProvider();
     //var lookups = factory.GetLookupBusiness();
-    var lookups = app.Services.GetService<LookupBusiness>();
+    using var lookups = BusinessFactory.Current.GetLookupBusiness();
     var res = lookups.GetPromoCodePercentage("RESELLER");
     Console.WriteLine("EF pre-loading completed.");
 }).FireAndForget();
@@ -214,6 +224,7 @@ else
 {
     app.UseExceptionHandler("/Home/Error");
     ApiExceptionFilterAttribute.ShowExceptionDetail = config.System.ErrorDisplayMode != ErrorDisplayModes.Application;
+
 }
 
 if (wsApp.Configuration.System.RedirectToHttps)

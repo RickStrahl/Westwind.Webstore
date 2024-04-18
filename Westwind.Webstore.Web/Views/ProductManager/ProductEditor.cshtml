@@ -384,6 +384,34 @@
 </div>
 
 
+
+<h3 class="page-header-text">
+    <i class="fa-duotone fa-bell-on"></i>
+    Product Subscription
+</h3>
+
+<div>
+    <label class="ml-4" style="display: inline">Subscription Months: </label>
+    <input type="number" class="form-control d-inline " style="width: 5em; display: inline !important"
+           asp-for="Product.SubscriptionRenewalMonths"
+           asp-format="{0:0}"/>
+    
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    
+    <label class="ml-4" style="display: inline">Renewal Discount: </label>
+    <input type="number" class="form-control d-inline " style="width: 5em; display: inline !important"
+           asp-for="Product.SubscriptionRenewalDiscountPercent"
+           asp-format="{0:0}"/>
+</div>
+
+<label>Subscription Renewal Text: <span class="label-note">(sent when subscription requires renewal)</span></label>
+<textarea asp-for="Product.SubscriptionRenewalRequestText"
+                        class="form-control"
+                        style="height: 10em"></textarea>
+
+
+
+
 <h3 class="page-header-text">
     <i class="fas fa-circle-star"></i>
     Specials Display

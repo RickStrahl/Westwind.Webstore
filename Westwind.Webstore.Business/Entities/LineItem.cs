@@ -101,6 +101,18 @@ namespace Westwind.Webstore.Business.Entities
         /// </summary>
         public string LicenseSerial { get; set;  }
 
+
+        /// <summary>
+        /// An optional license Expiration Date
+        /// </summary>
+        public DateTime SubscriptionExpires { get; set; } = wsApp.Constants.EmptyDate;
+
+        /// <summary>
+        /// An optional auto-renewal for a subscription at current prices
+        /// </summary>
+        public bool SubscriptionAutoRenewal { get; set;  }
+
+
         /// <summary>
         /// Last update time (actually creation time) to allow sorting
         /// </summary>
