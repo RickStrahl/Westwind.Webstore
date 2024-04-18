@@ -31,12 +31,15 @@
                    class="form-control form-control-lg mt-2 mb-2"
                    style="width: 11em" xoninput="validationCodeChanged()"
                    placeholder="### ###" />
-
+            
             <button type="submit" name="btnSubmit" id="btnSubmit"
                     class="btn btn-primary btn-lg mt-2">
                 <i class="far fa-check-circle"></i>
                 Validate
             </button>
+
+            <input type="hidden" asp-for="ReturnUrl" />
+            <input type="hidden" asp-for="TokenReturnUrl" />
         </form>
     </div>
 </div>
