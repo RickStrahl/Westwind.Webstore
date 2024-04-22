@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Westwind.Webstore.Business;
 using Westwind.Webstore.Web.Models;
 
 namespace Westwind.Webstore.Web.Controllers
@@ -16,5 +17,7 @@ namespace Westwind.Webstore.Web.Controllers
         public string HttpVerb { get; set; }
 
         public string PostData { get; set;  }
+
+        public string Path { get; set; }
     }
 }

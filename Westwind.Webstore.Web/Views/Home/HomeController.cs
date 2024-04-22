@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -55,18 +56,37 @@ namespace Westwind.Webstore.Web.Controllers
 
         public IActionResult Privacy()
         {
+        
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public async Task<IActionResult> Error()
+        public IActionResult MissingPage(string path, string url = null)
         {
-            var exceptionHandlerPath=  HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            var exceptionHandler =   HttpContext.Features.Get<IExceptionHandlerFeature>();
+            var model = new ErrorViewModel();
+            model.Path = url;
+            InitializeViewModel(model);
 
-            var mainException = exceptionHandler?.Error;
-            var pathException = exceptionHandlerPath?.Error;
+            return View(model);
+        }
 
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> Error(Exception ex = null)
+        {
+            var mainException = ex;
+            var pathException = ex;
+
+            IExceptionHandlerPathFeature exceptionHandlerPath = null;
+            IExceptionHandlerFeature exceptionHandler = null;
+
+            if (ex != null)
+            {
+                exceptionHandlerPath = HttpContext.Features.Get<IExceptionHandlerPathFeature>();                
+                exceptionHandler = HttpContext.Features.Get<IExceptionHandlerFeature>();
+
+                mainException = exceptionHandler?.Error;                
+                pathException = exceptionHandlerPath?.Error;
+            }
+            
             var model = new ErrorViewModel {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
                 Error = pathException,
@@ -81,7 +101,6 @@ namespace Westwind.Webstore.Web.Controllers
             {
                 model.StatusCode = (int) httpEx.StatusCode.Value;
                 Response.StatusCode = (int) model.StatusCode;
-
             }
             else
             {

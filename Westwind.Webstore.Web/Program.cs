@@ -296,13 +296,25 @@ if (!string.IsNullOrEmpty(itemImagePath))
 
 app.UseStatusCodePages(new StatusCodePagesOptions
 {
-    HandleAsync = (ctx) =>
+    HandleAsync =  (ctx) =>
     {
         if (ctx.HttpContext.Response.StatusCode == 404)
         {
-            // throw an exception so it shows as an error page
-            //  404 has special handling in `/home/error`
-            throw new HttpRequestException("Page not  found: " + ctx.HttpContext.Request.Path, null, statusCode: System.Net.HttpStatusCode.NotFound);
+            ctx.HttpContext.Response.Redirect("/home/missingpage?url=" + ctx.HttpContext.Request.GetUrl());
+            return Task.FromResult(0);
+            //// throw an exception so it shows as an error page
+            ////  404 has special handling in `/home/error`
+            ////throw new HttpRequestException("Page not  found: " + ctx.HttpContext.Request.Path, null, statusCode: System.Net.HttpStatusCode.NotFound);
+            //var ctxAccessor = ctx.HttpContext.RequestServices.GetService<IHttpContextAccessor>();
+            //var factory = ctx.HttpContext.RequestServices.GetService<BusinessFactory>();
+            //var logger = ctx.HttpContext.RequestServices.GetService<ILogger<HomeController>>();
+
+
+            //var controller = new HomeController(logger,factory, ctxAccessor );
+            //var result = controller.Error(new HttpRequestException(
+            //    "Page not  found: " + ctx.HttpContext.Request.Path,
+            //    null,
+            //    statusCode: System.Net.HttpStatusCode.NotFound));
         }
         else if (ctx.HttpContext.Response.StatusCode == 401)
         {
