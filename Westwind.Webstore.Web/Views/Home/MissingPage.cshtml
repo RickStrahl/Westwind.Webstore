@@ -1,0 +1,38 @@
+﻿@model ErrorViewModel
+
+<div class="container" style="max-width: 670px">
+  
+        <h1 class="page-header-text">
+            <i class="fas fa-warning text-warning"></i>
+            Oops - We're in the Weeds. Page not Found.
+        </h1>
+
+        <div class="responsive-container">
+            <div style="max-width: 12em">
+                <img src="/images/404Image.jpg" style="width: 100%; display:  block; padding-right:  1em;" />
+            </div>
+            <div style="font-size: 1.1em">
+                <p>
+                    <b>Uh oh!</b> 
+                    
+                    Looks like you've accessed a <b>page that no longer exists</b>,
+                    or you used <b>a link that is not valid</b> for this site.
+                </p>
+                <p>
+                    If you typed in or copied this link directly, please double check 
+                    to make sure the link is correct and valid for a page on this site.
+                </p>
+                <p class="small">
+                   <i>@Model.Path</i>
+                </p>
+                <p>
+                    <a class="bold" href="/">
+                        <i class="fa-duotone fa-up-right-from-square"></i>
+                        Back to Site Home
+                    </a>
+                </p>
+            </div>
+        </div>
+  
+
+</div>
