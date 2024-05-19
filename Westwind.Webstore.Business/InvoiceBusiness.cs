@@ -222,35 +222,106 @@ namespace Westwind.Webstore.Business
         /// or the active Entity instance.
         /// </summary>
         /// <param name="invoice">Invoice entity or the current active Entity</param>
-        /// <returns></returns>
+        /// <returns></returns>        
         public virtual decimal CalculateTotals(Invoice invoice = null)
         {
             if (invoice == null)
                 invoice = Entity;
-
             if (invoice == null)
-                return 0M;
+                return 0;
 
-            return invoice.CalculateTotals();
+            decimal subTotal = 0M;
+
+            foreach (var item in Entity.LineItems)
+            {
+                subTotal += item.CalculateItemTotal();
+            }
+
+            invoice.SubTotal = subTotal;
+
+            CalculateShipping();
+            CalculateTax();
+
+            invoice.InvoiceTotal = invoice.SubTotal + invoice.Tax + invoice.Shipping;
+
+            return invoice.InvoiceTotal;
         }
 
-        /// <summary>
-        /// Calculates the tax for an invoice
-        ///
-        /// Automatically called from CalculateTotals
-        /// </summary>
-        /// <param name="invoice"></param>
-        /// <returns></returns>
-        public decimal CalculateTax(Invoice invoice = null)
+        public virtual decimal CalculateTax(Invoice invoice = null)
         {
             if (invoice == null)
                 invoice = Entity;
-
             if (invoice == null)
+                return 0;
+
+            invoice.Tax = 0;
+            invoice.TaxRate = 0;
+
+            if (invoice.BillingAddress?.State == null)
                 return 0M;
 
-            return invoice.CalculateTax();
+            if (invoice.BillingAddress.State.Equals(wsApp.Configuration.Payment.TaxState, StringComparison.OrdinalIgnoreCase))
+            {
+                invoice.TaxRate = wsApp.Configuration.Payment.TaxRate;
+                invoice.Tax = (invoice.SubTotal + invoice.Shipping) * invoice.TaxRate;
+            }
+
+            return invoice.Tax;
         }
+
+        public virtual decimal CalculateShipping(Invoice invoice = null)
+        {
+            if (invoice == null)
+                invoice = Entity;
+            if (invoice == null)
+                return 0;
+
+
+            invoice.Shipping = 0;
+            if (!invoice.IsShipping)
+                return invoice.Shipping;
+
+
+            var address = invoice.ShippingAddress;
+            if (address == null || address.IsEmpty())
+                address = invoice.BillingAddress;
+
+            if (address == null)
+                return 0;
+
+            foreach (var item in invoice.LineItems)
+            {
+                if (!item.IsStockItem) continue;
+
+                // shipping cost per weight unit 
+                decimal shipCost = item.ShippingCost;
+                decimal totalWeight = item.Weight * item.Quantity;
+
+                if (address.CountryCode == "US" || address.CountryCode == "CA")
+                {
+                    if (shipCost < 0.01M)
+                        shipCost = 4.0M;
+                }
+                else
+                {
+                    if (shipCost < 0.01M)
+                        shipCost = 10M;
+                    else
+                        shipCost *= 2M;   // double for international
+                }
+
+                if (totalWeight < 1.0M)
+                    invoice.Shipping += shipCost;
+                else
+                {
+                    // first pound is full price, additional pounds are 50% of the cost
+                    invoice.Shipping += shipCost + Math.Ceiling(totalWeight - 1M) * (shipCost * 0.5M);
+                }
+            }
+
+            return invoice.Shipping;
+        }
+
 
         /// <summary>
         /// Adds an item to the active entity.
@@ -309,10 +380,15 @@ namespace Westwind.Webstore.Business
                     DiscountPercent = discount,
                     ItemImage = product.ItemImage,
                     AutoRegister = product.AutoRegister,
-                    UseLicensing = product.UseLicensing
+                    UseLicensing = product.UseLicensing,
+                    Weight = product.Weight,
+                    IsStockItem = product.IsStockItem,
+                    ShippingCost = product.ShippingCost
                 };
-                Entity.LineItems.Add(lineItem);
+                Entity.LineItems.Add(lineItem);                
             }
+            if (product.IsStockItem)
+                Entity.IsShipping = true;
 
             CalculateTotals(Entity);
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Westwind.Webstore.Business.Entities;
 
@@ -11,9 +12,11 @@ using Westwind.Webstore.Business.Entities;
 namespace Westwind.Webstore.Business.Migrations
 {
     [DbContext(typeof(WebStoreContext))]
-    partial class WebStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20240518165130_add-shipping-weight-to-lineitems")]
+    partial class addshippingweighttolineitems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -309,9 +312,6 @@ namespace Westwind.Webstore.Business.Migrations
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<decimal>("ShippingCost")
-                        .HasColumnType("decimal(18,4)");
-
                     b.Property<string>("Sku")
                         .HasColumnType("nvarchar(max)");
 
@@ -328,7 +328,7 @@ namespace Westwind.Webstore.Business.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -446,9 +446,6 @@ namespace Westwind.Webstore.Business.Migrations
 
                     b.Property<string>("RegistrationPassword")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("ShippingCost")
-                        .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("Sku")
                         .HasMaxLength(100)

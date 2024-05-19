@@ -118,6 +118,21 @@ namespace Westwind.Webstore.Business.Entities
         /// </summary>
         public DateTime Updated { get; set; } = DateTime.Now;
 
+
+        /// <summary>
+        /// Is this is a physical item that requires shipping
+        /// </summary>
+        public bool IsStockItem { get; set; }
+
+        /// <summary>
+        /// Weight used for shipping calculations
+        /// </summary>
+        [Column(TypeName ="decimal(18,4)")]
+        public decimal Weight { get; set;  }
+
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal ShippingCost { get; set; }
+
         /// <summary>
         /// Calculates the line item total and returns the value
         /// </summary>

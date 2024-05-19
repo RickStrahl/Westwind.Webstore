@@ -122,7 +122,7 @@ namespace Westwind.Webstore.Business.Entities
         /// Determines whether the item is a physical or virtual item (software)
         /// that can be digitally shipped
         /// </summary>
-        public bool IsStockItem { get; set;  }
+        public bool IsStockItem { get; set; }
 
         /// <summary>
         /// Number of items that are available for physical items
@@ -138,6 +138,11 @@ namespace Westwind.Webstore.Business.Entities
         [Column(TypeName = "decimal(18,4)")]
         public decimal Weight { get; set; }
 
+        /// <summary>
+        /// Shipping Cost per Weight Unit
+        /// </summary>
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal ShippingCost { get; set; }
 
         /// <summary>
         /// Number of items that are on order/expected. Use in

@@ -497,12 +497,24 @@ INSERT [dbo].[Addresses] ([Id], [CustomerId], [AddressName], [StreetAddress], [C
     {
         public string CountryCode { get; set; }
         public string Country { get; set;  }
+
+        public override string ToString()
+        {
+            return $"{CountryCode} - {Country}";
+        }
+
     }
 
     public class StateListItem
     {
         public string StateCode { get; set; }
         public string State { get; set;  }
+
+
+        public override string ToString()
+        {
+            return $"{StateCode} - {State}";
+        }
     }
 
 }

@@ -123,6 +123,12 @@
                asp-for="Product.Cost"
                asp-format="{0:0.00}"/>
     </div>
+    <div >
+        <label>Stock:</label>
+        <input type="number" step="any" class="form-control right"
+               asp-for="Product.Stock"
+               asp-format="{0:0.00}"/>
+    </div>
     @* <div> *@
     @*     <label>Comission:</label> *@
     @*     <input type="number" *@
@@ -134,12 +140,21 @@
 </div>
 
 <div class="responsive-container">
-    <div >
-        <label>Stock:</label>
+
+
+    <div>
+        <label>Weight:</label>
         <input type="number" step="any" class="form-control right"
-               asp-for="Product.Stock"
+               asp-for="Product.Weight"
                asp-format="{0:0.00}"/>
     </div>
+    <div>
+        <label>Shipping Cost:</label>
+        <input type="number" step="any" class="form-control right"
+               asp-for="Product.ShippingCost"
+               asp-format="{0:0.00}"/>
+    </div>
+    
     <div>
         <label>On Order:</label>
         <input type="number" step="any" class="form-control right"
@@ -147,11 +162,12 @@
                asp-format="{0:0.00}"/>
     </div>
     <div>
-        <label>Weight:</label>
-        <input type="number" step="any" class="form-control right"
-               asp-for="Product.Weight"
-               asp-format="{0:0.00}"/>
+        <label>Expected By:</label>
+        <input type="text" step="any" class="form-control right"
+               asp-for="Product.Expected"
+               asp-format="{0:yyyy-MM-dd}"/>
     </div>
+
 </div>
 
 

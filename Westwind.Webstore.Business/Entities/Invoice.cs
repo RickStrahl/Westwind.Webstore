@@ -1,14 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.Design;
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Westwind.Utilities;
-using Westwind.Webstore.Business.Entities;
 
 namespace Westwind.Webstore.Business.Entities
 {
@@ -244,47 +240,6 @@ namespace Westwind.Webstore.Business.Entities
 
 
         public int OldPk { get; set; }
-
-
-        /// <summary>
-        /// Calculates the SubTotal and InvoiceTotal and assigns it to this invoice
-        /// instance.
-        /// </summary>
-        /// <returns></returns>Invoice
-        public decimal CalculateTotals()
-        {
-            decimal subTotal = 0M;
-
-            foreach (var item in LineItems)
-            {
-                subTotal += item.CalculateItemTotal();
-            }
-
-            SubTotal = subTotal;
-
-            CalculateTax();
-
-            InvoiceTotal = SubTotal + Tax;
-
-            return InvoiceTotal;
-        }
-
-        public decimal CalculateTax()
-        {
-            Tax = 0;
-            TaxRate = 0;
-
-            if (BillingAddress?.State == null)
-                return 0M;
-
-            if (BillingAddress.State.Equals(wsApp.Configuration.Payment.TaxState, StringComparison.OrdinalIgnoreCase))
-            {
-                TaxRate = wsApp.Configuration.Payment.TaxRate;
-                Tax = SubTotal * TaxRate;
-            }
-
-            return Tax;
-        }
         #endregion
 
         [Required]

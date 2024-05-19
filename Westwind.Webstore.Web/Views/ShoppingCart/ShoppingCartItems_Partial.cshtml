@@ -144,29 +144,30 @@
             <tr>
                 <td  class="right">Subtotal:</td>
                 <td class="invoice-subtotal">
-                   @invoice.SubTotal.ToString("c2")
+                    @(wsApp.Configuration.CurrencySymbol)@invoice.SubTotal.ToString("n2")
                 </td>
             </tr>
-
-            @if (invoice.Tax > 0.001M)
-            {
-                <tr>
-                    <td class="right">Tax:</td>
-                    <td class="invoice-subtotal">
-                       @invoice.Tax.ToString("c2")
-                    </td>
-                </tr>
-            }
 
             @if (invoice.Shipping > 0.001M)
             {
                 <tr>
                     <td class="right">Shipping:</td>
                     <td class="invoice-subtotal">
-                        @(wsApp.Configuration.CurrencySymbol)@invoice.Shipping.ToString("c2")
+                        @(wsApp.Configuration.CurrencySymbol)@invoice.Shipping.ToString("n2")
                     </td>
                 </tr>
             }
+
+            @if (invoice.Tax > 0.001M)
+            {
+                <tr>
+                    <td class="right">Tax:</td>
+                    <td class="invoice-subtotal">
+                        @(wsApp.Configuration.CurrencySymbol)@invoice.Tax.ToString("n2")
+                    </td>
+                </tr>
+            }
+
         }
         <tr>
             <td class="right">
@@ -186,7 +187,8 @@
                                title="If you have a promo code, enter it here"/>
                         <button type="submit" name="btnRecalculate" id="btnRecalculate" 
                                 title="Recalculate order totals"
-                                class="btn btn-secondary"><i class="fas fa-fw fa-sync"></i></button>
+                                class="btn btn-secondary"><i class="fas fa-fw fa-sync"></i>
+                        </button>
                     </div>
                 }
                 else if (!string.IsNullOrEmpty(Model.Invoice.PromoCode))
@@ -196,13 +198,13 @@
                     </div>
                 }
 
-                <div class="hidable-xs text-danger" style="margin-top: 0.4em; font-size:  1.2em; font-weight:  700">
+                <div class="hidable-xs text-danger" style="margin-top: 0.17em; font-size:  1.3em; font-weight:  700">
                     Total:
                 </div>
             </td>
             <td class="right text-danger invoice-total" 
                 style="font-size: 1.6em; font-weight: bold;">
-                @invoice.InvoiceTotal.ToString("c2")
+                @(wsApp.Configuration.CurrencySymbol)@invoice.InvoiceTotal.ToString("n2")
             </td>
         </tr>
         </table>

@@ -4,6 +4,7 @@
  *                          uses configured connectionstring
 */
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -36,6 +37,8 @@ using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 
+var configFile = "_webstore-configuration.json";
+bool noConfig = !File.Exists(configFile);
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -51,6 +54,16 @@ wsApp.Constants.WebRootFolder = System.IO.Path.Combine(wsApp.Constants.StartupFo
 var config = wsApp.Configuration;
 builder.Configuration.GetSection("WebStore").Bind(config);
 services.AddSingleton(config);
+
+if (noConfig)
+{
+    Console.ForegroundColor = ConsoleColor.DarkYellow;
+    Console.WriteLine($"*** Configuration file '{configFile}' not found. Creating...");
+    Console.ResetColor();
+    Console.WriteLine("Please edit the configuration file and set the connection string and then restart the application.");
+    ShellUtils.ShellExecute(configFile);
+    return;
+}
 
 if (CommandLineProcessor.CreateDatabase(args))
     return;
