@@ -41,6 +41,8 @@ namespace Westwind.Webstore.Business
         public PaymentConfiguration Payment { get; set; } = new PaymentConfiguration();
         public CompanyConfiguration Company { get; set; } = new CompanyConfiguration();
 
+        public InventoryConfiguration Inventory { get; set; } = new InventoryConfiguration();
+
         public LicensingConfiguration Licensing { get; set; } = new LicensingConfiguration();
 
         public FraudConfiguration Security { get; set; } = new FraudConfiguration();
@@ -166,6 +168,29 @@ namespace Westwind.Webstore.Business
         /// explicit order confirmation is required.
         /// </summary>
         public bool AutoConfirmAdminOrders { get; set; } = false;
+    }
+
+
+    public class InventoryConfiguration
+    {
+        /// <summary>
+        /// Base Shipping cost for physical items if no explicit per weight shipping cost
+        /// is provided.
+        /// </summary>
+        public decimal BaseShippingCostPerWeightUnit { get; set; } = 5.0M;
+
+        /// <summary>
+        /// Shipping cost for secondary weight after the first weight unit: ie. 2nd, 3rd, 4th pound/oz after first.
+        /// Generally shipping is most expensive for the first weight unit and gets cheaper for additional weight.
+        /// Use this value to represent the discount for multiple items.
+        /// </summary>
+        public decimal ShippingPercentageForSecondaryWeightUnit { get; set; } = 0.5M;
+
+        /// <summary>
+        /// Shipping cost multiplier for international orders. Whatever the base price ends up
+        /// being it's multiple by this value to get the international shipping cost.  
+        /// </summary>
+        public decimal ShippingCostInternationalMultiplier { get; set; } = 2M;
     }
 
     public class FraudConfiguration

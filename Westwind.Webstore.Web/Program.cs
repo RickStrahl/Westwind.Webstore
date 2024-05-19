@@ -248,15 +248,15 @@ var supportedCultures = new[]
 {
     new CultureInfo("en-US"),
     new CultureInfo("en"),
-   //new CultureInfo("de-DE"),
-   // new CultureInfo("de")
+    //new CultureInfo("de-DE"),
+    //new CultureInfo("de")
 };
 app.UseRequestLocalization(options =>
 {
-    // Always display prices in the default currency symbol
+    // ALWAYS display prices in the default currency symbol
     var cult = new RequestCulture("en-US");
     cult.Culture.NumberFormat.CurrencySymbol = wsApp.Configuration.CurrencySymbol;
-    options.DefaultRequestCulture = cult;
+    options.DefaultRequestCulture = cult;    
     foreach (var culture in supportedCultures)
     {
         culture.NumberFormat.CurrencySymbol = wsApp.Configuration.CurrencySymbol;
@@ -311,29 +311,18 @@ app.UseStatusCodePages(new StatusCodePagesOptions
 {
     HandleAsync =  (ctx) =>
     {
+        // Custom Status Code Error Handling
         if (ctx.HttpContext.Response.StatusCode == 404)
         {
             ctx.HttpContext.Response.Redirect("/home/missingpage?url=" + ctx.HttpContext.Request.GetUrl());
             return Task.FromResult(0);
-            //// throw an exception so it shows as an error page
-            ////  404 has special handling in `/home/error`
-            ////throw new HttpRequestException("Page not  found: " + ctx.HttpContext.Request.Path, null, statusCode: System.Net.HttpStatusCode.NotFound);
-            //var ctxAccessor = ctx.HttpContext.RequestServices.GetService<IHttpContextAccessor>();
-            //var factory = ctx.HttpContext.RequestServices.GetService<BusinessFactory>();
-            //var logger = ctx.HttpContext.RequestServices.GetService<ILogger<HomeController>>();
-
-
-            //var controller = new HomeController(logger,factory, ctxAccessor );
-            //var result = controller.Error(new HttpRequestException(
-            //    "Page not  found: " + ctx.HttpContext.Request.Path,
-            //    null,
-            //    statusCode: System.Net.HttpStatusCode.NotFound));
-        }
-        else if (ctx.HttpContext.Response.StatusCode == 401)
+        }        
+        if (ctx.HttpContext.Response.StatusCode == 401)
         {
             throw new HttpRequestException("Unauthorized: " + ctx.HttpContext.Request.Path, null, statusCode: System.Net.HttpStatusCode.Unauthorized);
         }
 
+        // pass exception as is to error handler
         return Task.FromResult(0);
     }
 });

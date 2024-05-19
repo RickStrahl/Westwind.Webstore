@@ -247,11 +247,19 @@ namespace Westwind.Webstore.Business
             return invoice.InvoiceTotal;
         }
 
+        /// <summary>
+        /// Calculate tax on the invoice and set the `Tax` property with value. Value is also returned.
+        ///
+        /// Tax calculation is hard coded to only charge tax in the specificall `Configuration.Payment.TaxState`.
+        /// If this value is empty or null no tax is charged.
+        /// </summary>
+        /// <param name="invoice"></param>
+        /// <returns></returns>
         public virtual decimal CalculateTax(Invoice invoice = null)
         {
             if (invoice == null)
                 invoice = Entity;
-            if (invoice == null)
+            if (invoice == null || string.IsNullOrEmpty(wsApp.Configuration.Payment.TaxState))
                 return 0;
 
             invoice.Tax = 0;
@@ -269,13 +277,22 @@ namespace Westwind.Webstore.Business
             return invoice.Tax;
         }
 
+
+        /// <summary>
+        /// Calculate shipping cost and set the `Shipping` price property and also return value.
+        ///
+        /// Calculation is based on shipping cost per weight unit in Product, or a base rate of $4.00
+        /// for first weight unit nationally, double for international and half that for additional weight units.
+        /// You'll likely want to customize this functionality via DI and BusinessFactory custom classes of InvoiceBusiness.
+        /// </summary>
+        /// <param name="invoice"></param>
+        /// <returns></returns>
         public virtual decimal CalculateShipping(Invoice invoice = null)
         {
             if (invoice == null)
                 invoice = Entity;
             if (invoice == null)
                 return 0;
-
 
             invoice.Shipping = 0;
             if (!invoice.IsShipping)
@@ -289,6 +306,8 @@ namespace Westwind.Webstore.Business
             if (address == null)
                 return 0;
 
+            var ivConfig = wsApp.Configuration.Inventory;
+
             foreach (var item in invoice.LineItems)
             {
                 if (!item.IsStockItem) continue;
@@ -300,22 +319,22 @@ namespace Westwind.Webstore.Business
                 if (address.CountryCode == "US" || address.CountryCode == "CA")
                 {
                     if (shipCost < 0.01M)
-                        shipCost = 4.0M;
+                        shipCost = ivConfig.BaseShippingCostPerWeightUnit;
                 }
                 else
                 {
                     if (shipCost < 0.01M)
-                        shipCost = 10M;
+                        shipCost = ivConfig.BaseShippingCostPerWeightUnit * ivConfig.ShippingCostInternationalMultiplier;
                     else
-                        shipCost *= 2M;   // double for international
+                        shipCost *= ivConfig.ShippingCostInternationalMultiplier;
                 }
 
                 if (totalWeight < 1.0M)
                     invoice.Shipping += shipCost;
                 else
                 {
-                    // first pound is full price, additional pounds are 50% of the cost
-                    invoice.Shipping += shipCost + Math.Ceiling(totalWeight - 1M) * (shipCost * 0.5M);
+                    // first pound is full price, additional pounds are discounted by a percentage of the cost
+                    invoice.Shipping += shipCost + Math.Ceiling(totalWeight - 1M) * (shipCost * ivConfig.ShippingPercentageForSecondaryWeightUnit);
                 }
             }
 
