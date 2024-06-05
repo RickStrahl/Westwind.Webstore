@@ -144,9 +144,9 @@
 
 
 @{
-    var scriptVars = new ScriptVariables() { useCamelCase = true };
+    var scriptVars = new ScriptVariables() { UseCamelCase = true };
     scriptVars.Add("lineItem", Model.LineItem);
-    scriptVars.ClientObjectName = "globals";
+    scriptVars.ClientObjectName = "window.globals";
 }
 @section Scripts
 {

@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Westwind.AspNetCore.Security
 @model OrderFormViewModel
 @{
     Layout = null;
@@ -7,6 +8,7 @@
     // Full InvoiceModel Entity from View Model
     var invoice = Model.InvoiceModel.Invoice;
     string title = "Invoice # " + invoice.InvoiceNumber;
+    
     
 }
 <!DOCTYPE html>
@@ -74,7 +76,8 @@
                 text-align: center;
                 margin-top: 0;
             }
-            #ButtonBar {
+            
+            #ButtonBar, #PaymentButtonContainer {
                 display: none;
             }
             .manage-license-link {
@@ -98,17 +101,25 @@
         <i class="fad fa-print"></i>
         print invoice
     </button>
-
-    <a class="btn btn-secondary btn-sm" href="/account/profile" 
+    
+    <a class="btn btn-secondary btn-sm" href="/account/profile/@invoice.Customer.Id"
        title="Go to profile"
     >
         <i class="fad fa-user fa-fw"></i>
     </a>
-    <a class="btn btn-secondary btn-sm" 
-            title="Go back to site home"
-            href="/">
-        <i class="fas fa-home-alt fa-fw"></i>
-    </a>
+    @if (Model.UserState.IsAdmin)
+    {
+        <a class="btn btn-secondary btn-sm" href="/admin/ordermanager/@invoice.InvoiceNumber"
+           title="Go to the Invoice Editor">
+            <i class="far fa-file-invoice fa-fw"></i>
+        </a>
+    }
+    
+    <a href = "/"
+       class ="btn btn-secondary btn-sm"
+       title = "Go back to site home"  >
+            <i class ="fas fa-home-alt fa-fw" ></i >
+    </a >
 </div>
 
 <div style="max-width: 1080px; margin:  0 auto">
@@ -181,11 +192,12 @@ Email to: @(string.IsNullOrEmpty(invoice.ConfirmationEmail) ? invoice.Customer.E
         }
     
         <partial name="ShoppingCartItems_Partial" model="Model.InvoiceModel"/>
-    
+        
         <div style="font-size: 36pt; color: #bbb; font-weight: bold;margin-top: 0">
             @invoice.CreditCardResult.ToString()
         </div>
-
+        
+        
         @if (!string.IsNullOrEmpty(invoice.Notes))
         {
             <div>
