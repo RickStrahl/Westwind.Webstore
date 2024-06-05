@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if INCLUDE_BRAINTREE
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -544,3 +546,5 @@ namespace Westwind.CreditCardProcessing
         }
     }
 }
+
+#endif

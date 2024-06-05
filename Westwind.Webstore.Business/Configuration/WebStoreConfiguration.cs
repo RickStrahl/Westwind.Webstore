@@ -163,11 +163,18 @@ namespace Westwind.Webstore.Business
         public bool SendAdminEmails { get; set; }
 
         /// <summary>
+        /// Determines whether confirmation emails are sent.
+        /// Note if sender email is not set no emails are sent.
+        /// </summary>
+        public bool SendEmails { get; set; } = true;
+
+        /// <summary>
         /// If true automatically sends product confirmations on
         /// orders processed through the admin interface. Otherwise
         /// explicit order confirmation is required.
         /// </summary>
         public bool AutoConfirmAdminOrders { get; set; } = false;
+
     }
 
 
@@ -188,7 +195,7 @@ namespace Westwind.Webstore.Business
 
         /// <summary>
         /// Shipping cost multiplier for international orders. Whatever the base price ends up
-        /// being it's multiple by this value to get the international shipping cost.  
+        /// being it's multiple by this value to get the international shipping cost.
         /// </summary>
         public decimal ShippingCostInternationalMultiplier { get; set; } = 2M;
     }
