@@ -28,6 +28,10 @@ namespace Westwind.Webstore.Business.Utilities
         {
             var emailConfig = wsApp.Configuration.Email;
 
+            // if disabled or not configured assume success
+            if (!emailConfig.SendEmails || string.IsNullOrEmpty(emailConfig.SenderEmail))
+                return true;
+
             var message = new MimeMessage();
             message.From.Add(CreateMailboxAddress(emailConfig.SenderName,
                 emailConfig.SenderEmail));
@@ -98,6 +102,9 @@ namespace Westwind.Webstore.Business.Utilities
         public bool SendAdminEmail(string recipient, string subject, string messageText, EmailModes emailMode = EmailModes.plain, bool noCCs = false)
         {
             var emailConfig = wsApp.Configuration.Email;
+
+            if (!emailConfig.SendAdminEmails || string.IsNullOrEmpty(emailConfig.SenderEmail))
+                return true;
 
             var message = new MimeMessage();
             message.From.Add(CreateMailboxAddress(emailConfig.SenderName,
