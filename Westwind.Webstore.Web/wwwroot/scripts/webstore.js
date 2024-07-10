@@ -34,6 +34,10 @@ webstore = {
                 items: 10,
                 fitToElement: false,
                 delay: 200,
+                highlighter: function(name) { 
+                    var text = name.split('|')[0];
+                    return '<div>' + text + '</div>';
+                },
                 minLength: 0,
                 afterSelect: function(item) {
                     $input.data('typeahead').lastSelection = item;
@@ -52,8 +56,8 @@ webstore = {
             return;
         }
 
-        ajaxJson("/api/product/search/" + encodeURIComponent(this.value), null,
-            function (result) {
+        ajaxJson("/api/product/search/" + encodeURIComponent(this.value) + "?typeahead=true", null,
+            function (result) {             
                 $input.data('typeahead').source = result;
             }, null, { method: "GET" });
     },

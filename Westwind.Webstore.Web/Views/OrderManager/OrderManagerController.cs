@@ -190,6 +190,7 @@ public class OrderManagerController : WebStoreBaseController
         invoice.BillingAddress.CountryCode = minvoice.BillingAddress.CountryCode;
         invoice.BillingAddress.Country = minvoice.BillingAddress.GetCountryFromCode(invoice.BillingAddress.CountryCode);
         invoice.BillingAddress.Telephone = minvoice.BillingAddress.Telephone;
+        invoice.BillingAddress.Email = minvoice.BillingAddress.Email;
 
         if (!invoiceBus.Save())
         {

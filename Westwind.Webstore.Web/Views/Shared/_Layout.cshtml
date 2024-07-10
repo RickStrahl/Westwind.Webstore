@@ -257,27 +257,6 @@
                     </a>    
                 }
 
-                @* <a href="/products/.net"> *@
-                @*     <i class="fas fa-angle-right fa-right-padding"></i> *@
-                @*     .NET *@
-                @* </a> *@
-                @* <a href="/products/foxpro"> *@
-                @*     <i class="fas fa-angle-right fa-right-padding"></i> *@
-                @*     FoxPro *@
-                @* </a> *@
-                @* <a href="/products/web%20connection"> *@
-                @*     <i class="fas fa-angle-right fa-right-padding"></i> *@
-                @*     Web Connection *@
-                @* </a> *@
-                @* <a href="/products/web%20connection"> *@
-                @*     <i class="fas fa-angle-right fa-right-padding"></i> *@
-                @*     Documentation *@
-                @* </a> *@
-                @* <a href="/products/network tools"> *@
-                @*     <i class="fas fa-angle-right fa-right-padding"></i> *@
-                @*     Network Tools *@
-                @* </a> *@
-
                 @if (Model.UserState.IsAdmin)
                 {
                     <div class="header">Administration</div>
@@ -323,8 +302,9 @@
 
 @RenderSection("BottomOfBody", required: false);
 
+
 <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/lib/bootstrap3-typeahead/bootstrap3-typeahead.js" async></script>
+<script src="/lib/bootstrap3-typeahead/bootstrap3-typeahead.js" ></script>
 <script src="/lib/westwind.jquery.js"></script>
 <script src="/scripts/webstore.js?v=@wsApp.Version"></script>
 <script src="/lib/toastr/build/toastr.min.js" async></script>

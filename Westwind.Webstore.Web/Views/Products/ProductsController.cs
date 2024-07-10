@@ -96,15 +96,17 @@ namespace Westwind.Webstore.Web.Controllers
 
 
         [HttpGet, Route("api/product/search/{searchText}")]
-        public IActionResult ApiProductSearch(string searchText)
+        public IActionResult ApiProductSearch(string searchText, string typeAhead = null)
         {
+            bool typeAheadMode = !string.IsNullOrEmpty(typeAhead);
+
             List<object> list = new List<object>();
             using (var busItem = BusinessFactory.GetProductBusiness())
             {
                 var filter = new InventoryItemsFilter() { SearchTerm = searchText };
                 var matches = busItem.GetItems(filter)
-                    .Select(p => new { id = p.Sku, name = p.Description });
-
+                    .Select(p => new { id = p.Sku, name = p.Description + (typeAheadMode ? "|" + p.Sku : "" )});
+                
                 foreach(var prod in matches)
                     list.Add(prod);
             }

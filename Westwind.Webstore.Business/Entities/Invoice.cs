@@ -414,6 +414,26 @@ namespace Westwind.Webstore.Business.Entities
                     ProcessingResult.Equals("PAID IN FULL", StringComparison.OrdinalIgnoreCase));
         }
 
+        /// <summary>
+        /// Determines if a payment is due and payable
+        /// </summary>
+        /// <returns></returns>
+        public bool IsDueAndPayable()
+        {
+            if (ProcessingResult.Equals("DUE AND PAYABLE", StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            return false;
+        }
+
+        public bool IsDeclined()
+        {
+            return !string.IsNullOrEmpty(ProcessingResult) &&
+                   (ProcessingResult.Equals("DECLINED", StringComparison.OrdinalIgnoreCase) ||
+                    ProcessingResult.Equals("VOID", StringComparison.OrdinalIgnoreCase) ||
+                    ProcessingResult.Equals("VOIDED", StringComparison.OrdinalIgnoreCase));
+        }
+
         public override string ToString()
         {
             if (string.IsNullOrEmpty(ProcessingResult))

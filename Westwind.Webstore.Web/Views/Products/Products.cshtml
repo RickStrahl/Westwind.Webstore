@@ -45,8 +45,11 @@
                         return;
                     }
 
-                    $(`.item-container a:containsNoCase("${searchText}"), .item-container a[data-sku*="${searchText}"]`).each(function() {
-                        var $parent = $(this).parents(".item-container");
+                    $(`.item-container:containsNoCase("${searchText}"), .item-container a[data-sku*="${searchText}"]`).each(function() {
+                        $parent = $(this);  // .item-container
+                        if (this.nodeName == "A")  // .item-container a
+                            $parent = $(this).parents(".item-container");
+                            
                         $parent.removeClass("hidden");
                     });
                 })
