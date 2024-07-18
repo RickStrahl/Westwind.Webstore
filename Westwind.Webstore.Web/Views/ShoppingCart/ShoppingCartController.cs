@@ -636,8 +636,10 @@ Nonce:      {inv.CreditCard.Nonce}";
 
             model.InvoiceModel = new InvoiceViewModel(invoice);
 
-            if (!isPrintInvoice)
+            if (!isPrintInvoice && string.IsNullOrEmpty(invoice.OrderStatus))
             {
+               invoice.OrderStatus = "Order placed";
+
                await AppUtils.SendOrderConfirmationEmail(model, ControllerContext);
 
                 if (invoice.CreditCardResult.IsApproved())

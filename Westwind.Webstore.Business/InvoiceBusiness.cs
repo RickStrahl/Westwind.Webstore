@@ -222,7 +222,7 @@ namespace Westwind.Webstore.Business
         /// or the active Entity instance.
         /// </summary>
         /// <param name="invoice">Invoice entity or the current active Entity</param>
-        /// <returns></returns>        
+        /// <returns></returns>
         public virtual decimal CalculateTotals(Invoice invoice = null)
         {
             if (invoice == null)
@@ -312,7 +312,7 @@ namespace Westwind.Webstore.Business
             {
                 if (!item.IsStockItem) continue;
 
-                // shipping cost per weight unit 
+                // shipping cost per weight unit
                 decimal shipCost = item.ShippingCost;
                 decimal totalWeight = item.Weight * item.Quantity;
 
@@ -404,7 +404,7 @@ namespace Westwind.Webstore.Business
                     IsStockItem = product.IsStockItem,
                     ShippingCost = product.ShippingCost
                 };
-                Entity.LineItems.Add(lineItem);                
+                Entity.LineItems.Add(lineItem);
             }
             if (product.IsStockItem)
                 Entity.IsShipping = true;
@@ -1017,8 +1017,7 @@ namespace Westwind.Webstore.Business
                 if (invoice.Completed <= wsApp.EmptyDate)
                     invoice.Completed = DateTime.Now;
 
-                if (string.IsNullOrEmpty(invoice.OrderStatus))
-                    invoice.OrderStatus = WebStoreBusinessResources.EmailConfirmationSent;
+                invoice.OrderStatus = WebStoreBusinessResources.EmailConfirmationSent;
             }
 
             return true;
