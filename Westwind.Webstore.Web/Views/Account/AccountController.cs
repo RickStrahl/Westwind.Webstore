@@ -291,6 +291,8 @@ namespace Westwind.Webstore.Web.Views
 
                 if (UserState.IsTwoFactorValidated)
                 {
+                    UserState.IsAdmin = customer.IsAdminUser; // reset admin explicitly
+
                     if (model.IsTokenRequest)
                     {
                         var tokenManager = new UserTokenManager(wsApp.Configuration.ConnectionString);
@@ -307,7 +309,10 @@ namespace Westwind.Webstore.Web.Views
                     }
 
                     return Redirect(model.ReturnUrl);
-                    //ErrorDisplay.ShowSuccess("Code has been validated.");
+                }
+                else
+                {
+                    UserState.IsAdmin = false;
                 }
 
                 ErrorDisplay.ShowError("Invalid validation code. Please try again.");

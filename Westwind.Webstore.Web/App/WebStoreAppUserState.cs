@@ -69,10 +69,10 @@ namespace Westwind.Webstore.Web.Models
                 return !string.IsNullOrEmpty(UserId);
             else
             {
-                return !string.IsNullOrEmpty(UserId) &&
-                       IsTwoFactorValidated;
+                return !string.IsNullOrEmpty(UserId) && IsTwoFactorValidated;
             }
         }
+
 
         /// <summary>
         /// Resets the value to the defaults
