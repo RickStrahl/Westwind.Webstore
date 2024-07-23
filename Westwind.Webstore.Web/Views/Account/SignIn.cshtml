@@ -32,7 +32,7 @@
                    asp-for="Email"
                    aria-label="Email"
                    autocapitalize="off"
-                   autocomplete="off"
+                   autocomplete="email"
                    spellcheck="false"
                    autocorrect="off" required />
         </div>
@@ -43,12 +43,11 @@
             <input type="password"
                    class="form-control"
                    placeholder="@AppResources.Account.EnterYourPassword"
-                   asp-for="Password"
+                   asp-for="Password" 
                    autocapitalize="off"
-                   autocomplete="off"
+                   autocomplete="current-password"
                    spellcheck="false"
-                   autocorrect="off"
-                   required />
+                   autocorrect="off" required />
         </div>
         
 

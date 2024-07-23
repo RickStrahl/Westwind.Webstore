@@ -267,6 +267,7 @@
                 <select asp-for="BillingAddress.CountryCode"
                         class="form-select"
                         title="Country - if not listed use 'Other' at the end of the list"
+                        autocomplete="countrycode"
                         asp-items="@(new SelectList(wsApp.Countries, "CountryCode", "Country"))">
                 </select>
             </div>
