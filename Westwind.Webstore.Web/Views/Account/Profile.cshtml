@@ -76,6 +76,7 @@
                            class="form-control"
                            aria-label="First name"
                            placeholder="First name"
+                           autocomplete="given-name"
                            asp-for="Customer.Firstname"/>
                 </div>
 
@@ -85,6 +86,7 @@
                             class="form-control" 
                             aria-label="Last name"
                             asp-for="Customer.Lastname"
+                            autocomplete="family-name"
                             placeholder="Last name" />
                 </div>
             </div>
@@ -112,6 +114,7 @@
                        aria-label="Email"
                        title="Please enter a valid email address "
                        autocapitalize="off"
+                       autocomplete="email"
                        spellcheck="false"
                        autocorrect="off" required />
                 
@@ -201,7 +204,7 @@
 
                     <div class="input-group mb-2">
                         <span class="input-group-text"><i class="fad fa-fw fa-user-lock "></i></span>
-                        <input class="form-control" type="password"
+                        <input class="form-control" type="password" auto-complete="new-password"
                                asp-for="Password" placeholder="Enter a Password"/>
                     </div>
 
@@ -231,10 +234,10 @@
                     <textArea type="text"
                               class="form-control"
                               placeholder="Enter your Address"
-                              id="Address"
+                              id="Address" 
                               asp-for="BillingAddress.StreetAddress"  
                               aria-label="Address" 
-                              autocomplete="on"
+                              autocomplete="street-address"
                               ></textArea>
                 </div>
             </div>
@@ -245,14 +248,17 @@
                 <div class="responsive-container">
                     <input asp-for="BillingAddress.City" 
                            class="form-control"
-                           style="min-width: 280px" 
+                           style="min-width: 280px"
                            placeholder="City"/>
                     <select asp-for="BillingAddress.State"
-                            class="form-select"
+                            class="form-select" 
                             title="US State or Candian Province - all others can leave this unset."
                             asp-items="@(new SelectList(wsApp.States, "StateCode", "State"))">
                     </select>
-                    <input asp-for="BillingAddress.PostalCode" class="form-control" placeholder="Postal code"/>
+                    <input asp-for="BillingAddress.PostalCode" 
+                           class="form-control"
+                           autocomplete="postal-code"
+                           placeholder="Postal code"/>
                 </div>
             </div>
 

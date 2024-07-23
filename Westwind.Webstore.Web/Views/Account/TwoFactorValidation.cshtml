@@ -30,6 +30,7 @@
             <input id="txtValidationCode" asp-for="ValidationCode"
                    class="form-control form-control-lg mt-2 mb-2"
                    style="width: 11em" xoninput="validationCodeChanged()"
+                   autocomplete="one-time-code"
                    placeholder="### ###" />
             
             <button type="submit" name="btnSubmit" id="btnSubmit"

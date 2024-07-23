@@ -136,14 +136,14 @@
         <div class="input-group me-1">
             <span class="input-group-text"><i class="fad fa-fw fa-user"></i></span>
             <input type="text" class="form-control" 
-                   title="First Name (required)"
+                   title="First Name (required)" autocomplete="given-name" autocapitalize="words"
                    placeholder="First name*" asp-for="Firstname"/>
         </div>
 
         <div class="input-group ms-1">
             <span class="input-group-text"><i class="fad fa-fw fa-user "></i></span>
             <input type="text" class="form-control" id="txtLastname"
-                   title="Last Name (required)"
+                   title="Last Name (required)" autocomplete="family-name" autocapitalize="words"
                    asp-for="Lastname" placeholder="Last name*"/>
         </div>
     </div>
@@ -158,10 +158,8 @@
                    placeholder="Company or Organization (optional)"
                    asp-for="Company"
                    title="Company (if applicable)"
-                   autocapitalize="off"
-                   autocomplete="off"
                    spellcheck="false"
-                   autocorrect="off"/>
+                   autocorrect="off" />
         </div>
     </div>
             
@@ -177,7 +175,7 @@
                    aria-label="Email"
                    title="Please enter a valid email address."
                    autocapitalize="off"
-                   autocomplete="off"
+                   autocomplete="email"
                    spellcheck="false"
                    autocorrect="off" required/>
             <button id="btnSendValidationEmail"
@@ -201,8 +199,7 @@
                    title="First line of your street address (required for Credit Cards, optional for PayPal)"
                    placeholder="First line of street address (required for credit cards, optional for PayPal)"
                    asp-for="StreetAddress"
-                   autocapitalize="off"
-                   autocomplete="off"
+                   autocomplete="street-address"
                    spellcheck="false"
                    autocorrect="off"/>
         </div>
@@ -216,8 +213,7 @@
                    title="Zip or Postal Code"
                    placeholder="Zip or Postal Code*"
                    asp-for="PostalCode"
-                   autocapitalize="off"
-                   autocomplete="off"
+                   autocomplete="postal-code"
                    spellcheck="false"
                    autocorrect="off" />
         </div>
@@ -246,15 +242,13 @@
                    aria-label="Password"
                    title="Enter a password for this account. Used to access your account in the future."
                    autocapitalize="off"
-                   autocomplete="off"
+                   autocomplete="new-password"
                    spellcheck="false"
                    autocorrect="off" required/>
         </div>
         <div class="header-byline ">used to access your account. 8 chars minimum, must include: upper case, lower case, and a number</div>
     }
 </div>
-
-
 
     <button id="btnSubmit" name="btnSubmit" type="submit"
             class="btn-primary btn btn-lg mt-4" >
