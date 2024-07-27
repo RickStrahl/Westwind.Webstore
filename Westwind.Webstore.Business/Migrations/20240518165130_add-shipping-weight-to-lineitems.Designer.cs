@@ -13,7 +13,7 @@ namespace Westwind.Webstore.Business.Migrations
 {
     [DbContext(typeof(WebStoreContext))]
     [Migration("20240518165130_add-shipping-weight-to-lineitems")]
-    partial class addshippingweighttolineitems
+    partial class Addshippingweighttolineitems
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

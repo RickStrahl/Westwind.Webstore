@@ -5,7 +5,7 @@
 namespace Westwind.Webstore.Business.Migrations
 {
     /// <inheritdoc />
-    public partial class addshippingweighttolineitems : Migration
+    public partial class Addshippingweighttolineitems : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,7 +30,7 @@ namespace Westwind.Webstore.Business.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "IsStockItem",
-                table: "LineItems");
+                table: "LineItems");`
 
             migrationBuilder.DropColumn(
                 name: "Weight",

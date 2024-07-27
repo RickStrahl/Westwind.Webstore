@@ -31,14 +31,14 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Westwind.Data.EfCore" Version="6.0.2" />
+    <PackageReference Include="Westwind.Data.EfCore" Version="6.0.3" />
     <PackageReference Include="Westwind.Globalization" Version="3.1.8" />
 
     <!-- private package in ./_SupportPackages folder -->
     <PackageReference Include="Westwind.Licensing" Version="1.0.5" />
     
-    <PackageReference Include="Westwind.Utilities" Version="5.0.4" />
-    <PackageReference Include="Westwind.Utilities.Data" Version="5.0.4" />
+    <PackageReference Include="Westwind.Utilities" Version="5.0.7.4" />
+    <PackageReference Include="Westwind.Utilities.Data" Version="5.0.7" />
    </ItemGroup>
 
   <ItemGroup>
