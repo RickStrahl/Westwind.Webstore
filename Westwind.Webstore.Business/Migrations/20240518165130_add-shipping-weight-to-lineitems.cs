@@ -30,7 +30,7 @@ namespace Westwind.Webstore.Business.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "IsStockItem",
-                table: "LineItems");`
+                table: "LineItems");
 
             migrationBuilder.DropColumn(
                 name: "Weight",

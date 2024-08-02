@@ -364,8 +364,7 @@ namespace Westwind.Webstore.Web.Views
 
             var model = CreateViewModel<ProfileViewModel>();
 
-            model.IsOrderProfile =
-                HttpContext.Request.Path.Value.Contains("/orderprofile", StringComparison.OrdinalIgnoreCase);
+            model.IsOrderProfile = HttpContext.Request.Path.Value.Contains("/orderprofile", StringComparison.OrdinalIgnoreCase);
             model.ReturnUrl = returnUrl;
 
             var customerBusiness = BusinessFactory.GetCustomerBusiness();

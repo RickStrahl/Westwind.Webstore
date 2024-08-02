@@ -235,7 +235,7 @@ namespace Westwind.Webstore.Web.Controllers
 
             var busInvoice = BusinessFactory.GetInvoiceBusiness();
             var invoice = busInvoice.Load(UserState.InvoiceId);
-            if (invoice == null)
+            if (invoice == null || invoice.LineItems.Count < 1)
                 return Redirect("~/");
 
             // Update InvoiceModel From Customer

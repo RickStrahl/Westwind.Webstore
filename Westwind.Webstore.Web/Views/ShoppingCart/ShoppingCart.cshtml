@@ -13,17 +13,22 @@
         <partial name="ShoppingCartItems_Partial" model="Model.Invoice"/>
         
         <div class="mt-3">
-            <a  href="/shoppingcart/orderprofile"
-                class="btn btn-primary ">
-                <i class="fas fa-check-circle text-success"></i>
-                @AppResources.ShoppingCart.PlaceOrder
-            </a>
             
-            <a href="~/" class="btn btn-secondary btn-sm continue-button" >
+            @if (Model.Invoice.Invoice.LineItems.Count > 0)
+            {
+                <a href="/shoppingcart/orderprofile"
+                   class="btn btn-primary">
+                    <i class="fas fa-check-circle text-success"></i>
+                    @AppResources.ShoppingCart.PlaceOrder
+                </a>
+            }
+
+            <a href="~/" class="btn btn-secondary btn-sm continue-button">
                 <i class="fad fa-cart-plus"></i>
                 Continue Shopping
             </a>
-            
+
+            <div class="clearfix"></div>
         </div>
     </form>
 </div>
