@@ -19,6 +19,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+    
     <!-- application.css references bootstrap and font-awesome -->
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/lib/fontawesome/css/all.min.css" rel="stylesheet" />
@@ -102,7 +103,7 @@
         print invoice
     </button>
     
-    <a class="btn btn-secondary btn-sm" href="/account/profile/@invoice.Customer.Id"
+    <a class="btn btn-secondary btn-sm" href="/profile"
        title="Go to profile"
     >
         <i class="fad fa-user fa-fw"></i>
@@ -196,6 +197,19 @@ Email to: @(string.IsNullOrEmpty(invoice.ConfirmationEmail) ? invoice.Customer.E
         <div style="font-size: 36pt; color: #bbb; font-weight: bold;margin-top: 0">
             @invoice.CreditCardResult.ToString()
         </div>
+        
+            
+        @if (!invoice.CreditCardResult.IsApproved() && invoice.InvoiceTotal > 0.001M && invoice.IsDueAndPayable())
+        {          
+            <div class="not-printable">
+                <hr/>
+                <a href="/invoice/payment/@invoice.InvoiceNumber"
+                   class="btn btn-secondary">
+                    <i class="fas fa-credit-card-alt"></i>
+                    Pay Invoice
+                </a>
+            </div>
+        }
         
         
         @if (!string.IsNullOrEmpty(invoice.Notes))

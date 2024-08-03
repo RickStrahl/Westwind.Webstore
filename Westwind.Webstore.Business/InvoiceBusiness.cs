@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Westwind.CreditCardProcessing;
 using Westwind.Utilities;
-using Westwind.Utilities.InternetTools;
 using Westwind.Webstore.Business.Entities;
 using Westwind.Webstore.Business.Properties;
 using Westwind.Webstore.Business.Utilities;

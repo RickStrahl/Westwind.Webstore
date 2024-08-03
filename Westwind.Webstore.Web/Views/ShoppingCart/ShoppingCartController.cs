@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Westwind.AspNetCore.Extensions;
 using Westwind.AspNetCore.Messages;
+using Westwind.CreditCardProcessing;
 using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
@@ -294,8 +295,6 @@ namespace Westwind.Webstore.Web.Controllers
 
             // ensure customer and address are linked
             invoiceBusiness.UpdateCustomerReferences(customer);
-            //var entry = invoiceBusiness.Context.Entry(customer);
-            //entry.State = EntityState.Modified;
 
             var invoiceModel = model.InvoiceModel;
             model.InvoiceModel.CanEditPromoCode = true;
@@ -320,8 +319,6 @@ namespace Westwind.Webstore.Web.Controllers
                 return View(model);
 
             invoiceBusiness.CalculateTotals();
-
-
 
             if (!isNoCharge && !ProcessCreditCard(model, invoiceBusiness))
             {
@@ -693,10 +690,88 @@ Nonce:      {inv.CreditCard.Nonce}";
             return response;
         }
 
-
-
         #endregion
 
+        #region Invoice Payment
+
+        [HttpGet]
+        [Route("invoice/payment/{invoiceNo}")]
+        public ActionResult InvoicePayment(string invoiceNo)
+        {
+            var model = CreateViewModel<OrderFormViewModel>();
+            model.dtto = OrderValidation.EncodeCurrentDate();
+
+            var busInvoice = BusinessFactory.GetInvoiceBusiness();
+            var invoice = busInvoice.LoadByInvNo(invoiceNo);
+            if (invoice == null || invoice.LineItems.Count < 1 || invoice.Customer.Id != UserState.UserId)
+                return Redirect("~/");
+
+            // Update InvoiceModel From Customer
+            model.InvoiceModel = new InvoiceViewModel(invoice);
+            model.InvoiceModel.CanEditPromoCode = false;
+
+            if (invoice.BillingAddress is not null)
+            {
+                if (invoice.BillingAddress.Email is null)
+                    invoice.BillingAddress.Email = invoice.Customer.Email;
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Route("invoice/payment/{invoiceNo}")]
+        public ActionResult InvoicePayment(OrderFormViewModel model, string invoiceNo)
+        {
+            InitializeViewModel(model);
+            model.dtto = OrderValidation.EncodeCurrentDate();
+
+            var invoiceBusiness = BusinessFactory.GetInvoiceBusiness();
+            var invoice = invoiceBusiness.LoadByInvNo(invoiceNo);
+            invoice = invoiceBusiness.Load(invoice.Id);
+
+            if (invoice == null || invoice.LineItems.Count < 1)
+            {
+                return Redirect("~/");
+            }
+
+            if (invoice.BillingAddress is not null)
+            {
+                if (invoice.BillingAddress.Email is null)
+                    invoice.BillingAddress.Email = invoice.Customer.Email;
+            }
+
+            var invoiceModel = model.InvoiceModel;
+            model.InvoiceModel.CanEditPromoCode = false;
+
+            invoiceModel.Invoice = invoice;  // assign actual invoice
+
+            invoiceBusiness.CalculateTotals();
+
+            bool isNoCharge = invoice.InvoiceTotal < 0.1M && invoice.LineItems.Count > 0;
+            if (!isNoCharge && !ProcessCreditCard(model, invoiceBusiness))
+            {
+                ModelState.Clear();
+                model.ErrorDisplay.AddMessage(invoiceBusiness.ErrorMessage,"dropin-container");
+                model.ErrorDisplay.ShowError("Please fix the following");
+                return View(model);
+            }
+
+            invoice.IsTemporary = false;
+
+            if (!invoiceBusiness.Save())
+            {
+                model.ErrorDisplay.ShowError(invoiceBusiness.ErrorMessage,
+                    AppResources.ShoppingCart.InvoiceCouldNotBeSaved);
+                return View(model);
+            }
+
+            invoiceBusiness.UpdateLineItemsLicenses(saveInvoice: true);
+            invoiceBusiness.DeleteExpiredTemporaryInvoices();
+
+            return Redirect("/invoice/" + invoice.InvoiceNumber);
+        }
+    #endregion
 
 
         #region Support Functions

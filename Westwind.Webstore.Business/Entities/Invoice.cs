@@ -257,6 +257,11 @@ namespace Westwind.Webstore.Business.Entities
                      string.IsNullOrEmpty(CreditCardResult.TransactionId));
         }
 
+        public bool IsDueAndPayable()
+        {
+            return CreditCardResult.IsDueAndPayable();
+        }
+
 
         /// <summary>
         /// Returns the status HTML color to display for
@@ -420,7 +425,10 @@ namespace Westwind.Webstore.Business.Entities
         /// <returns></returns>
         public bool IsDueAndPayable()
         {
-            if (ProcessingResult.Equals("DUE AND PAYABLE", StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrEmpty(ProcessingResult))
+                return false;
+
+            if (ProcessingResult.EqualsMany(StringComparison.OrdinalIgnoreCase, "DUE AND PAYABLE", "UNPAID", "DUE"))
                 return true;
 
             return false;

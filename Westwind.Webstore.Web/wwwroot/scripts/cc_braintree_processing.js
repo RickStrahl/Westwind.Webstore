@@ -63,6 +63,7 @@ brainTree = {
             }
             
             // Submit payload.nonce to your server
+            document.getElementById("Nonce").value = payload.nonce;
             $("#Nonce").val(payload.nonce);
             $("#Descriptor").val(payload.type);
 

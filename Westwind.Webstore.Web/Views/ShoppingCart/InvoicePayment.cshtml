@@ -1,0 +1,81 @@
+﻿@model OrderFormViewModel
+
+@{
+    
+    Layout = "_Layout";
+    var invoice = Model.InvoiceModel.Invoice;
+    ViewBag.Title = $"Pay Invoice - {invoice.InvoiceNumber}";
+}
+<div class="container">
+
+<h2 class="page-header-text">
+    <i class="fad fa-credit-card"></i>
+    Pay Invoice
+</h2>
+
+<error-display error-display-model="Model.ErrorDisplay"></error-display>
+
+<form id="OrderForm"  method="post">
+    <table class="table table-bordered">
+        <thead>
+        <tr class="bg-light">
+            <th>Invoice <span class="hidable">Number</span></th>
+            <th>Sold on</th>
+            <th><span class="hidable">Customer</span> Reference</th>
+            <th class="right">Total Sale</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="highlighted">@invoice.InvoiceNumber</td>
+            <td>@invoice.InvoiceDate.ToString("MMM d, yyyy")</td>
+            <td>@invoice.PoNumber</td>
+            <td class="right highlighted">$@invoice.InvoiceTotal.ToString("n2")</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <partial name="OrderAddress_Partial" model="invoice" />
+
+    <div style="font-size: 0.8em">
+        <partial name="ShoppingCartItems_Partial" model="Model.InvoiceModel"  />
+    </div>
+
+    
+    <h3 class="page-header-text mt-4">
+        <i class="fad fa-credit-card"></i>
+        @AppResources.ShoppingCart.PaymentInformation
+
+        <img src="/images/ccCards.png" class="float-end hidable-xs" alt="Credit Cards">
+    </h3>
+
+
+    <partial name="CreditCardPayment_BrainTree_Partial" model="Model" />
+
+
+    <button id="btnSubmit" type="submit"
+            class="btn-primary btn btn-lg mt-4" >
+        <i class="fa fa-check-circle text-success"></i>
+        Pay this invoice
+    </button>
+</form>
+
+</div>
+@section BottomOfBody
+{
+    <partial name="ProgressWindowOverlay_Partial"  model="new ProgressWindowOverlayModel()"/>
+}
+
+@section Headers
+{
+    <style>
+        .highlighted {
+            color: firebrick; font-size: 1.2em; font-weight: bold;
+        }
+    </style>
+}
+
+@section Scripts {
+    <link href="/lib/toastr/build/toastr.min.css" rel="stylesheet"/>
+    <script src="/lib/toastr/build/toastr.min.js"></script>
+}
