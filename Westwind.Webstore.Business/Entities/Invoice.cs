@@ -448,7 +448,7 @@ namespace Westwind.Webstore.Business.Entities
                 return "Unprocessed";
 
             if (ProcessingResult.Equals("AUTHORIZED"))
-                return "Payment Pending";
+                return "Authorized and Payment Pending";
 
             return ProcessingResult;
         }
