@@ -37,6 +37,7 @@ namespace Westwind.Webstore.Web.Controllers
             if (string.IsNullOrEmpty(UserState.InvoiceId))
             {
                 invoice = busInvoice.Create();
+                invoice.IsTemporary = true;
             }
             else
             {
@@ -133,7 +134,12 @@ namespace Westwind.Webstore.Web.Controllers
             invoice.CalculateTotals();
 
             if (!noSave)
-                return invoice.Save();
+            {
+                if (!invoice.Save())
+                    return false;
+
+                UserState.SetInvoiceSettings(inv);
+            }
 
             return true;
         }
