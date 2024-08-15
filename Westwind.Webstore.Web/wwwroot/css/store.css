@@ -15,8 +15,8 @@
 }
 
 .lineitem-description {
-    font-size: 1.02em;
     font-weight: 500;
+    color: #606060;
     display: block;
 }
 
