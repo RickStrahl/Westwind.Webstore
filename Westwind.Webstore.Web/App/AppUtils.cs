@@ -78,8 +78,9 @@ namespace Westwind.Webstore.Web.App
             var invoice = model.InvoiceModel.Invoice;
             string confirmationHtml = await ViewRenderer.RenderViewToStringAsync("EmailConfirmation", model, controllerContext);
 
+
             var emailer = new Emailer();
-            return emailer.SendEmail(invoice.Customer.Email,
+            return emailer.SendEmail(string.IsNullOrEmpty(invoice.BillingAddress.Email) ? invoice.Customer.Email : invoice.BillingAddress.Email,
                 $"{wsApp.Configuration.ApplicationName} Order Confirmation #{invoice.InvoiceNumber}",
                 confirmationHtml,
                 EmailModes.html);

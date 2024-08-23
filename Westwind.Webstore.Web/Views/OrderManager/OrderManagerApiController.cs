@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.CodeAnalysis;
-using Westwind.AspNetCore;
 using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.Messages;
-using Westwind.AspNetCore.Security;
-using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
-using Westwind.Webstore.Web.Controllers;
-using Westwind.Webstore.Web.Models;
 
 namespace Westwind.Webstore.Web.Controllers;
 

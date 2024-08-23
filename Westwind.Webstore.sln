@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Westwind.Utilities.Data", "
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "WebStoreDatabase", "WebStoreDatabase\WebStoreDatabase.sqlproj", "{F66FE9CD-3956-40C0-947B-DBA378357A9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Westwind.AspNetCore.Markdown", "..\Westwind.AspNetCore.Markdown\Westwind.AspNetCore.Markdown\Westwind.AspNetCore.Markdown.csproj", "{6F177348-48EE-4073-9668-DF2564E31667}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{F66FE9CD-3956-40C0-947B-DBA378357A9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F66FE9CD-3956-40C0-947B-DBA378357A9F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F66FE9CD-3956-40C0-947B-DBA378357A9F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{6F177348-48EE-4073-9668-DF2564E31667}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F177348-48EE-4073-9668-DF2564E31667}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F177348-48EE-4073-9668-DF2564E31667}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F177348-48EE-4073-9668-DF2564E31667}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +96,7 @@ Global
 		{432C907D-77CF-4913-982B-5017D153507D} = {9963D622-0E91-4636-B25E-7C52D3BCB196}
 		{0317E831-63FC-4D3E-9B7F-86C8AAB56A28} = {9963D622-0E91-4636-B25E-7C52D3BCB196}
 		{F66FE9CD-3956-40C0-947B-DBA378357A9F} = {E1BEE474-8E66-41AF-813D-533FB1F0C997}
+		{6F177348-48EE-4073-9668-DF2564E31667} = {9963D622-0E91-4636-B25E-7C52D3BCB196}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {550943C1-D5D6-4368-A5D6-43ED7F2F1DA6}

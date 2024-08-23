@@ -143,6 +143,13 @@
         }
     </h2>
 
+    @if (invoice.CreditCardResult.IsDueAndPayable())
+    {
+        <a  href="@(wsApp.Configuration.ApplicationHomeUrl + "invoice/" + invoice.InvoiceNumber)"
+            title="Pay this invoice online with a Credit Card or PayPal."
+            class="btn btn-primary" 
+            style="display: block; font-size:  1.2em; text-align:  center; width:  10em; margin: 1.4em auto;">Pay this Invoice</a>
+    }
 
     <p>
         Thank you for your order in the West Wind Web Store.

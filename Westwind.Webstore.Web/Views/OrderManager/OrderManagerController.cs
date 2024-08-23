@@ -10,6 +10,7 @@ using Westwind.AspNetCore.Views;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 using Westwind.Webstore.Business.Utilities;
+using Westwind.Webstore.Web.App;
 using Westwind.Webstore.Web.Models;
 using Westwind.Webstore.Web.Views;
 
@@ -155,6 +156,8 @@ public class OrderManagerController : WebStoreBaseController
             return DeleteInvoice(model);
         if (Request.IsFormVar("btnAddLineItem"))
             return AddLineItem(model);
+        if (Request.IsFormVar("btnRequestPaymentInvoice"))
+            return await SendPaymentInvoiceEmail(model.Invoice.InvoiceNumber);
 
 
         var invoiceBus = BusinessFactory.GetInvoiceBusiness();
@@ -284,6 +287,31 @@ public class OrderManagerController : WebStoreBaseController
     }
 
     #region Email Confirmations
+
+
+    public async Task<IActionResult> SendPaymentInvoiceEmail(string invoiceNo)
+    {
+        var invoiceBus = BusinessFactory.GetInvoiceBusiness();
+        var invoice = invoiceBus.LoadByInvNo(invoiceNo);
+        if (invoice == null)
+        {
+
+        }
+        var orderModel = CreateViewModel<OrderFormViewModel>();
+        orderModel.InvoiceModel = new InvoiceViewModel(invoice);
+
+        string message = "Order Confirmation Email sent.";
+        string icon = "success";
+         bool result =  await AppUtils.SendOrderConfirmationEmail(orderModel, ControllerContext);
+         if (!result)
+         {
+             message = "Order Confirmation failed. " + orderModel.ErrorDisplay.Message;
+             icon = "error";
+         }
+
+        return Redirect($"/admin/ordermanager/{invoice.Id}?message={WebUtility.UrlEncode(message)}&messageicon={icon}");
+    }
+
 
     private async Task<IActionResult> OrderEmailConfirmation(InvoiceEditorViewModel model)
     {

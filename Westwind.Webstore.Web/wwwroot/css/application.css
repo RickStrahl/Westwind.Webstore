@@ -391,20 +391,25 @@ input[type=number]::-webkit-inner-spin-button {
 /* item list specific */
 .item-container {
     display: flex;
-    padding: 0.5em;
     margin-bottom: 1em;
     border-bottom: 1px solid #eee;
+    padding-bottom: 0.5em;
 }
 .item-image {
     flex: none;
-    width: 17%;
-    min-width: 120px;
-    padding-top: 15px;
+    width: 20%;
+    min-width: 140px;
+    max-width: 220px;
+    padding-top: 0.5em;
 }
 
 .item-image img {
     width: auto;
-    max-width: 75%;
+    max-width: 70%;
+}
+.item-title {
+    font-weight: 500;
+    color:  #606060;
 }
 .item-price {
     display: inline;

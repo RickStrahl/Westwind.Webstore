@@ -14,11 +14,6 @@
     vertical-align: top;
 }
 
-.lineitem-description {
-    font-weight: 500;
-    color: #606060;
-    display: block;
-}
 
 #LineItemTable td:nth-child(2),
 #LineItemTable th:nth-child(2),
@@ -43,7 +38,6 @@
     padding-right: 0.5em;
     opacity: 0.4;
 }
-
 .invoice-total {
     font-size: 1.2em;
     font-weight: bold;
@@ -59,6 +53,7 @@
     width:  6em;
     height:  6em;
     margin-right:  1em;
+    margin-top: 0.5em;
     overflow: hidden;
 }
 .lineitem-image {
@@ -66,6 +61,12 @@
     width: 100%;
     height: auto;
     overflow:  hidden;
+}
+.lineitem-description {
+    font-weight: 500;
+    color: #606060;
+    margin-bottom: 0.35em;
+    display: block;
 }
 
 .invoice-subtotal {

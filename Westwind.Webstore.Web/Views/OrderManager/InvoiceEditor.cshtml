@@ -220,7 +220,19 @@
                     <i class="fas fa-inbox-out"></i>
                     Product Confirmations
                 </button>
+                
             </div>
+        }
+        
+        @if (invoice.CreditCardResult.IsDueAndPayable())
+        {
+            <button type="submit" name="btnRequestPaymentInvoice" id="btnRequestPaymentInvoice"
+                    class="btn btn-secondary btn-sm" title="Send an invoice to a customer to pay."
+                    onclick="$(this).find('i.fas').removeClass('fa-inbox-out').addClass('fa-spin').addClass('fa-spinner');"
+            >
+                <i class="fas fa-inbox-out"></i>
+                Request Payment
+            </button>    
         }
 
         @* @if (rawPaymentStatus == "APPROVED" || *@
@@ -237,7 +249,6 @@
     </div>
 
     @{
-
         string transactionLink = "#0";
         if (!string.IsNullOrEmpty(invoice.CreditCardResult.TransactionId))
         {

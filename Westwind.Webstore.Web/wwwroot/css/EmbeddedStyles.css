@@ -52,6 +52,32 @@ h4.page-header-text {
     background: linear-gradient(to bottom #eee, #f4f4f4 100%);
 }
 
+.btn {
+    background: #007bff;
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 0.3em;
+    text-decoration: none;
+    font-weight: 600;
+}
+.btn-lg {
+    font-size: 1.2em;
+    padding: 0.6em 1.2em;
+}
+.btn-primary {
+    background: #007bff;
+}
+.btn-secondary {
+    background: #6c757d;
+}
+.btn-success {
+    background: #28a745;
+}
+.btn-warning {
+    background: #ffc107;
+}
+
+
 @media(max-width: 500px) {
     .well {
         width: 100%;

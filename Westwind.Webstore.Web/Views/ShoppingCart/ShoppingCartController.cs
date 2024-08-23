@@ -606,7 +606,9 @@ Nonce:      {inv.CreditCard.Nonce}";
 
             return true;
         }
+    #endregion
 
+    #region OrderConfirmation
         [HttpGet]
         [Route("invoice/{invoiceNo}")]
         [Route("shoppingcart/orderconfirmation/{invoiceNo}")]
@@ -775,7 +777,7 @@ Nonce:      {inv.CreditCard.Nonce}";
             invoiceBusiness.UpdateLineItemsLicenses(saveInvoice: true);
             invoiceBusiness.DeleteExpiredTemporaryInvoices();
 
-            return Redirect("/invoice/" + invoice.InvoiceNumber);
+           return Redirect("/shoppingcart/orderconfirmation/" + invoice.InvoiceNumber);
         }
     #endregion
 
