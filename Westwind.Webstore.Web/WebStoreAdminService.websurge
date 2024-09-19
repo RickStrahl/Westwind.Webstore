@@ -136,6 +136,13 @@ WebSurge-Request-Group: User Token
 
 ------------------------------------------------------------------
 
+GET /adminservice/systeminfo HTTP/2.0
+Authorization: Bearer
+Websurge-Request-Name: System Info
+WebSurge-Request-Group: Miscellaneous
+
+------------------------------------------------------------------
+
 
 ----- Start WebSurge Options -----
 
@@ -147,7 +154,7 @@ WebSurge-Request-Group: User Token
   "OnlineSessionId": null,
   "SessionVariables": {},
   "UseCustomUsers": true,
-  "HttpProtocolVersion": "1.1",
+  "HttpProtocolVersion": "2.0",
   "IgnoreCertificateErrors": false,
   "NoContentDecompression": false,
   "UpdateHeadersFromRequest": false,
@@ -163,7 +170,7 @@ WebSurge-Request-Group: User Token
   "ReplaceQueryStringValuePairs": null,
   "ReplaceCookieValue": "",
   "TrackPerSessionCookies": true,
-  "ReplaceAuthorization": "Bearer xu9pwn5ej711tii",
+  "ReplaceAuthorization": "Bearer 32ey0rjgee8jux8",
   "Username": null,
   "Password": null,
   "UsernamePasswordType": "Negotiate",

@@ -99,6 +99,7 @@
                        placeholder="Company or Organization (optional)"
                        asp-for="Customer.Company"
                        autocapitalize="off"
+                       autocomplete="organization"
                        spellcheck="false"
                        autocorrect="off" />
             </div>
@@ -204,7 +205,8 @@
 
                     <div class="input-group mb-2">
                         <span class="input-group-text"><i class="fad fa-fw fa-user-lock "></i></span>
-                        <input class="form-control" type="password" auto-complete="new-password"
+                        <input class="form-control" type="password" 
+                               auto-complete="new-password"
                                asp-for="Password" placeholder="Enter a Password"/>
                     </div>
 
@@ -213,6 +215,7 @@
                         <span class="input-group-text"><i class="far fa-fw fa-user-lock"></i></span>
                         <input class="form-control" type="password"
                                asp-for="PasswordConfirm" novalidate
+                               autocomplete="new-password"
                                placeholder="Confirm Password"/>
                     </div>
 
@@ -267,7 +270,7 @@
                 <select asp-for="BillingAddress.CountryCode"
                         class="form-select"
                         title="Country - if not listed use 'Other' at the end of the list"
-                        autocomplete="countrycode"
+                        autocomplete="country"
                         asp-items="@(new SelectList(wsApp.Countries, "CountryCode", "Country"))">
                 </select>
             </div>

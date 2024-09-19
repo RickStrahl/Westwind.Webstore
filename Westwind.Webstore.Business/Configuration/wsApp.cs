@@ -22,12 +22,14 @@ namespace Westwind.Webstore.Business
             get
             {
                 if (_version == null)
-                    _version = Assembly.GetEntryAssembly().GetName().Version.ToString();
+                    _version =  Assembly.GetEntryAssembly().GetName().Version.FormatVersion(2,4);
 
                 return _version;
             }
         }
         public static string _version;
+
+        public static string EnvironmentName { get; set; } = "Development"; 
 
         public static Dictionary<string, string> Categories
         {

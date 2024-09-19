@@ -14,6 +14,10 @@ using Westwind.AspNetCore.Errors;
 using Westwind.Utilities.Data.Security;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Http;
 
 namespace Westwind.Webstore.Web.Service
 {
@@ -156,6 +160,21 @@ namespace Westwind.Webstore.Web.Service
         }
 
         #endregion
+
+
+        [Route("adminservice/systeminfo")]
+        public object SystemInfo([FromServices] IServer server)
+        {            
+            var addresses = server.Features.Get<IServerAddressesFeature>()?.Addresses;
+
+            return new
+            {
+                Version = wsApp.Version,
+                HostAddresses = addresses,
+                Platform = $"{RuntimeInformation.FrameworkDescription}- {wsApp.EnvironmentName}",
+                Os = RuntimeInformation.OSDescription + " (" + RuntimeInformation.OSArchitecture + ")"
+            };
+        }
     }
 
     public class AuthenticateRequest

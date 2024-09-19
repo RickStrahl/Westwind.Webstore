@@ -16,6 +16,10 @@ using Westwind.Webstore.Web.Controllers;
 using Westwind.Webstore.Web.Models;
 using Westwind.AspNetCore.Extensions;
 using Westwind.Webstore.Business.Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Westwind.Webstore.Web.Views.Admin
 {
@@ -24,12 +28,13 @@ namespace Westwind.Webstore.Web.Views.Admin
         private BusinessFactory BusinessFactory { get;  }
 
         private IHostApplicationLifetime AppLifeTime { get; }
+        private IHostEnvironment HostEnvironment { get; }
 
-        public AdminController(BusinessFactory businessFactory, IHostApplicationLifetime lifetime)
+        public AdminController(BusinessFactory businessFactory, IHostApplicationLifetime lifetime, IHostEnvironment hostEnvironment)
         {
             BusinessFactory = businessFactory;
             AppLifeTime = lifetime;
-
+            HostEnvironment = hostEnvironment;
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -234,6 +239,7 @@ namespace Westwind.Webstore.Web.Views.Admin
 
             return View("Index", model);
         }
+        
 
         [Route("/admin/throw")]
         public IActionResult ThrowException()

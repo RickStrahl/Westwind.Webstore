@@ -6,9 +6,11 @@
 		<TargetFrameworks>net472;NET6.0;net7.0;net8.0</TargetFrameworks>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="Westwind.Utilities" Version="5.0.1" />
+    <!-- avoid security warning (from BrainTree) -->
+	  <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="Westwind.Utilities" Version="5.0.9" />
 
-    <PackageReference Include="Braintree" Version="5.25.0" Condition="INCLUDE_BRAINTREE == 'INCLUDE_BRAINTREE'" />
+    <PackageReference Include="Braintree" Version="5.26.0" Condition="INCLUDE_BRAINTREE == 'INCLUDE_BRAINTREE'" />
     <Reference Include="AuthorizeNet" Condition="INCLUDE_AUTHORIZENET == 'INCLUDE_AUTHORIZENET'">
       <!--<PackageReference Include="AuthorizeNet" Version="2.0.3" />-->
       <!-- 

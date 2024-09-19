@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -36,6 +37,7 @@ using Westwind.Globalization.AspnetCore;
 using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 
 var configFile = "_webstore-configuration.json";
 bool noConfig = !File.Exists(configFile);
@@ -45,6 +47,8 @@ var services = builder.Services;
 
 // constants
 wsApp.IsDevelopment = builder.Environment.IsDevelopment();
+wsApp.EnvironmentName = builder.Environment.EnvironmentName;
+
 wsApp.Constants.StartupFolder = Environment.CurrentDirectory;
 wsApp.Constants.WebRootFolder = System.IO.Path.Combine(wsApp.Constants.StartupFolder, "wwwroot");
 //DataProtector.UniqueIdentifier = "WebStore!*9@11";
@@ -57,11 +61,22 @@ services.AddSingleton(config);
 
 if (noConfig)
 {
+
     Console.ForegroundColor = ConsoleColor.DarkYellow;
     Console.WriteLine($"*** Configuration file '{configFile}' not found. Creating...");
     Console.ResetColor();
-    Console.WriteLine("Please edit the configuration file and set the connection string and then restart the application.");
-    ShellUtils.ShellExecute(configFile);
+
+    try
+    {
+        config.Write(); // write out full configuration
+        Console.WriteLine("Please edit the configuration file and set the connection string and then restart the application.");
+        ShellUtils.ShellExecute(configFile);
+    }
+    catch
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"Couldn't find and write configuration file.\nPlease check for write permissions, or manually create: {configFile}.");
+    }
     return;
 }
 
@@ -256,7 +271,7 @@ app.UseRequestLocalization(options =>
     // ALWAYS display prices in the default currency symbol
     var cult = new RequestCulture("en-US");
     cult.Culture.NumberFormat.CurrencySymbol = wsApp.Configuration.CurrencySymbol;
-    options.DefaultRequestCulture = cult;    
+    options.DefaultRequestCulture = cult;
     foreach (var culture in supportedCultures)
     {
         culture.NumberFormat.CurrencySymbol = wsApp.Configuration.CurrencySymbol;
@@ -297,12 +312,17 @@ if (!string.IsNullOrEmpty(itemImagePath))
                 RequestPath = new PathString("/product-images"),
                 DefaultContentType = "application/octet-stream"
            });
-        Console.WriteLine($"Added image path mapping to: {itemImagePath}");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Added image path mapping to: {itemImagePath}\n");
+        Console.ResetColor();
     }
     else
     {
         app.UseStaticFiles();
-        Console.WriteLine("Warning: " + $"Image Path doesn't exist: {itemImagePath}");
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"Warning: Image Path doesn't exist: {itemImagePath}\n");
+        Console.ResetColor();
+
         Log.Warning($"Image Path doesn't exist: {itemImagePath}");
     }
 }
@@ -316,7 +336,7 @@ app.UseStatusCodePages(new StatusCodePagesOptions
         {
             ctx.HttpContext.Response.Redirect("/home/missingpage?url=" + ctx.HttpContext.Request.GetUrl());
             return Task.FromResult(0);
-        }        
+        }
         if (ctx.HttpContext.Response.StatusCode == 401)
         {
             throw new HttpRequestException("Unauthorized: " + ctx.HttpContext.Request.Path, null, statusCode: System.Net.HttpStatusCode.Unauthorized);
@@ -373,36 +393,34 @@ app.UseEndpoints(endpoints =>
 });
 
 
-Console.ForegroundColor = ConsoleColor.DarkYellow;
-Console.WriteLine($@"---------------------------------
-West Wind Web Store
----------------------------------");
-Console.ResetColor();
-
-
-var urls = builder.WebHost.GetSetting(WebHostDefaults.ServerUrlsKey)?.Replace(";", " ");
-Console.Write($"    Urls: ");
-Console.ForegroundColor = ConsoleColor.DarkCyan;
-Console.WriteLine($"{urls}", ConsoleColor.DarkCyan);
-Console.ResetColor();
-
-Console.WriteLine($" Runtime: {RuntimeInformation.FrameworkDescription} - {builder.Environment.EnvironmentName}");
-Console.WriteLine($"Platform: {RuntimeInformation.OSDescription}");
-Console.WriteLine();
-
-Console.WriteLine(config.ConnectionString);
-
-if (!System.IO.File.Exists("_webstore-configuration.json"))
-{
-    try
-    {
-        wsApp.Configuration.Write(); // write out full configuration
-    }catch { }
-}
 
 wsApp.Constants.AppStartedOn = DateTime.Now;
 
-app.Run();
+
+
+app.Start();
+
+Console.ForegroundColor = ConsoleColor.DarkYellow;
+Console.WriteLine($@"---------------------------------
+West Wind Web Store v{wsApp.Version}
+---------------------------------");
+Console.ResetColor();
+
+var urlList = app.Urls;
+string urls = string.Join(" ", urlList);
+
+Console.Write("    Urls: ");
+Console.ForegroundColor = ConsoleColor.DarkCyan;
+Console.WriteLine(urls, ConsoleColor.DarkCyan);
+Console.ResetColor();
+
+Console.WriteLine($" Runtime: {RuntimeInformation.FrameworkDescription} - {builder.Environment.EnvironmentName}");
+Console.WriteLine($"Platform: {RuntimeInformation.OSDescription} ({RuntimeInformation.OSArchitecture})");
+Console.WriteLine();
+
+//Console.WriteLine(config.ConnectionString);
+
+app.WaitForShutdown();
 
 
 

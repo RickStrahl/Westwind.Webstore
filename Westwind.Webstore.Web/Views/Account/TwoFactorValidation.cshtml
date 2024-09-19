@@ -28,6 +28,7 @@
                 Enter your Authenticator Validation Code
             </label>
             <input id="txtValidationCode" asp-for="ValidationCode"
+                   type="number" step="any"
                    class="form-control form-control-lg mt-2 mb-2"
                    style="width: 11em" xoninput="validationCodeChanged()"
                    autocomplete="one-time-code"

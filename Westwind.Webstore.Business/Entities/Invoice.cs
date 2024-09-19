@@ -428,7 +428,7 @@ namespace Westwind.Webstore.Business.Entities
             if (string.IsNullOrEmpty(ProcessingResult))
                 return false;
 
-            if (ProcessingResult.EqualsMany(StringComparison.OrdinalIgnoreCase, "DUE AND PAYABLE", "UNPAID", "DUE"))
+            if (ProcessingResult.EqualsAny(StringComparison.OrdinalIgnoreCase, "DUE AND PAYABLE", "UNPAID", "DUE"))
                 return true;
 
             return false;
