@@ -10,6 +10,9 @@
         Model.ReturnUrl = "/shoppingcart/orderform";
         ViewData["Title"] = "Order Billing Information";
     }
+
+    // use for credit card status processing
+    var ccResult = new InvoiceCreditCardResultData();
 }
 
 <div class="container">
@@ -342,7 +345,7 @@
     <table class="table table-hover">
         <tbody>
         
-        
+                
         @foreach (InvoiceListItem invoice in invoiceList)
         {
             var color = "background: " + Invoice.StatusColor(invoice.Status);
@@ -376,30 +379,38 @@
                     }
 
 
-                    @if (invoice.Status == "APPROVED")
+                    @if (ccResult.IsApproved(invoice.Status))
                     {
                         <span class="text-success">
                             @total
                             <i class="fas fa-check-circle text-success hidable-xs" title="APPROVED"></i>
                         </span>
                     }
-                    else if (invoice.Status == "AUTHORIZED")
+                    else if (ccResult.IsAuthorized(invoice.Status))
                     {
                         <span class="text-warning">
                             @total
                             <i class="fas fa-check-circle text-warning hidable-xs" title="AUTHORIZED"></i>
                         </span>
                     }
-                    else if (string.IsNullOrEmpty(invoice.Status) || invoice.Status == "UNPROCESSED")
+                    else if (ccResult.IsUnprocessed(invoice.Status))
                     {
                         <span class="text-info">
                             @total
                             <i class="fas fa-wait text-info hidable-xs" title="UNPROCESSED"></i>
                         </span>
                     }
-                    else
+                    
+                    else if (ccResult.IsDueAndPayable(invoice.Status))
                     {
                         <span class="text-danger">
+                            @total
+                            <i class="fas fa-times-circle text-danger hidable-xs" title="DUE AND PAYABLE"></i>
+                        </span>
+                    }
+                    else
+                    {
+                        <span>
                             @total
                             <i class="fas fa-times-circle text-danger hidable-xs" title="@invoice.Status"></i>
                         </span>

@@ -411,35 +411,63 @@ namespace Westwind.Webstore.Business.Entities
 
         public string ProcessingError { get; set; }
 
+        #region Result Status Methods
 
-        public bool IsApproved()
+        public bool IsApproved(string processingResult = null)
         {
-            return !string.IsNullOrEmpty(ProcessingResult) &&
-                   (ProcessingResult.Equals("APPROVED", StringComparison.OrdinalIgnoreCase) ||
-                    ProcessingResult.Equals("PAID IN FULL", StringComparison.OrdinalIgnoreCase));
+            if (string.IsNullOrEmpty(processingResult))
+                processingResult = ProcessingResult;
+
+            return !string.IsNullOrEmpty(processingResult) &&
+                   (processingResult.Equals("APPROVED", StringComparison.OrdinalIgnoreCase) ||
+                    processingResult.Equals("PAID IN FULL", StringComparison.OrdinalIgnoreCase));
+        }
+
+        public bool IsAuthorized(string processingResult = null)
+        {
+            if (string.IsNullOrEmpty(processingResult))
+                processingResult = ProcessingResult;
+
+            return !string.IsNullOrEmpty(processingResult) &&
+                   (processingResult.Equals("AUTHORIZED", StringComparison.OrdinalIgnoreCase));                    
         }
 
         /// <summary>
         /// Determines if a payment is due and payable
         /// </summary>
         /// <returns></returns>
-        public bool IsDueAndPayable()
+        public bool IsDueAndPayable(string processingResult = null)
         {
-            if (string.IsNullOrEmpty(ProcessingResult))
+            if (string.IsNullOrEmpty(processingResult))
+                processingResult = ProcessingResult;
+
+            if (string.IsNullOrEmpty(processingResult))
                 return false;
 
-            if (ProcessingResult.EqualsAny(StringComparison.OrdinalIgnoreCase, "DUE AND PAYABLE", "UNPAID", "DUE"))
+            if (processingResult.EqualsAny(StringComparison.OrdinalIgnoreCase, "DUE AND PAYABLE", "UNPAID", "DUE"))
                 return true;
 
             return false;
         }
 
-        public bool IsDeclined()
+        public bool IsDeclined(string processingResult = null)
         {
-            return !string.IsNullOrEmpty(ProcessingResult) &&
-                   (ProcessingResult.Equals("DECLINED", StringComparison.OrdinalIgnoreCase) ||
-                    ProcessingResult.Equals("VOID", StringComparison.OrdinalIgnoreCase) ||
-                    ProcessingResult.Equals("VOIDED", StringComparison.OrdinalIgnoreCase));
+            if (string.IsNullOrEmpty(processingResult))
+                processingResult = ProcessingResult;
+
+            return !string.IsNullOrEmpty(processingResult) &&
+                   (processingResult.Equals("DECLINED", StringComparison.OrdinalIgnoreCase) ||
+                    processingResult.Equals("VOID", StringComparison.OrdinalIgnoreCase) ||
+                    processingResult.Equals("VOIDED", StringComparison.OrdinalIgnoreCase));
+        }
+
+        public bool IsUnprocessed(string processingResult = null)
+        {
+            if (string.IsNullOrEmpty(processingResult))
+                processingResult = ProcessingResult;
+
+            return string.IsNullOrEmpty(processingResult) ||
+                   processingResult.Equals("UNPROCESSED", StringComparison.OrdinalIgnoreCase);
         }
 
         public override string ToString()
@@ -452,6 +480,8 @@ namespace Westwind.Webstore.Business.Entities
 
             return ProcessingResult;
         }
+
+        #endregion
     }
 
 
