@@ -95,7 +95,7 @@ namespace Westwind.Webstore.Web.Controllers
 
             var context = ContextAccessor.HttpContext;
 
-            var header = StringUtils.GetLines(mainException.Message).FirstOrDefault();
+            var header = pathException.GetType().Name + ": " + StringUtils.GetLines(pathException.Message).FirstOrDefault();
 
             if (pathException is HttpRequestException httpEx)
             {
@@ -147,8 +147,10 @@ body {{ font-family: sans-serif }}
 
 {mainException.StackTrace}
 
-{model.PostData}
+{model.PostData?.TrimEnd()}
 ";
+
+                
                 _logger.LogCritical(pathException,textMsg);
 
                 if (wsApp.Configuration.Email.SendAdminEmails)
