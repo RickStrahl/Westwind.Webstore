@@ -14,8 +14,6 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -37,7 +35,7 @@ using Westwind.Globalization.AspnetCore;
 using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
-using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.Extensions.Logging;
 
 var configFile = "_webstore-configuration.json";
 bool noConfig = !File.Exists(configFile);
@@ -83,18 +81,20 @@ if (noConfig)
 if (CommandLineProcessor.CreateDatabase(args))
     return;
 
+builder.Logging.ClearProviders();
+
 // logging
 var logConfig = new LoggerConfiguration()
     .MinimumLevel.Warning()
-    .Enrich.FromLogContext()
-    // .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}---{NewLine}")
+    .Enrich.FromLogContext()        
+    .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}---{NewLine}")
     .WriteTo.File(
-        System.IO.Path.Combine(wsApp.Constants.WebRootFolder, "admin", "applicationlog.txt"),
+        Path.Combine(wsApp.Constants.WebRootFolder, "admin", "applicationlog.txt"),
         fileSizeLimitBytes: 3_000_000,
         retainedFileCountLimit: 5,
         rollOnFileSizeLimit: true,
         shared: true,
-        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}{NewLine}---",
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}---{NewLine}",
         flushToDiskInterval: TimeSpan.FromSeconds(20));
 Log.Logger = logConfig.CreateLogger();
 builder.Logging.AddSerilog(Log.Logger);
@@ -185,7 +185,6 @@ UserStateWebSettings.Current = new UserStateWebSettings()
     CookieTimeoutDays = 5
 };
 
-
 //services.AddRazorPages().AddRazorRuntimeCompilation();
 var aspnetServices = services.AddControllersWithViews()
     .AddNewtonsoftJson(opt =>
@@ -252,12 +251,10 @@ else
 {
     app.UseExceptionHandler("/Home/Error");
     ApiExceptionFilterAttribute.ShowExceptionDetail = config.System.ErrorDisplayMode != ErrorDisplayModes.Application;
-
 }
 
 if (wsApp.Configuration.System.RedirectToHttps)
     app.UseHsts();
-
 
 var supportedCultures = new[]
 {

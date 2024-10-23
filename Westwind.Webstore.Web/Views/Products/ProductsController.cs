@@ -22,8 +22,7 @@ namespace Westwind.Webstore.Web.Controllers
         [HttpGet, Route("products"),  Route("products/{category}")]
         public IActionResult Products(string category, string s, string order)
         {
-            var model = CreateViewModel<ProductListViewModel>();
-
+            var model = CreateViewModel<ProductListViewModel>();          
             var filter =
                 new InventoryItemsFilter()
                 {
