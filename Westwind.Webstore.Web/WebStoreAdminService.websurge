@@ -23,9 +23,9 @@ WebSurge-Request-Group: Admin Service
 ------------------------------------------------------------------
 
 GET /adminservice/invoices?q=recent HTTP/2.0
-Accept-Encoding: gzip,deflate
+Accept-Encoding: br,gzip,deflate
 Accept: application/json
-Authorization: Bearer
+Authorization: Bearer 9m213dh6dcffene
 Websurge-Request-Name: Get Invoices
 WebSurge-Request-Group: Admin Service
 
@@ -170,7 +170,7 @@ WebSurge-Request-Group: Miscellaneous
   "ReplaceQueryStringValuePairs": null,
   "ReplaceCookieValue": "",
   "TrackPerSessionCookies": true,
-  "ReplaceAuthorization": "Bearer 32ey0rjgee8jux8",
+  "ReplaceAuthorization": "Bearer 9m213dh6dcffene",
   "Username": null,
   "Password": null,
   "UsernamePasswordType": "Negotiate",

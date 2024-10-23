@@ -171,9 +171,16 @@ namespace Westwind.Webstore.Web.Service
             {
                 Version = wsApp.Version,
                 HostAddresses = addresses,
-                Platform = $"{RuntimeInformation.FrameworkDescription}- {wsApp.EnvironmentName}",
-                Os = RuntimeInformation.OSDescription + " (" + RuntimeInformation.OSArchitecture + ")"
+                Platform = $"{RuntimeInformation.FrameworkDescription} - {wsApp.EnvironmentName}",
+                Os = RuntimeInformation.OSDescription + " (" + RuntimeInformation.OSArchitecture + ")",
+                UserAccount=Environment.UserName
             };
+        }
+
+        [Route("adminservice/throw")]
+        public object Throw()
+        {
+            throw new ApplicationException("Throwing up is the new normal!");            
         }
     }
 

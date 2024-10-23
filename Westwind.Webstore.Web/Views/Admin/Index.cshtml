@@ -19,7 +19,7 @@
     </h1>
     <div class="mt-1 mb-3 header-byline">v@(Model.ApplicationVersion) &nbsp;<small style="font-size: 0.75em">(@Model.ApplicationDate)</small> &bull;
         @Environment.EnvironmentName &bull;
-        @RuntimeInformation.FrameworkDescription 
+        @RuntimeInformation.FrameworkDescription &bull; @RuntimeInformation.OSArchitecture
     </div>
 
     <error-display class="mt-3 mb-4" error-display-model="@Model.ErrorDisplay">
@@ -71,8 +71,7 @@
         os: @RuntimeInformation.OSDescription &bull;
         user: @System.Environment.UserName &bull;
         started: @wsApp.Constants.AppStartedOn &bull;
-        
-        cur: @((110.10).ToString("c")) - @CultureInfo.CurrentUICulture.Name - @CultureInfo.CurrentUICulture.NumberFormat.CurrencySymbol
+                
         </div>
         
         
