@@ -24,22 +24,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MailKitLite" Version="4.8.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+    <PackageReference Include="MailKitLite" Version="4.10.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
-<!--    <PackageReference Include="Westwind.Data.EfCore" Version="6.0.3" />-->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
+    <PackageReference Include="Westwind.Data.EfCore" Version="9.0.0" />
     <PackageReference Include="Westwind.Globalization" Version="3.1.8" />
 
     <!-- private package in ./_SupportPackages folder -->
     <PackageReference Include="Westwind.Licensing" Version="1.0.5" />
     
-    <PackageReference Include="Westwind.Utilities" Version="5.0.11" />
-    <PackageReference Include="Westwind.Utilities.Data" Version="5.0.10" />
-    <ProjectReference Include="..\..\Westwind.Data.EfCore\Westwind.Data.EfCore\Westwind.Data.EfCore.csproj" />
+    <PackageReference Include="Westwind.Utilities" Version="5.1.3.1" />
+    <PackageReference Include="Westwind.Utilities.Data" Version="5.1.2.1" />
+<!--    <ProjectReference Include="..\..\Westwind.Data.EfCore\Westwind.Data.EfCore\Westwind.Data.EfCore.csproj" />-->
 
     <ProjectReference Include="..\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing.csproj" />
    </ItemGroup>
