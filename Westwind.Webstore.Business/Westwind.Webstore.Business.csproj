@@ -31,6 +31,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
+    <PackageReference Include="Westwind.AI" Version="0.2.4" />
     <PackageReference Include="Westwind.Data.EfCore" Version="9.0.0" />
     <PackageReference Include="Westwind.Globalization" Version="3.1.8" />
 

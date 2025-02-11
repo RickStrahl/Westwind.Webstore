@@ -20,17 +20,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Routing;
+using Westwind.Webstore.Business.Utilities;
 
 namespace Westwind.Webstore.Web.Views.Admin
 {
     public class AdminController : WebStoreBaseController
     {
-        private BusinessFactory BusinessFactory { get;  }
+        private BusinessFactory BusinessFactory { get; }
 
         private IHostApplicationLifetime AppLifeTime { get; }
         private IHostEnvironment HostEnvironment { get; }
 
-        public AdminController(BusinessFactory businessFactory, IHostApplicationLifetime lifetime, IHostEnvironment hostEnvironment)
+        public AdminController(BusinessFactory businessFactory, IHostApplicationLifetime lifetime,
+            IHostEnvironment hostEnvironment)
         {
             BusinessFactory = businessFactory;
             AppLifeTime = lifetime;
@@ -118,7 +121,7 @@ namespace Westwind.Webstore.Web.Views.Admin
                     model.ErrorDisplay.ShowError($"Configuration could not be written.");
             }
 
-            return View("Configuration",model);
+            return View("Configuration", model);
         }
 
 
@@ -131,9 +134,9 @@ namespace Westwind.Webstore.Web.Views.Admin
             {
                 // doesn't work - file is locked
                 var file = Path.Combine(wsApp.Constants.WebRootFolder, "admin", "applicationlog.txt");
-                System.IO.File.WriteAllText(file,"");
+                System.IO.File.WriteAllText(file, "");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 model.ErrorDisplay.ShowError("Failed to delete log file: " + ex.Message);
                 return View("index", model);
@@ -160,7 +163,7 @@ namespace Westwind.Webstore.Web.Views.Admin
             model.EmailList = adminBus.EmailListFromSkus(model.Sku, model.Days);
             if (!string.IsNullOrEmpty(adminBus.ErrorMessage))
             {
-                model.ErrorDisplay.ShowError(adminBus.ErrorMessage,"An error occurred");
+                model.ErrorDisplay.ShowError(adminBus.ErrorMessage, "An error occurred");
             }
 
             return View("SkuEmailList", model);
@@ -197,7 +200,7 @@ namespace Westwind.Webstore.Web.Views.Admin
                 ErrorDisplay.MessageAsRawHtml = true;
             }
 
-            return View("Index",model);
+            return View("Index", model);
         }
 
         [HttpGet, Route("/admin/databasecleanup")]
@@ -209,7 +212,7 @@ namespace Westwind.Webstore.Web.Views.Admin
             var msg = adminBus.DatabaseCleanup();
 
 
-            ErrorDisplay.ShowInfo(HtmlUtils.DisplayMemo(msg),"Database Cleanup Result");
+            ErrorDisplay.ShowInfo(HtmlUtils.DisplayMemo(msg), "Database Cleanup Result");
             ErrorDisplay.MessageAsRawHtml = true;
 
             return View("Index", model);
@@ -232,19 +235,25 @@ namespace Westwind.Webstore.Web.Views.Admin
                 ErrorDisplay.ShowSuccess("IIS Application Pool has been reloaded.");
                 Response.Headers["Refresh"] = "1.5; url=/admin";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ErrorDisplay.ShowError(ex.Message, "IIS App reloading failed");
             }
 
             return View("Index", model);
         }
-        
+
 
         [Route("/admin/throw")]
         public IActionResult ThrowException()
         {
             throw new ApplicationException("Test Exception - an error thrown to demonstrate error handling.");
+        }
+
+        [Route("/admin/exportseeddata/")]
+        public object ExportData()
+        {
+            return ImportExportSeedData.ExportObject();
         }
     }
 

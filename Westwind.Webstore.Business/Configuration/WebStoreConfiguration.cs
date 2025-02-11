@@ -1,4 +1,5 @@
-﻿using Westwind.CreditCardProcessing;
+﻿using Westwind.AI.Configuration;
+using Westwind.CreditCardProcessing;
 using Westwind.Utilities.Configuration;
 
 namespace Westwind.Webstore.Business
@@ -49,7 +50,7 @@ namespace Westwind.Webstore.Business
 
         public SystemConfiguration System { get; set; } = new SystemConfiguration();
 
-
+        public AzureOpenAiConnection AiConnection { get; set; } = new AzureOpenAiConnection();
 
         protected override IConfigurationProvider OnCreateDefaultProvider(string sectionName, object configData)
         {

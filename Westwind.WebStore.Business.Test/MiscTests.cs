@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Westwind.Utilities;
+using Westwind.Webstore.Business.Ai;
 using Westwind.Webstore.Web.Utilities;
 
 namespace Westwind.Webstore.Business.Test
@@ -84,6 +85,26 @@ namespace Westwind.Webstore.Business.Test
             result = OrderValidation.IsTimeEncodingValid(dtstr, 10, 10);
             Console.WriteLine(result);
 
+        }
+
+        [Test]
+        public async Task AddressParsingTest()
+        {
+            var parser = new AddressParser();
+
+            string address = """
+Rick Strahl
+West Wind Technologies
+301 N. 15th Street #213
+Paia, HI 96779
+United States
+""";
+
+            var customer = await parser.ParseAddress(address);
+
+            Assert.IsNotNull(customer, parser.ErrorMessage);
+
+            Console.WriteLine(customer + "\n" + customer.Addresses.FirstOrDefault().ToString());
         }
     }
 }
