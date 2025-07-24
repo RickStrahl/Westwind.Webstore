@@ -429,7 +429,7 @@ namespace Westwind.Webstore.Business.Entities
                 processingResult = ProcessingResult;
 
             return !string.IsNullOrEmpty(processingResult) &&
-                   (processingResult.Equals("AUTHORIZED", StringComparison.OrdinalIgnoreCase));                    
+                   (processingResult.Equals("AUTHORIZED", StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -481,8 +481,58 @@ namespace Westwind.Webstore.Business.Entities
             return ProcessingResult;
         }
 
-        #endregion
+       #endregion
     }
 
+
+    public class CcResultCodes
+    {
+        public static string Approved = "APPROVED";
+        public static string PaidInFull = "PAID IN FULL";
+        public static string DueAndPayable = "DUE AND PAYABLE";
+        public static string Unprocessed = "UNPROCESSED";
+
+        public static string Authorized = "AUTHORIZED";
+        public static string Declined = "DECLINED";
+        public static string Fraud = "FRAUD";
+        public static string Failed = "FAILED";
+
+        public static string Refunded = "REFUNDED";
+        public static string Void = "VOIDED";
+        public static string Hold = "HOLD";
+
+        public static IList<string> ToList() =>
+        [
+            Approved,
+            PaidInFull,
+            DueAndPayable,
+            Unprocessed,
+            Authorized,
+            Declined,
+            Fraud,
+            Failed,
+            Refunded,
+            Void,
+            Hold
+        ];
+
+        public static Dictionary<string,string> ToDictionary() =>
+        new Dictionary<string, string>
+        {
+            { Approved, "Approved" },
+            { PaidInFull, "Paid In Full" },
+            { DueAndPayable, "Due And Payable" },
+            { Unprocessed, "Unprocessed" },
+            { Authorized, "Authorized" },
+            { Declined, "Declined" },
+            { Fraud, "Fraud" },
+            { Failed, "Failed" },
+            { Refunded, "Refunded" },
+            { Void, "Voided" },
+            { Hold, "Hold" }
+        };
+
+
+    }
 
 }
