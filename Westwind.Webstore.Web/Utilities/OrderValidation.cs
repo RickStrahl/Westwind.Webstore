@@ -7,6 +7,7 @@ using Westwind.Utilities;
 using Westwind.Utilities.InternetTools;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Utilities;
+using HttpPostMode = Westwind.Utilities.HttpPostMode;
 
 namespace Westwind.Webstore.Web.Utilities
 {
@@ -43,10 +44,10 @@ namespace Westwind.Webstore.Web.Utilities
             var encoded = Encryption.EncryptString(dt, Key, useBinHex: true);
             return encoded;
         }
-        
 
 
-        /// <summary> 
+
+        /// <summary>
         /// checks to see if the passed date was done in more than than the timeoutSeconds timeframe.
         /// Fails if less time has passed.
         /// </summary>
@@ -82,7 +83,7 @@ namespace Westwind.Webstore.Web.Utilities
         #region Google ReCapture Verification
 
         /// <summary>
-        /// Verifies a Recapture code captured on the Web Form 
+        /// Verifies a Recapture code captured on the Web Form
         /// </summary>
         /// <param name="validationKey"></param>
         /// <param name="IpAddress"></param>
@@ -95,20 +96,34 @@ namespace Westwind.Webstore.Web.Utilities
 
             if (string.IsNullOrEmpty(secretKey))
                 secretKey = wsApp.Configuration.Security.GoogleRecaptureSecret;
-            
-            var http = new HttpClient();
 
-            http.AddPostKey("secret", secretKey);
-            http.AddPostKey("response", validationKey);
+            var settings = new HttpClientRequestSettings()
+            {
+                Url = "https://www.google.com/recaptcha/api/siteverify",
+                HttpVerb = "POST",
+                RequestPostMode = HttpPostMode.UrlEncoded
+            };
+
+            settings.AddPostKey("secret", secretKey);
+            settings.AddPostKey("response", validationKey);
             if (!string.IsNullOrEmpty(IpAddress))
-                http.AddPostKey("remoteIp", IpAddress);
-            http.HttpVerb = "POST";
+                settings.AddPostKey("remoteIp", IpAddress);
 
-            var json = http.DownloadString("https://www.google.com/recaptcha/api/siteverify");
+            var json = HttpClientUtils.DownloadString(settings);
+
+            // var http = new HttpClient();
+            //
+            // http.AddPostKey("secret", secretKey);
+            // http.AddPostKey("response", validationKey);
+            // if (!string.IsNullOrEmpty(IpAddress))
+            //     http.AddPostKey("remoteIp", IpAddress);
+            // http.HttpVerb = "POST";
+            //
+            // var json = http.DownloadString("https://www.google.com/recaptcha/api/siteverify");
 
             if (json.Contains("\"success\": true"))
                 return true;
-            
+
             return false;
         }
 

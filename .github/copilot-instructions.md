@@ -1,63 +1,72 @@
 # Copilot Instructions for West Wind Web Store
 
 ## Project Overview
-- **West Wind Web Store** is a modular ASP.NET Core web application for e-commerce, with a focus on extensibility and configuration flexibility.
-- The solution is split into several projects:
-  - `Westwind.Webstore.Web`: Main ASP.NET Core web frontend (MVC).
-  - `Westwind.Webstore.Business`: Business logic, data access, migrations.
-  - `Westwind.WebStore.Business.Test`: Unit/integration tests for business logic.
-  - `WebStoreDatabase`: Database project (SQL Server, schema, migrations).
-  - `Westwind.CreditCardProcessing`: Payment integration logic.
+West Wind Web Store is a modular ASP.NET Core e-commerce application built with Entity Framework Core and SQL Server. The architecture emphasizes configuration flexibility and extensibility through dependency injection.
 
-## Configuration & Environment
-- **Configuration is layered:**
-  - Base: `_webstore-configuration.json` (not in source control, generated at runtime or via admin UI).
-  - Overrides: `appsettings.json`, `appsettings.Development.json`, environment variables, user secrets, etc. (all under the `WebStore` key).
-  - See `README.md` for sample config structure and override patterns.
-- **Never commit real config files**—use the admin UI or startup to generate them.
+**Key Projects:**
+- `Westwind.Webstore.Web`: ASP.NET Core MVC frontend (controllers stored with views in Views/ folders)
+- `Westwind.Webstore.Business`: Business logic, EF Core context, migrations
+- `Westwind.WebStore.Business.Test`: Unit/integration tests (minimal, mostly integration tests)
+- `WebStoreDatabase`: SQL Server database project with schema management
+- `Westwind.CreditCardProcessing`: Payment processing (Braintree integration)
 
-## Build, Run, and Test
-- **Build:** Use the solution file `Westwind.Webstore.sln` with Visual Studio or `dotnet build`.
-- **Run:**
-  - Use `run.ps1` or `publish.ps1` for local/dev automation.
-  - The web project (`Westwind.Webstore.Web`) is the main entry point.
-- **Database:**
-  - Migrations are in `Westwind.Webstore.Business/Migrations/`.
-  - Apply migrations from the business project, not the web project.
-- **Testing:**
-  - Tests are in `Westwind.WebStore.Business.Test`.
-  - Use `dotnet test Westwind.WebStore.Business.Test/Westwind.WebStore.Business.Test.csproj`.
+## Configuration Architecture
+**Critical Pattern:** Configuration is completely external to source control and layered:
 
-## Key Patterns & Conventions
-- **Dependency Injection:**
-  - Business logic is accessed via `BusinessFactory` (see `HomeController` and other controllers).
-- **Error Handling:**
-  - Centralized in `HomeController.Error`—logs critical errors and emails admins if enabled.
-- **ViewModels:**
-  - Use `CreateViewModel<T>()` to instantiate and initialize view models.
-- **Email:**
-  - Email sending is abstracted via `AppUtils.SendEmail`.
-- **Validation:**
-  - Use `ValidationErrorCollection` for collecting and displaying validation errors.
-- **Admin UI:**
-  - Configuration and some data management can be done via the web admin interface.
+1. **Base:** `_webstore-configuration.json` (auto-generated, never committed)
+2. **Overrides:** Standard ASP.NET config under `WebStore` key in `appsettings.json`
+3. **Admin UI:** Live configuration editing through web interface
 
-## External Integrations
-- **Payment:**
-  - Braintree integration in `Westwind.CreditCardProcessing` and business logic.
-- **Licensing:**
-  - Licensing logic and server integration in `Westwind.Licensing` and config.
-- **Localization:**
-  - Uses `Westwind.Globalization.AspnetCore.Utilities` for i18n/l10n.
+**Never commit config files** - they're generated at runtime or via admin UI. See `README.md` for complete config structure examples.
 
-## Notable Files & Directories
-- `Westwind.Webstore.Web/Controllers/HomeController.cs`: Main controller, error handling, MVP/discount flows.
-- `Westwind.Webstore.Business/`: Business logic, migrations, data access.
-- `DefaultConfigurationFiles/`: Example config files (not used at runtime).
-- `WebStoreDatabase/`: SQL project, schema, and compare files.
+## Development Workflow
+**Build & Run:**
+- Root-level `run.ps1` → `cd Westwind.Webstore.Web && dotnet watch run --no-hot-reload`
+- Main solution: `Westwind.Webstore.sln`
 
-## Project-Specific Advice
-- Always use the admin UI or startup logic to generate config files—never copy example files directly.
+**Database Migrations:**
+- Run from `Westwind.Webstore.Business` project (not web project)
+- Uses `dotnet ef` commands - see `Migrations.md` for detailed workflows
+- **Important:** Invoice->Customer FK requires manual fix in migrations (see `Migrations.md`)
+
+**Testing:**
+- `dotnet test Westwind.WebStore.Business.Test/Westwind.WebStore.Business.Test.csproj`
+
+## Core Architectural Patterns
+**Controllers & Views:**
+- Controllers are stored alongside their views in `Views/{AreaName}/` folders
+- Example: `Views/Home/HomeController.cs` and `Views/Home/Index.cshtml` are in same folder
+- Controllers inherit from `WebStoreBaseController`
+
+**Business Layer Access:**
+- All business logic accessed via `BusinessFactory.Current` or DI
+- Business objects inherit from `WebStoreBusinessObject<TEntity>` → `EntityFrameworkBusinessObject`
+
+**View Models:**
+- ViewModels inherit from `WebStoreBaseViewModel`
+- Use `CreateViewModel<T>()` method for proper initialization
+
+**Configuration Access:**
+- Global config via `wsApp.Configuration` static property
+- ViewModels automatically get `Configuration` property
+
+**Validation:**
+- Uses `ValidationErrorCollection` from Westwind.Utilities for business object validation errors
+
+**Email & Utilities:**
+- Email: `AppUtils.SendEmail()` and `Emailer` class
+- Utilities centralized in `wsApp.Constants` and `AppUtils`
+
+## Data Layer Details
+- **Context:** `WebStoreContext` with lazy loading proxies enabled
+- **Connection:** Auto-configured from `_webstore-configuration.json`
+- **Design-time:** `WebStoreContextDesignTimeFactory` for migrations
+
+## External Dependencies
+- **Westwind.Data.EfCore:** Base business object framework
+- **Westwind.AspNetCore:** View rendering, base controllers/viewmodels
+- **Westwind.AI:** AI client integration (see `Ai/` folder)
+- **Braintree:** Payment processing
 - When adding new business logic, place it in `Westwind.Webstore.Business` and expose via `BusinessFactory`.
 - For new settings, update both the config object and the admin UI for editing.
 - For cross-cutting concerns (logging, email, error handling), use the provided abstractions (`AppUtils`, logger, etc.).
