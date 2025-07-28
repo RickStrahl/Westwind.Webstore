@@ -261,7 +261,15 @@
            asp-for="Invoice.CreditCardResult.ProcessingResult"
            style="border: none; color: @Invoice.StatusColor(invoice.CreditCardResult.ProcessingResult,true)" 
            title="Payment status - double click to lookup transaction"
+           list="ccResultCodes"
            placeholder="UNPROCESSED"/>
+
+    <datalist id="ccResultCodes">
+        @foreach (var code in CcResultCodes.ToDictionary())
+        {
+            <option value="@code.Key"></option>
+        }
+    </datalist>           
 </div>    
     
 <partial name="../ShoppingCart/ShoppingCartItems_Partial" model="invoiceModel"/>

@@ -516,7 +516,7 @@ namespace Westwind.Webstore.Business.Entities
             Hold
         ];
 
-        public static Dictionary<string,string> ToDictionary() =>
+        public static Dictionary<string, string> ToDictionary() =>
         new Dictionary<string, string>
         {
             { Approved, "Approved" },
@@ -531,8 +531,15 @@ namespace Westwind.Webstore.Business.Entities
             { Void, "Voided" },
             { Hold, "Hold" }
         };
-
-
+        
+        // var dict = new Dictionary<string, string>();
+        // var props = typeof(CcResultCodes).GetFields(BindingFlags.Static | BindingFlags.Public );
+        // foreach(var prop in props)
+        // {
+        // 	var val = prop.GetValue(null) as string;
+        // 	dict.Add(prop.Name, val);
+        // }			
+        // return dict;        
     }
 
 }
