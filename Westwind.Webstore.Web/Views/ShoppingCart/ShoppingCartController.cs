@@ -337,6 +337,7 @@ namespace Westwind.Webstore.Web.Controllers
             invoice.IsTemporary = false;
             invoice.InvoiceDate = DateTime.Now;
             invoice.BillingAddress = CustomerBusiness.GetBillingAddress(customer);
+            invoice.ShippingAddress = CustomerBusiness.GetShippingAddress(customer);
 
             if (!invoiceBusiness.Save())
             {

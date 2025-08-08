@@ -29,17 +29,18 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
     <PackageReference Include="Westwind.AI" Version="0.2.7" />
-    <PackageReference Include="Westwind.Data.EfCore" Version="9.0.2" />
+    <PackageReference Include="Westwind.Data.EfCore" Version="9.0.8" />
     <PackageReference Include="Westwind.Globalization" Version="3.1.8" />
 
     <!-- private package in ./_SupportPackages folder -->
     <PackageReference Include="Westwind.Licensing" Version="1.0.5" />
     
-    <PackageReference Include="Westwind.Utilities" Version="5.1.14" />
-    <PackageReference Include="Westwind.Utilities.Data" Version="5.1.11" />
+    <PackageReference Include="Westwind.Utilities" Version="5.1.15.2" />
+    <PackageReference Include="Westwind.Utilities.Data" Version="5.1.15" />
+    <!--    <ProjectReference Include="..\..\Westwind.Utilities\Westwind.Utilities\Westwind.Utilities.csproj" />-->
     <!--<ProjectReference Include="..\..\Westwind.Data.EfCore\Westwind.Data.EfCore\Westwind.Data.EfCore.csproj" />-->
 
     <ProjectReference Include="..\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing.csproj" />

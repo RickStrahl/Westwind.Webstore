@@ -7,7 +7,6 @@ using Westwind.Utilities;
 using Westwind.Utilities.InternetTools;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Utilities;
-using HttpPostMode = Westwind.Utilities.HttpPostMode;
 
 namespace Westwind.Webstore.Web.Utilities
 {
@@ -101,7 +100,7 @@ namespace Westwind.Webstore.Web.Utilities
             {
                 Url = "https://www.google.com/recaptcha/api/siteverify",
                 HttpVerb = "POST",
-                RequestPostMode = HttpPostMode.UrlEncoded
+                RequestFormPostMode = HttpFormPostMode.UrlEncoded
             };
 
             settings.AddPostKey("secret", secretKey);

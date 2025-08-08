@@ -456,6 +456,10 @@ namespace Westwind.Webstore.Business
         /// <returns></returns>
         protected override bool OnValidate(Customer customer)
         {
+            customer.Lastname = customer.Lastname ?? string.Empty;
+            customer.Firstname = customer.Firstname ?? string.Empty;
+            customer.Company = customer.Company ?? string.Empty;
+
             if (string.IsNullOrEmpty(customer.Lastname) && string.IsNullOrEmpty(customer.Company))
                 ValidationErrors.Add(WebStoreBusinessResources.NameOrCompanyMustBeEntered, "Lastname");
 
