@@ -56,7 +56,7 @@ namespace Westwind.Webstore.Web.Controllers
 
         public IActionResult Privacy()
         {
-        
+
             return View();
         }
 
@@ -80,13 +80,13 @@ namespace Westwind.Webstore.Web.Controllers
 
             if (ex != null)
             {
-                exceptionHandlerPath = HttpContext.Features.Get<IExceptionHandlerPathFeature>();                
+                exceptionHandlerPath = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
                 exceptionHandler = HttpContext.Features.Get<IExceptionHandlerFeature>();
 
-                mainException = exceptionHandler?.Error;                
+                mainException = exceptionHandler?.Error;
                 pathException = exceptionHandlerPath?.Error;
             }
-            
+
             var model = new ErrorViewModel {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
                 Error = pathException,
@@ -150,7 +150,7 @@ body {{ font-family: sans-serif }}
 {model.PostData?.TrimEnd()}
 ";
 
-                
+
                 _logger.LogCritical(pathException,textMsg);
 
                 if (wsApp.Configuration.Email.SendAdminEmails)
@@ -247,6 +247,8 @@ body {{ font-family: sans-serif }}
 
             if (model.ReceiveMarkdownMonster)
                 sb.AppendLine("Requesting: Markdown Monster");
+            if (model.ReceiveDocumentationMonster)
+                sb.AppendLine("Requesting: Markdown Monster");
             if (model.ReceiveWebSurge)
                 sb.AppendLine("Requesting: West Wind Web Surge");
 
@@ -294,7 +296,9 @@ body {{ font-family: sans-serif }}
                 invoice.Notes = model.MvpLink + "\n\n" + model.CustomerNotes;
 
                 if (model.ReceiveMarkdownMonster)
-                    invoiceBus.AddLineItem("markdown_monster_mvp_3");
+                    invoiceBus.AddLineItem("markdown_monster_mvp_4");
+                if (model.ReceiveDocumentationMonster)
+                    invoiceBus.AddLineItem("docmonster_mvp");
                 if (model.ReceiveWebSurge)
                     invoiceBus.AddLineItem("websurge_2_mvp");
                 invoice.PromoCode = "MVP_REQUEST";

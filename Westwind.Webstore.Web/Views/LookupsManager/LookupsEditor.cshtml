@@ -25,12 +25,14 @@
     <table class="table table-bordered table-dark-headers">
         <tbody>
         
-        <tr id="new" style="display:none">
+        <tr id="new1" class="edit-header" style="display:none">
             <td>
                 <input id="key-new"
                        placeholder="Key"
                        value="" class="form-control"/>
             </td>
+        </tr>
+        <tr id="new" class="edit-header" style="display:none">
             <td>
                 <input id="cdata-new" 
                        placeholder = "CData"
@@ -45,12 +47,17 @@
                 <input id="ndata-new" 
                        placeholder = "NData"
                        value="" class="form-control number"/>
+                <div style="text-align: right">
+          
+                </div>
+            </td>
+            <td style="text-align: right">
+                <button class="btn btn-secondary btn-sm mt-1" 
+                        onclick="page.saveItem('new')">
+                    <i class="fas fa-circle-check text-warning"></i>
+                    Save
+                </button>
                 
-                 <button class="btn btn-secondary btn-sm mt-1 "
-                                   onclick="page.saveItem('new')">
-                     <i class="fas fa-circle-check text-warning"></i>
-                     Save
-                 </button>
             </td>
         </tr>
 

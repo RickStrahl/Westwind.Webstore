@@ -169,7 +169,7 @@ namespace Westwind.Webstore.Business
 
             if (lsearch == "recent")
             {
-                tlist = tlist.Take(10);
+                tlist = tlist.Take(20);
             }
 
             return tlist

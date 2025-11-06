@@ -66,7 +66,10 @@ namespace Westwind.Webstore.Web.Views
         public string MvpLink { get; set; }
         public bool ReceiveMarkdownMonster { get; set; }
         public bool ReceiveWebSurge { get; set; }
+
+        public bool ReceiveDocumentationMonster { get; set; }
         public bool IsDiscountRequest { get; set; }
+
     }
 
 

@@ -5,7 +5,7 @@ page = {
     initialize() {
     },
     showNewItem(key) {
-        $("#new").show();
+        $(".edit-header").show();
         setTimeout(()=>   $("#key-new").focus(), 120);
         
         var id = 'new';
@@ -34,7 +34,7 @@ page = {
         ajaxJson("/admin/lookupsmanager", lookup,
             ()=> {
                 toastr.success("Item updated.");
-                $("#new").hide();
+                $(".edit-header").hide();
 
                 if (id === 'new') {
                     window.location.reload();

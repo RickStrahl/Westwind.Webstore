@@ -39,6 +39,9 @@ namespace Westwind.Webstore.Web.Models
         public bool IsTwoFactorValidated { get; set; }
 
 
+        public string LanguageId { get; set; } = "en";
+
+
         /// <summary>
         /// Sets invoice related settings on the WebStoreUserState.
         /// You can also pass null to clear the items from userstate.
