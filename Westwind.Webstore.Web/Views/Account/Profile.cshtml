@@ -362,7 +362,8 @@
                     {
                         <b>@invoice.Company -</b>
                     }
-                    @invoice.Name<br/>
+                    @invoice.Name
+                    <br/>
                     <div class="lh-1">
                         @foreach (var lineItem in invoice.LineItems)
                         {
@@ -392,6 +393,7 @@
                             @total
                             <i class="fas fa-check-circle text-warning hidable-xs" title="AUTHORIZED"></i>
                         </span>
+                        <br/><small style="font-size: 0.5em" class="text-secondary">Authorized and Pending</small>
                     }
                     else if (ccResult.IsUnprocessed(invoice.Status))
                     {
@@ -407,14 +409,18 @@
                             @total
                             <i class="fas fa-times-circle text-danger hidable-xs" title="DUE AND PAYABLE"></i>
                         </span>
+                        <br/><small style="font-size: 0.5em" class="text-secondary">@invoice.Status</small>
                     }
                     else
                     {
                         <span>
                             @total
-                            <i class="fas fa-times-circle text-danger hidable-xs" title="@invoice.Status"></i>
+                            <i class="fas fa-times-circle text-danger hidable-xs" title="@invoice.Status"></i>                           
                         </span>
+                        <br/><small style="font-size: 0.5em" class="text-secondary">@invoice.Status</small>
                     }
+                    <br/>
+                    
                 </td>
                 <td class="right bold">
                     <span>
