@@ -86,7 +86,7 @@ builder.Logging.ClearProviders();
 // logging
 var logConfig = new LoggerConfiguration()
     .MinimumLevel.Warning()
-    .Enrich.FromLogContext()        
+    .Enrich.FromLogContext()
     .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}---{NewLine}")
     .WriteTo.File(
         Path.Combine(wsApp.Constants.WebRootFolder, "admin", "applicationlog.txt"),
@@ -208,8 +208,6 @@ services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 // so that Pages can localize - note required even if you're not using
 // the DbResource manager.
 services.AddTransient<IViewLocalizer, DbResViewLocalizer>();
-
-services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
 
 // We want a transient context!
 services.AddTransient<WebStoreContext>( services =>
@@ -393,6 +391,11 @@ app.UseEndpoints(endpoints =>
 
 wsApp.Constants.AppStartedOn = DateTime.Now;
 
+var scheduler = new Scheduler() { CheckFrequency = 600_000 /* 10 minutes */ };
+scheduler.ExecuteScheduledEvent += (scheduler, notUsed) =>
+{
+
+};
 
 
 app.Start();
