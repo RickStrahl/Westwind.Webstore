@@ -132,6 +132,15 @@
                             @total
                             <i class="fas fa-check-circle text-warning hidable-xs" title="AUTHORIZED"></i>
                         </span>
+                        <br/><small style="font-size: 0.5em" class="text-secondary">Authorized and Pending</small>
+                    }
+                    else if (string.IsNullOrEmpty(invoice.Status) || invoice.Status == "DUE AND PAYABLE")
+                    {
+                        <span class="text-info">
+                            @total
+                            <i class="fas fa-wait text-info hidable-xs" title="Due and Payable"></i>
+                        </span>
+                        <br/><small style="font-size: 0.5em" class="text-secondary">@invoice.Status</small>
                     }
                     else if (string.IsNullOrEmpty(invoice.Status) || invoice.Status == "UNPROCESSED")
                     {
@@ -146,6 +155,7 @@
                             @total
                             <i class="fas fa-times-circle text-danger hidable-xs" title="@invoice.Status"></i>
                         </span>
+                        <br/><small style="font-size: 0.5em" class="text-secondary">@invoice.Status</small>
                     }
                 </td>
                 <td class="right bold">
