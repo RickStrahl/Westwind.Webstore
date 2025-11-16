@@ -419,6 +419,19 @@ namespace Westwind.Webstore.Business
         }
 
 
+        public bool CanAutoUpgrade(Invoice invoice = null)
+        {
+            if (invoice == null)
+                invoice = Entity;
+
+            foreach(var lineItem in invoice.LineItems)
+            {
+                var product = Context.Products.AsNoTracking().Select(p => p.Sku).FirstOrDefault();
+
+            }
+        }
+
+
         /// <summary>
         /// Removes an item from the lineitems collection
         /// </summary>

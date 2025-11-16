@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -29,6 +28,7 @@ namespace Westwind.Webstore.Business.Entities
         ///
         /// The <seealso cref="Sku"/> can use common postfixes like _LARGE or _BLUE etc.
         /// </summary>
+        [StringLength(100)]
         public string ParentSku { get; set; }
 
         /// <summary>
@@ -50,17 +50,20 @@ namespace Westwind.Webstore.Business.Entities
         /// <summary>
         /// Comma delimited list of categories for this item
         /// </summary>
+        [StringLength(512)]
         public string Categories { get; set;  }
 
 
         /// <summary>
         /// Optional Manufacturer
         /// </summary>
+        [StringLength(100)]
         public string Manufacturer { get; set; }
 
         /// <summary>
         /// Optional Version number for this product
         /// </summary>
+        [StringLength(20)]
         public string Version { get; set;  }
 
         /// <summary>
@@ -79,6 +82,12 @@ namespace Westwind.Webstore.Business.Entities
         /// Image file name used from ItemImages folder.
         /// </summary>
         public string ItemImage { get; set; }
+
+        /// <summary>
+        /// A comma delimited list of skus that can be automatically upgrades
+        /// Example: `"markdownmonster_2, markdownmonster_up_2"`
+        /// </summary>
+        public string AutoUpgradeSkus { get; set; }
 
         /// <summary>
         /// If set redirects this item to the specified URL rather than

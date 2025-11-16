@@ -258,6 +258,29 @@ namespace Westwind.Webstore.Business
             return result;
         }
 
+
+
+        /// <summary>
+        /// Checks to see if the customer has any approved orders
+        /// </summary>
+        /// <param name="id">Optional - customer Id to check. If not passed uses entity</param>
+        /// <returns></returns>
+        public bool HasApprovedOrders(string id = null)
+        {
+            if (string.IsNullOrEmpty(id))
+                id = Entity.Id;
+
+            if (string.IsNullOrEmpty(id))
+                return false;
+
+            return Context.Invoices.Any(inv => inv.CustomerId == id &&
+                                            inv.CreditCardResult != null &&
+                                            (inv.CreditCardResult.ProcessingResult == "APPROVED" ||
+                                            inv.CreditCardResult.ProcessingResult == "PAID IN FULL")
+                                        );
+            return false;
+        }
+
         #region Account Operations and Data
 
         /// <summary>

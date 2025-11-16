@@ -1,0 +1,25 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+    <File Path="TODO.md" />
+    <File Path="Westwind.Webstore.Business/Migrations.md" />
+    <File Path="Westwind.Webstore.Web/WebStoreAdminService.websurge" />
+    <Project Path="WebStoreDatabase/WebStoreDatabase.sqlproj" Id="f66fe9cd-3956-40c0-947b-dba378357a9f">
+      <Build />
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/Solution Items/LibrariesAndTests/">
+    <Project Path="../Westwind.AspNetCore.Markdown/Westwind.AspNetCore.Markdown/Westwind.AspNetCore.Markdown.csproj" />
+    <Project Path="../Westwind.AspNetCore/Westwind.AspNetCore/Westwind.AspNetCore.csproj" />
+    <Project Path="../Westwind.Data.EfCore/Westwind.Data.EfCore/Westwind.Data.EfCore.csproj" />
+    <Project Path="../Westwind.Utilities/Westwind.Utilities.Data/Westwind.Utilities.Data.csproj" />
+    <Project Path="../Westwind.Utilities/Westwind.Utilities/Westwind.Utilities.csproj" />
+    <Project Path="Westwind.CreditCardProcessing/Westwind.CreditCardProcessing/Westwind.CreditCardProcessing.csproj" />
+    <Project Path="Westwind.WebStore.Business.Test/Westwind.WebStore.Business.Test.csproj" />
+  </Folder>
+  <Project Path="Westwind.Webstore.Business/Westwind.Webstore.Business.csproj" />
+  <Project Path="Westwind.Webstore.Web/Westwind.Webstore.Web.csproj" />
+</Solution>

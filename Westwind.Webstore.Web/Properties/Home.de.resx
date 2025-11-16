@@ -59,7 +59,7 @@
       <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
    </resheader>
    <data name="WhatsNewMessage" xml:space="preserve">
-      <value>Willkommen im West Wind Web Store, wo Sie West Wind und andere Entwickler-Tools von Drittanbietern für .NET und Visual FoxPro mit Ihrer &lt;strong&gt;Kredit Karte&lt;/strong&gt; oder &lt;strong&gt;PayPal&lt;/strong&gt; kaufen können.</value>
+      <value>Willkommen im West Wind Web Store, wo Sie West Wind und andere Entwickler-Tools von Drittanbietern für .NET und Visual FoxPro kaufen können.</value>
    </data>
    <data name="WhatsNewMessageHeader" xml:space="preserve">
       <value>Was ist neu bei West Wind Technologies?</value>

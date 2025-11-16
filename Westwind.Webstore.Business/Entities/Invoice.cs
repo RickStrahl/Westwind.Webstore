@@ -402,7 +402,7 @@ namespace Westwind.Webstore.Business.Entities
         /// Returns a simple result code from Credit Card processing
         /// APPROVED, DECLINED, FRAUD, FAILED or empty/null
         /// </summary>///
-        public string ProcessingResult { get; set; }
+        public string ProcessingResult { get; set; } = string.Empty;
 
         /// <summary>
         /// Returns the raw processing result from the processor
@@ -531,15 +531,15 @@ namespace Westwind.Webstore.Business.Entities
             { Void, "Voided" },
             { Hold, "Hold" }
         };
-        
+
         // var dict = new Dictionary<string, string>();
         // var props = typeof(CcResultCodes).GetFields(BindingFlags.Static | BindingFlags.Public );
         // foreach(var prop in props)
         // {
         // 	var val = prop.GetValue(null) as string;
         // 	dict.Add(prop.Name, val);
-        // }			
-        // return dict;        
+        // }
+        // return dict;
     }
 
 }
