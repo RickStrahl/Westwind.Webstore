@@ -60,9 +60,12 @@ $(function () {
         ajaxJson("/api/account/validate/send", { email: email, vk: vmKey },
             function (result) {
                 toastr.success("Validation code has been emailed.");
+                $("#email-validation-code").focus();
             });
         
         $("#EmailValidatorModal").modal("show");
+        
+        
     }
 
     function validateCode() {
