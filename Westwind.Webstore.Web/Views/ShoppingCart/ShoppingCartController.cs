@@ -240,6 +240,9 @@ namespace Westwind.Webstore.Web.Controllers
             if (customer == null)
                 return Redirect("~/");
 
+            if (busCustomer.HasApprovedOrders())
+                model.UseOrderFormRecaptcha = false;
+
             var busInvoice = BusinessFactory.GetInvoiceBusiness();
             var invoice = busInvoice.Load(UserState.InvoiceId);
             if (invoice == null || invoice.LineItems.Count < 1)
@@ -284,6 +287,9 @@ namespace Westwind.Webstore.Web.Controllers
             {
                 return Redirect("~/");
             }
+
+            if (customerBusiness.HasApprovedOrders())
+                model.UseOrderFormRecaptcha = false;
 
             var invoiceBusiness = BusinessFactory.GetInvoiceBusiness(customerBusiness.Context);
             var invoice = invoiceBusiness.Load(invoiceId);
@@ -536,7 +542,7 @@ namespace Westwind.Webstore.Web.Controllers
                 }
             }
 
-            if (wsApp.Configuration.Security.UseOrderFormRecaptcha &&
+            if (model.UseOrderFormRecaptcha &&
                 !OrderValidation.VerifyRecaptcha(model.ReCaptchaResult, invoice.CreditCard.IpAddress))
             {
                 invoiceBusiness.ValidationErrors.Add("reCAPTCHA Failed. Please try validating again.", "grc");

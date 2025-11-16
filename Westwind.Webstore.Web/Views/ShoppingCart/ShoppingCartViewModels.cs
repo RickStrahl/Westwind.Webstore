@@ -1,4 +1,5 @@
-﻿using Westwind.Webstore.Business.Entities;
+﻿using Westwind.Webstore.Business;
+using Westwind.Webstore.Business.Entities;
 using Westwind.Webstore.Web.Models;
 
 namespace Westwind.Webstore.Web.Views
@@ -14,6 +15,7 @@ namespace Westwind.Webstore.Web.Views
     {
         public InvoiceViewModel InvoiceModel { get; set; } = new InvoiceViewModel();
 
+        public bool UseOrderFormRecaptcha { get; set; } = wsApp.Configuration.Security.UseOrderFormRecaptcha;
 
         public string ReCaptchaResult { get; set; }
 
