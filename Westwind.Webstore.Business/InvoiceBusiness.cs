@@ -744,6 +744,7 @@ namespace Westwind.Webstore.Business
         /// <returns></returns>
         public virtual bool CanAutoConfirm(bool checkForLicensePresent = false)
         {
+            // Promo Codes **ALWAYS** trigger a review
             if (!string.IsNullOrEmpty(Entity.PromoCode))
                 return false;
 
@@ -770,6 +771,8 @@ namespace Westwind.Webstore.Business
                         return false;
                 }
 
+                // Check to see if an upgrade had previous approved orders
+                // for specific autoupgrade skus
                 if (!CanLineItemUpgradeAutoRegister(lineItem))
                     return false;
             }
