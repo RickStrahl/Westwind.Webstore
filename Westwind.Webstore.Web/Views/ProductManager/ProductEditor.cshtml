@@ -385,6 +385,10 @@
     Allow auto-registration
 </label>
 
+<label>Auto Upgrade Skus: <span class="label-note">(optional comma delimited list of skus to auto-upgrade from)</span></label>
+<input asp-for="Product.AutoUpgradeSkus" 
+       class="form-control mb-1" />
+
 <div>
     <label>
         <input type="checkbox" asp-for="Product.UseLicensing"/>

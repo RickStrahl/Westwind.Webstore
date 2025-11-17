@@ -419,19 +419,6 @@ namespace Westwind.Webstore.Business
         }
 
 
-        public bool CanAutoUpgrade(Invoice invoice = null)
-        {
-            if (invoice == null)
-                invoice = Entity;
-
-            foreach(var lineItem in invoice.LineItems)
-            {
-                var product = Context.Products.AsNoTracking().Select(p => p.Sku).FirstOrDefault();
-
-            }
-        }
-
-
         /// <summary>
         /// Removes an item from the lineitems collection
         /// </summary>
@@ -760,6 +747,14 @@ namespace Westwind.Webstore.Business
             if (!string.IsNullOrEmpty(Entity.PromoCode))
                 return false;
 
+            string countryCode = Entity.BillingAddress.CountryCode;
+            string[] whiteList = { "US", "CA", "DE", "GB", "AU", "NZ", "AT", "CH", "FR", "NL", "BE", "IT",
+                "DK", "SE", "NO", "GR", "ES","IE", "SI",
+                "CZ", "IS", "IL", "CL", "BR", "AR" };
+            if (!whiteList.Any(w => w == countryCode))
+                return false;
+
+
             // If there is any item that can't autoconfirm
             // don't allow the order to be processed as online as a SALE - use Authorize
             foreach (var lineItem in Entity.LineItems)
@@ -768,20 +763,58 @@ namespace Westwind.Webstore.Business
                 if (!lineItem.AutoRegister)
                     return false;
 
-                string countryCode = Entity.BillingAddress.CountryCode;
-                string[] whiteList = { "US", "CA", "DE", "GB", "AU", "NZ", "AT", "CH", "FR", "NL", "BE", "IT", "DK", "SE", "NO", "GR", "ES","IE", "SI", "CZ", "IS", "IL", "CL", "BR", "AR" };
-                if (!whiteList.Any(w => w == countryCode))
-                    return false;
-
                 if (checkForLicensePresent)
                 {
                     // uses a license but license has not been applied
                     if (lineItem.UseLicensing && string.IsNullOrEmpty(lineItem.LicenseSerial))
                         return false;
                 }
+
+                if (!CanLineItemUpgradeAutoRegister(lineItem))
+                    return false;
             }
 
             return true;
+        }
+
+
+        /// <summary>
+        /// Checks to see if a lineitem can be auto-register
+        /// Checks for:
+        /// * Item is AutoRegister
+        /// * If Item has AutoUpgradeSkus defined those are checked to see
+        ///   customer has previously purchased the item on an approved invoice
+        /// </summary>
+        /// <param name="invoice">Optional - invoice instance</param>
+        /// <returns></returns>
+        public bool CanLineItemUpgradeAutoRegister(LineItem lineitem)
+        {
+            var product = Context.Products.AsNoTracking().FirstOrDefault(li => li.Sku == lineitem.Sku);
+            if (product == null)
+                return false;
+
+            if (!product.AutoRegister)
+                return false;
+
+            if (string.IsNullOrEmpty(product.AutoUpgradeSkus))
+                return true;
+
+            // Check skus that can be upgraded from
+            var skus = product.AutoUpgradeSkus.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            foreach (var sku in skus)
+            {
+                var li = Context.LineItems.AsNoTracking().FirstOrDefault(li => li.Sku == sku &&
+                                                                               li.CustomerId == Entity.CustomerId && li.InvoiceId != Entity.Id);
+                if (li == null) continue;
+
+                // check if the invoice is approved
+                if( Context.Invoices.AsNoTracking().Any(inv => inv.Id == li.InvoiceId &&
+                                                            inv.CreditCardResult.ProcessingResult == "APPROVED" ||
+                                                            inv.CreditCardResult.ProcessingResult == "PAID IN FULL") )
+                    return true;
+            }
+
+            return false;
         }
 
 

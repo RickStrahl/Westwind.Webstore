@@ -572,7 +572,7 @@ namespace Westwind.Webstore.Web.Controllers
             // capture Credit Card Props
             invoice.CreditCard.Nonce = invoiceModel.Nonce;
             invoice.CreditCard.Descriptor = invoiceModel.Descriptor;
-            invoice.CreditCard.IpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+            invoice.CreditCard.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             if (invoice.CreditCard.IpAddress == "::1")
                 invoice.CreditCard.IpAddress = "127.0.0.1";
