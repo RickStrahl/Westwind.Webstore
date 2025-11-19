@@ -126,6 +126,20 @@ namespace Westwind.Webstore.Web.Views.Admin
 
 
         [HttpGet]
+        [Route("/admin/{filename}")]
+        public ActionResult GetAdminFile(string filename, string contentType = "text/plain")
+        {
+            var file = Path.Combine(wsApp.Constants.WebRootFolder, "admin", filename);
+            if (!System.IO.File.Exists(file))
+            {
+                return Content("File not found: " + filename);
+            }
+
+            return PhysicalFile(file, contentType);
+        }
+
+
+        [HttpGet]
         [Route("/admin/clearlog")]
         public ActionResult ClearLog()
         {

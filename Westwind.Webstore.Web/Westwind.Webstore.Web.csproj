@@ -12,10 +12,10 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="GoogleAuthenticator" Version="3.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.10" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.0" />
 <!--    <PackageReference Include="Westwind.AspNetCore" Version="4.0.7" />-->
 <!--    <PackageReference Include="Westwind.AspnetCore.Markdown" Version="3.20.0" />-->
     <PackageReference Include="Westwind.Globalization.AspnetCore" Version="3.1.8" />
@@ -38,6 +38,11 @@
   <ItemGroup>
     <None Update="pingo.exe" CopyToOutputDirectory="PreserveNewest" />
     <Content Update="_webstore-configuration.json;DbResourceConfiguration.json;wwwroot\images\product-images\**\*;wwwroot\admin\applicationlog.txt;wwwroot\admin\cclog.txt;wwwroot\temp\**\*" CopyToPublishDirectory="Never" />
+    <Content Update="wwwroot\web.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+      <Content Remove="wwwroot\admin\applicationlog.txt" /> 
+      <Content Remove="wwwroot\admin\cclog.txt" />
   </ItemGroup>
 
   <ItemGroup>

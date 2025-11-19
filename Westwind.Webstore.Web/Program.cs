@@ -294,14 +294,15 @@ app.UseCustomHeaders((opt) =>
 
 
 
-var itemImagePath = wsApp.Configuration.ProductImageUploadFilePath;
+app.UseStaticFiles();
+
+var itemImagePath = wsApp.Configuration.ProductImageUploadFilePath ?? string.Empty;
 if (!string.IsNullOrEmpty(itemImagePath))
 {
     itemImagePath = System.IO.Path.GetFullPath(itemImagePath);
     if (System.IO.Directory.Exists(itemImagePath))
     {
-        app.UseStaticFiles()
-           .UseStaticFiles(new StaticFileOptions()
+           app.UseStaticFiles(new StaticFileOptions()
            {
                 FileProvider = new PhysicalFileProvider(itemImagePath),
                 RequestPath = new PathString("/product-images"),
@@ -313,11 +314,9 @@ if (!string.IsNullOrEmpty(itemImagePath))
     }
     else
     {
-        app.UseStaticFiles();
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine($"Warning: Image Path doesn't exist: {itemImagePath}\n");
         Console.ResetColor();
-
         Log.Warning($"Image Path doesn't exist: {itemImagePath}");
     }
 }
