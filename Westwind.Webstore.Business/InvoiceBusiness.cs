@@ -1187,5 +1187,15 @@ namespace Westwind.Webstore.Business
         public string CustId { get; init; }
 
         public List<LineItem> LineItems { get; set; }
+
+        public bool IsApproved(string processingResult = null)
+        {
+            if (string.IsNullOrEmpty(processingResult))
+                processingResult = Status;
+
+            return !string.IsNullOrEmpty(processingResult) &&
+                   (processingResult.Equals("APPROVED", StringComparison.OrdinalIgnoreCase) ||
+                    processingResult.Equals("PAID IN FULL", StringComparison.OrdinalIgnoreCase));
+        }
     }
 }

@@ -278,7 +278,6 @@ namespace Westwind.Webstore.Business
                                             (inv.CreditCardResult.ProcessingResult == "APPROVED" ||
                                             inv.CreditCardResult.ProcessingResult == "PAID IN FULL")
                                         );
-            return false;
         }
 
         #region Account Operations and Data

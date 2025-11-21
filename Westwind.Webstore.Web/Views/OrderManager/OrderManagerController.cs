@@ -58,10 +58,17 @@ public class OrderManagerController : WebStoreBaseController
         }
 
         var invoiceBus = BusinessFactory.GetInvoiceBusiness();
-        model.InvoiceList = invoiceBus.GetInvoices(s, 15000);
+        model.InvoiceList = invoiceBus.GetInvoices(s, 15000) ;
 
-        model.InvoiceTotal = model.InvoiceList.Sum(inv => inv.InvoiceTotal);
-        model.InvoiceCount = model.InvoiceList.Count();
+
+        var invoiceList = model.InvoiceList.Select(i=> new { i.InvoiceTotal, i.Status }).ToList();
+        model.InvoiceCount = invoiceList.Count;
+
+        model.InvoiceTotal = invoiceList.Where(ili => ili.Status != "APPROVED" && ili.Status != "PAID IN FULL").Sum(inv => inv.InvoiceTotal);
+        
+        var approvedList = invoiceList.Where(ili => ili.Status == "APPROVED" || ili.Status == "PAID IN FULL").ToList();
+        model.InvoiceApprovedTotal = approvedList.Sum(ili => ili.InvoiceTotal);
+        model.InvoiceApprovedCount = approvedList.Count;
 
         return View("InvoiceList", model);
     }
@@ -543,8 +550,9 @@ public class InvoiceListViewModel : WebStoreBaseViewModel
     public object SearchCustomer { get; set; }
 
     public int InvoiceCount { get; set; }
-
+    public int InvoiceApprovedCount { get; set; }
     public decimal InvoiceTotal { get; set; }
+    public decimal InvoiceApprovedTotal { get; set; }
 }
 
 public class InvoiceEditorViewModel : WebStoreBaseViewModel

@@ -62,7 +62,17 @@
                     @if (Model.InvoiceCount > 0)
                     {
                         <div class="header-byline mt-2">
-                            <span class="text-info">@Model.InvoiceCount.ToString("n0")</span> invoices &bull; Total: <b class="text-danger">@Model.InvoiceTotal.ToString("c2")</b>
+                            @if (Model.InvoiceApprovedCount > 0) {
+                                <span>
+                                        @Model.InvoiceApprovedCount Approved: <b class="text-success">@Model.InvoiceApprovedTotal.ToString("c2")</b> &bull;
+                                </span>
+                            }
+                            @if(Model.InvoiceApprovedCount < Model.InvoiceCount )
+                            {
+                            <span>
+                                @((Model.InvoiceCount-Model.InvoiceApprovedCount).ToString("n0")) Pending: <b class="text-danger">@Model.InvoiceTotal.ToString("c2")</b>
+                            </span>
+                            }
                         </div>
                     }
                 </form>
