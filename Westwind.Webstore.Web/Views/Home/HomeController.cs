@@ -248,7 +248,7 @@ body {{ font-family: sans-serif }}
             if (model.ReceiveMarkdownMonster)
                 sb.AppendLine("Requesting: Markdown Monster");
             if (model.ReceiveDocumentationMonster)
-                sb.AppendLine("Requesting: Markdown Monster");
+                sb.AppendLine("Requesting: Documentation Monster");
             if (model.ReceiveWebSurge)
                 sb.AppendLine("Requesting: West Wind Web Surge");
 

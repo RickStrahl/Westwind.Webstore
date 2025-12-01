@@ -131,41 +131,43 @@
 
                     @if (invoice.Status == "APPROVED" || invoice.Status == "PAID IN FULL")
                     {
-                        <span class="text-success">
+                        <div class="text-success">
                             @total
-                            <i class="fas fa-check-circle text-success hidable-xs" title="@invoice.Status"></i>
-                        </span>
+                            <i class="fas fa-check-circle text-success hidable-xs" title="This invoice has been paid."></i>
+                        </div>
                     }
                     else if (invoice.Status == "AUTHORIZED")
                     {
-                        <span class="text-warning">
+                        <div class="text-warning">
                             @total
-                            <i class="fas fa-check-circle text-warning hidable-xs" title="AUTHORIZED"></i>
-                        </span>
-                        <br/><small style="font-size: 0.5em" class="text-secondary">Authorized and Pending</small>
-                    }
-                    else if (string.IsNullOrEmpty(invoice.Status) || invoice.Status == "DUE AND PAYABLE")
-                    {
-                        <span class="text-info">
-                            @total
-                            <i class="fas fa-wait text-info hidable-xs" title="Due and Payable"></i>
-                        </span>
-                        <br/><small style="font-size: 0.5em" class="text-secondary">@invoice.Status</small>
+                            <i class="fad fa-credit-card text-warning hidable-xs" title="Invoice has been authorized, pending final sale authorization."></i>
+                        </div>
+                        <div style="font-size: 0.5em" class="text-secondary">Authorized and Pending</div>
                     }
                     else if (string.IsNullOrEmpty(invoice.Status) || invoice.Status == "UNPROCESSED")
                     {
-                        <span class="text-info">
+                        <div class="text-info">
                             @total
-                            <i class="fas fa-wait text-info hidable-xs" title="UNPROCESSED"></i>
-                        </span>
+                            <i class="fad fa-circle-xmark text-info hidable-xs" title="This invoice has not been processed yet."></i>
+                        </div>
+                        <div style="font-size: 0.5em" class="text-secondary">Unprocessed</div>
                     }
+                    else if (invoice.Status == "DUE AND PAYABLE")
+                    {
+                        <div class="text-info">
+                            @total
+                            <i class="fas fa-clock-rotate-left text-danger hidable-xs" title="Awaiting payment for due and payable invoice."></i>
+                        </div>
+                        <div style="font-size: 0.5em" class="text-secondary">Due and Payable</div>
+                    }
+                   
                     else
                     {
-                        <span class="text-danger">
+                        <div class="text-danger">
                             @total
                             <i class="fas fa-times-circle text-danger hidable-xs" title="@invoice.Status"></i>
-                        </span>
-                        <br/><small style="font-size: 0.5em" class="text-secondary">@invoice.Status</small>
+                        </div>
+                        <div style="font-size: 0.5em" class="text-secondary">@invoice.Status</div>
                     }
                 </td>
                 <td class="right bold">
