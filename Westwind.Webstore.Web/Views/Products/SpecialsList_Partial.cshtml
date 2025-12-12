@@ -35,8 +35,8 @@
                 }
             </div>*@
 
-            <div>
-                @item.SpecialsText
+            <div>                
+                @Markdown.ParseHtmlString(item.SpecialsText)
             </div>
         </div>
     </div>
