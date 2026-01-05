@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,8 +24,6 @@ namespace Westwind.WebStore.Business.Test
         [Test]
         public async Task CreateTemporaryInvoiceAndAddItemsAndDeleteToInvoice()
         {
-            //MartenBusinessStartupStateSettings.EnableLegacyTimestampBehavior = false;
-
             Invoice loadedInvoices;
             using (var busInvoice = BusinessFactory.GetInvoiceBusiness())
             {
@@ -75,6 +74,32 @@ namespace Westwind.WebStore.Business.Test
             }
         }
 
+
+
+        [Test]
+        public async Task CanLineItemUpgradeAutoRegister_UpgradeSkuExists_ReturnsTrue()
+        {
+            var invoiceNoToCheck = "x8n8ak07";
+
+            using (var busInvoice = BusinessFactory.GetInvoiceBusiness())
+            {
+                Console.WriteLine(busInvoice.Context.ConnectionString);
+
+                //var invoice = busInvoice.Load("tbmcjt2cku");
+                var invoice = busInvoice.LoadByInvNo(invoiceNoToCheck);
+                if (invoice == null)
+                    Assert.Fail("Invoice not found");
+
+             
+
+                var lineItem = invoice.LineItems.FirstOrDefault();
+                if (lineItem == null)
+                    Assert.Fail("No lineitems on this invoice.");
+
+                var result = busInvoice.CanLineItemUpgradeAutoRegister(lineItem);
+                Assert.IsTrue(result, busInvoice.ErrorMessage);
+            }
+        }
 
     }
 }

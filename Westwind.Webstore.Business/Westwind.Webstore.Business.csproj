@@ -25,25 +25,26 @@
 
   <ItemGroup>
     <PackageReference Include="MailKitLite" Version="4.14.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
-    <PackageReference Include="Westwind.AI" Version="0.3.0" />
-    <PackageReference Include="Westwind.Data.EfCore" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Westwind.AI" Version="0.3.1" />
+    <PackageReference Include="Westwind.Data.EfCore" Version="10.0.1" />
     <PackageReference Include="Westwind.Globalization" Version="3.1.8" />
 
     <!-- private package in ./_SupportPackages folder -->
     <PackageReference Include="Westwind.Licensing" Version="1.0.5" />
     
-    <PackageReference Include="Westwind.Utilities" Version="5.2.0" />
-    <PackageReference Include="Westwind.Utilities.Data" Version="5.2.0" />
-    <!--    <ProjectReference Include="..\..\Westwind.Utilities\Westwind.Utilities\Westwind.Utilities.csproj" />-->
-    <!--<ProjectReference Include="..\..\Westwind.Data.EfCore\Westwind.Data.EfCore\Westwind.Data.EfCore.csproj" />-->
-
+    <PackageReference Include="Westwind.Utilities" Version="5.2.1" />
+    <PackageReference Include="Westwind.Utilities.Data" Version="5.2.1" />
     <ProjectReference Include="..\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing.csproj" />
+    
+    <!--<ProjectReference Include="..\..\Westwind.Utilities\Westwind.Utilities\Westwind.Utilities.csproj" /> -->
+    <!--<ProjectReference Include="..\..\Westwind.Utilities\Westwind.Utilities.Data\Westwind.Utilities.Data.csproj" />-->
+    <!--<ProjectReference Include="..\..\Westwind.Data.EfCore\Westwind.Data.EfCore\Westwind.Data.EfCore.csproj" />-->    
    </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿@model MvpPerksViewModel
 
 @{
-    ViewBag.Title = "MVP Perks";
+    ViewBag.Title = "Discount Pricing";
     Layout = "_Layout";
 }
 <div class="container">
@@ -116,6 +116,11 @@
                 <label class="d-block" title="request Markdown Monster.">
                     <input type="checkbox" asp-for="ReceiveMarkdownMonster" Text="Markdown Monster"/>
                     Markdown Monster
+                </label>
+                
+                <label class="d-block" title="request Documentation Monster.">
+                    <input type="checkbox" asp-for="ReceiveDocumentationMonster" Text="Documentation Monster"/>
+                    Documentation Monster
                 </label>
                 
                 <label class="d-block" title="request West Wind WebSurge">

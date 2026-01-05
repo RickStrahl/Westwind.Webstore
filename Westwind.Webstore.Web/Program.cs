@@ -415,6 +415,7 @@ Console.ResetColor();
 
 Console.WriteLine($" Runtime: {RuntimeInformation.FrameworkDescription} - {builder.Environment.EnvironmentName}");
 Console.WriteLine($"Platform: {RuntimeInformation.OSDescription} ({RuntimeInformation.OSArchitecture})");
+Console.WriteLine("Connection: " + PasswordScrubber.Instance.ScrubSqlConnectionStringValues( wsApp.Configuration.ConnectionString));
 Console.WriteLine();
 
 //Console.WriteLine(config.ConnectionString);

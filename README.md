@@ -1,8 +1,7 @@
 # West Wind Web Store 
-This is essentially a code dump of my online store. It's not meant as a product or even an inspiring example it's here primarily for my own reference and  I use it as a code reference that I can link to from posts and other reference materials.
+This is essentially a **code dump** of my online store. It's not meant as a product or even an inspiring example, it's here primarily for my own code reference that I can link to from posts and other reference materials.
 
 As such there's no documentation, no support, no nothing. Feel free to browse around or use at your own risk.
-
 
 ## Getting Started
 

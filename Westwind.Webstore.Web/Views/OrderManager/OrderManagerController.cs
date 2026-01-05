@@ -132,7 +132,7 @@ public class OrderManagerController : WebStoreBaseController
 
         var invoiceBus = BusinessFactory.GetInvoiceBusiness();
         model.Invoice = invoiceBus.LoadByInvNo(invoiceNumber) ?? invoiceBus.Load(invoiceNumber);
-        if (model.Invoice == null)
+         if (model.Invoice == null)
         {
             model.Invoice = invoiceBus.Create();
             ErrorDisplay.ShowInfo("Creating a new invoice.");

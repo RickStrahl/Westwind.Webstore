@@ -32,7 +32,7 @@ namespace Westwind.Webstore.Business.Utilities
             if (!emailConfig.SendEmails || string.IsNullOrEmpty(emailConfig.SenderEmail))
                 return true;
 
-            var message = new MimeMessage();
+            using var message = new MimeMessage();
             message.From.Add(CreateMailboxAddress(emailConfig.SenderName,
                 emailConfig.SenderEmail));
 
@@ -58,29 +58,28 @@ namespace Westwind.Webstore.Business.Utilities
 
             try
             {
-                using (var client = new SmtpClient())
+                using var client = new SmtpClient();
+
+                // Server and Port (ie. smtp.server.com:587)
+                var serverTokens = EmailServerConfiguration.MailServer.Split(':');
+                var mailServer = serverTokens[0];
+                var mailServerPort = 25;
+                if (serverTokens.Length > 1)
+                    mailServerPort = Westwind.Utilities.StringUtils.ParseInt(serverTokens[1], 25);
+
+                client.Connect(mailServer, mailServerPort, EmailServerConfiguration.UseTls ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+
+                // Note: only needed if the SMTP server requires authentication
+                if (!string.IsNullOrEmpty(EmailServerConfiguration.MailServerUsername))
                 {
-                    // Server and Port (ie. smtp.server.com:587)
-                    var serverTokens = EmailServerConfiguration.MailServer.Split(':');
-                    var mailServer = serverTokens[0];
-                    var mailServerPort = 25;
-                    if (serverTokens.Length > 1)
-                        mailServerPort = Westwind.Utilities.StringUtils.ParseInt(serverTokens[1], 25);
-
-                    client.Connect(mailServer, mailServerPort, EmailServerConfiguration.UseTls ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
-
-                    // Note: only needed if the SMTP server requires authentication
-                    if (!string.IsNullOrEmpty(EmailServerConfiguration.MailServerUsername))
-                    {
-                        client.Authenticate(EmailServerConfiguration.MailServerUsername,
-                            EmailServerConfiguration.MailServerPassword);
-                    }
-
-                    client.Send(message);
-                    client.Disconnect(true);
-
-                    return true;
+                    client.Authenticate(EmailServerConfiguration.MailServerUsername,
+                        EmailServerConfiguration.MailServerPassword);
                 }
+
+                client.Send(message);
+                client.Disconnect(true);
+
+                return true;
             }
             catch (Exception ex)
             {

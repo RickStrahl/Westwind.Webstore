@@ -47,11 +47,11 @@ namespace Westwind.Webstore.Business
         /// </summary>
         /// <param name="services"></param>
         /// <param name="connectionString"></param>
-        /// <param name="noDbContext"></param>
+        /// <param name="noDbContext">If no DbContexthas been configured in services we'll try to create one based on config</param>
         public static void AddServices(IServiceCollection services, string connectionString = null, bool noDbContext = false)
         {
             var config = wsApp.Configuration;
-            services.AddSingleton(config);
+            services.AddSingleton(config);  // this may already exist but same as 
 
             services.AddTransient(typeof(ProductBusiness));
             services.AddTransient(typeof(CustomerBusiness));
