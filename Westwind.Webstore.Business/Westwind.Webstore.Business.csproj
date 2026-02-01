@@ -38,7 +38,7 @@
     <!-- private package in ./_SupportPackages folder -->
     <PackageReference Include="Westwind.Licensing" Version="1.0.5" />
     
-    <PackageReference Include="Westwind.Utilities" Version="5.2.7" />
+    <PackageReference Include="Westwind.Utilities" Version="5.2.7.1" />
     <PackageReference Include="Westwind.Utilities.Data" Version="5.2.7" />
     <ProjectReference Include="..\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing\Westwind.CreditCardProcessing.csproj" />
     

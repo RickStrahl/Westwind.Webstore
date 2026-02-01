@@ -61,11 +61,11 @@ public class OrderManagerController : WebStoreBaseController
         model.InvoiceList = invoiceBus.GetInvoices(s, 15000) ;
 
 
-        var invoiceList = model.InvoiceList.Select(i=> new { i.InvoiceTotal, i.Status }).ToList();
+        var invoiceList = model.InvoiceList.Select(i=> new { i.InvoiceTotal, Status = i.Status }).ToList();
         model.InvoiceCount = invoiceList.Count;
 
         model.InvoiceTotal = invoiceList.Where(ili => ili.Status != "APPROVED" && ili.Status != "PAID IN FULL").Sum(inv => inv.InvoiceTotal);
-        
+
         var approvedList = invoiceList.Where(ili => ili.Status == "APPROVED" || ili.Status == "PAID IN FULL").ToList();
         model.InvoiceApprovedTotal = approvedList.Sum(ili => ili.InvoiceTotal);
         model.InvoiceApprovedCount = approvedList.Count;

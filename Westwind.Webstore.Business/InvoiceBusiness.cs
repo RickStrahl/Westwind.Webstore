@@ -153,7 +153,8 @@ namespace Westwind.Webstore.Business
                 }
                 else
                 {
-                    invBase = invBase.Where(i => i.InvoiceNumber.Contains(search) ||
+                    invBase = invBase.Where(i =>
+                                                 i.InvoiceNumber.Contains(search) ||
                                                  i.CustomerId == search ||
                                                  i.Customer.Lastname.Contains(search) ||
                                                  i.Customer.Company.Contains(search) ||
@@ -181,7 +182,7 @@ namespace Westwind.Webstore.Business
                         Email = inv.Customer.Email,
                         InvoiceDate = inv.InvoiceDate,
                         InvoiceTotal = inv.InvoiceTotal,
-                        Status = inv.CreditCardResult.ProcessingResult,
+                        Status = inv.CreditCardResult.ProcessingResult ?? "UNPROCESSED",
                         Id = inv.Id,
                         CustId = inv.CustomerId,
                         LineItems = inv.LineItems

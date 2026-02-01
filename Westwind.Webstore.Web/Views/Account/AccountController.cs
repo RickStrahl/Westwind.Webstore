@@ -601,23 +601,23 @@ namespace Westwind.Webstore.Web.Views
             var url = wsApp.Configuration.ApplicationHomeUrl.TrimEnd('/') + $"/account/recover/verify/{validationId}";
 
             string title = $"{wsApp.Configuration.ApplicationName} Password Recovery";
-            string body = $@"Hi,
+            string body = $"""
+Hi,
 
 This is your **password recovery email** for your {wsApp.Configuration.ApplicationName} account.
 
-Please visit the [following link]({url}) to recover your password and create a new password for your account.
+Click the link below to recover and create a new password for your account.
 
-[Reset your password]({url})
+### [Reset your password]({url})
 
 Regards,
 
 **The {wsApp.Configuration.ApplicationCompany} Team**
-";
+""";
 
             bool success = AppUtils.SendEmail(
                 email, title,
-                AppUtils.GetEmbeddedHtmlDocument(AppUtils.MarkdownToHtml(body)),
-                out string error, noCCs: true);
+                AppUtils.GetEmbeddedHtmlDocument(AppUtils.MarkdownToHtml(body)), out string error);
 
             if (!success)
                 model.ErrorDisplay.ShowError("Unable to send email: " + error);
@@ -630,7 +630,7 @@ Regards,
 
                 ClearAppUser();
 
-                Response.Headers["Refresh"] =  "15;url=" + Url.Action("Signin", "Account");
+                Response.Headers["Refresh"] =  "10;url=" + Url.Action("Signin", "Account");
             }
 
             return View(model);

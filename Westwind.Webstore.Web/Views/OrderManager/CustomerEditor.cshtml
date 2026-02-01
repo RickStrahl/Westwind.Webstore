@@ -111,9 +111,31 @@
                        autocorrect="off" required/>
             </div>
         </div>
-    </div>
-
-    <h3 class="page-header-text mb-0 mt-4">
+    
+        @if (!string.IsNullOrEmpty(Model.Customer.ValidationKey))
+        {
+            <div class="small mt-2 float-end " title="Link for password recovery for customer. Can be manually sent to customer in case automatic email notifications are not getting to the user.">
+                <i class="fad fa-envelope fa-send text-info"></i>
+                <i><a href="https://store.west-wind.com/account/recover/verify/@Model.Customer.ValidationKey">pending email recovery link</a></i>
+            </div>
+        }
+        else 
+        {
+            <div class="mt-2 float-end" 
+                 title="You can set a validation key to be used for a password recovery link. Save form then use the link that comes up instead."
+                 >
+                <i class="fad fa-envelope fa-send text-info"></i> 
+                <input type="text" 
+                       asp-for="Customer.ValidationKey" 
+                       placeholder="Validation key for email validation or password recovery"
+                       class="form-control  form-control-sm d-inline-block" style="height: 22px; padding: 3px; width: 200px"
+                />
+            </div>
+            <br/>
+        }
+        
+        
+        <h3 class="page-header-text mb-0">
         <i class="fad fa-credit-card"></i>
         Billing Address
     </h3>
@@ -121,13 +143,13 @@
     <div class="form-group mt-2">
         <div class="input-group">
             <textArea type="text"
-                                      class="form-control"
-                                      placeholder="Enter your Address"
-                                      asp-for="BillingAddress.StreetAddress"
-                                      autocapitalize="off"
-                                      autocomplete="off"
-                                      spellcheck="false"
-                                      autocorrect="off"></textArea>
+                      class="form-control"
+                      placeholder="Enter your Address"
+                      asp-for="BillingAddress.StreetAddress"
+                      autocapitalize="off"
+                      autocomplete="off"
+                      spellcheck="false"
+                      autocorrect="off"></textArea>
         </div>
     </div>
     
@@ -212,7 +234,7 @@
             if (@invoice.Status == "AUTHORIZED")
                 color = "background: cornsilk;";
             else if(invoice.Status == "UNPROCESSED" || string.IsNullOrEmpty(invoice.Status))
-                color = "background:  #f9f9f9;";
+                color = "background:  #e9e9e9;";
             else if( invoice.Status == "DUE AND PAYABLE")
                 color = "background:   #ffeeee;";
             else if(invoice.Status == "APPROVED")
