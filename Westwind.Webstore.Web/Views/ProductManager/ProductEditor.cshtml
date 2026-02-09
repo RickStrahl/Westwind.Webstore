@@ -355,6 +355,10 @@
 <label>Redirect Url: <span class="label-note">(url to redirect to - use for mapping old items to new)</span></label>
 <input type="text" class="form-control" asp-for="Product.RedirectUrl" placeholder="Url to redirect to. Use for old items to redirect to new items. "/>
 
+<label>External Order Url: <span class="label-note">(url to order from an external site)</span></label>
+<input type="text" class="form-control" asp-for="Product.ExternalOrderUrl" placeholder="Url on an external site. When set replaces the Add to Cart button with a Buy button. "/>
+
+
 <label>Abstract: <span class="label-note">(product abstract displayed in item lists)</span></label>
 <textarea asp-for="Product.Abstract" 
                 class="form-control"

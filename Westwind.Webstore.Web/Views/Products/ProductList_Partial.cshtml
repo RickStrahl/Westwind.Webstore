@@ -29,10 +29,32 @@
 
 
             <div>
-                <a href="~/shoppingcart/add/@item.Sku/1" class="btn btn-primary btn-sm" style="padding: 1px 8px; margin-top:  -0.7em">
-                    <i class="fad fa-cart-arrow-down"></i>
-                    Buy
-                </a>
+                @{
+                    @if (!string.IsNullOrEmpty(item.ExternalOrderUrl))
+                    {
+                        <a href="@item.ExternalOrderUrl" class="btn btn-warning btn-sm" style="padding: 1px 8px; margin-top:  -0.7em">
+                            <i class="fad fa-cloud-upload"></i>
+                            Buy
+                        </a>
+                    }
+
+                    else if (!string.IsNullOrEmpty(item.RedirectUrl))
+                    {
+                        <a href="@item.RedirectUrl" class="btn btn-primary btn-sm" style="padding: 1px 8px; margin-top:  -0.7em">
+                            <i class="fad fa-cart-arrow-down"></i>
+                            Buy
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="~/shoppingcart/add/@item.Sku/1" class="btn btn-primary btn-sm" style="padding: 1px 8px; margin-top:  -0.7em">
+                            <i class="fad fa-cart-arrow-down"></i>
+                            Buy
+                        </a>
+                    }
+                }
+                
+                
 
                 <b class="text-red" style="font-size: 1.2em; padding:  1em 0.4em 1em 1em !important; ">@item.Price.ToString("c")</b>
                 @{

@@ -95,6 +95,13 @@ namespace Westwind.Webstore.Business.Entities
         /// </summary>
         public string RedirectUrl { get; set; }
 
+
+        /// <summary>
+        /// If this item is ordered from another Web Site, the Add to Cart
+        /// button will link to this URL rather than adding the item to the cart.
+        /// </summary>
+        public string ExternalOrderUrl { get; set; }
+
         /// <summary>
         /// If true won't show in listings or searches
         /// </summary>

@@ -67,10 +67,20 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fad fa-cart-arrow-down"></i>&nbsp;
-                                Add to shopping cart &nbsp;
-                            </button>
+                            @if (string.IsNullOrEmpty(Model.Item.ExternalOrderUrl))
+                            {
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fad fa-cart-arrow-down"></i>&nbsp;
+                                    Add to shopping cart &nbsp;
+                                </button>
+                            }
+                            else
+                            {
+                                <a class="btn btn-warning" href="@Model.Item.ExternalOrderUrl">
+                                    <i class="fad fa-cloud-upload"></i>&nbsp;
+                                    Purchase &nbsp; <i class="fad fa-square-arrow-up-right"></i>
+                                </a>
+                            }
                         </td>
                     </tr>
 
