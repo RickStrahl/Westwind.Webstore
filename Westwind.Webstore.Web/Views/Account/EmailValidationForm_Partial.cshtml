@@ -11,27 +11,40 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                 <div class="alert alert-info">
-                     <i class="fa fa-info-circle fa-2x" style="padding: 0 10px 20px 0; display: block; float: left;"></i>
-                 <small id="helpId" class="text-muted">We've sent you an email with a validation code to verify your email address. Please enter the validation code in the field field below.</small>
+                <div class="alert alert-info">
+                    <i class="fa fa-info-circle fa-2x" style="padding: 0 10px 20px 0; display: block; float: left;"></i>
+                    <small id="helpId" class="text-muted">
+                    <ol style="margin-left: 2em" class="mb-0">
+                        <li>Click the button send a validation email to verify your email address.<br/></li>
+                        <li>Once received, enter the validation code in the field below.</li>
+                     </ol>                    
+                </small>
                 </div>
-                <div class="form-group">
-                  <label for="">Enter the Validation Code</label>
-                  <input type="text" name="email-validation-code" id="email-validation-code" placeholder="validation code" class="form-control" placeholder="" aria-describedby="helpId">                 
+                
+                <div class="text-center mb-3">
+                    <button id="btnSendValidationEmailInModal" type="button" class="btn btn-success" style="display: none;">
+                        <i class="fa fa-envelope"></i> Send Validation Email
+                    </button>
                 </div>
+                
+                <div class="form-group hidden" id="validationCodeGroup">
+                    <label for="">Enter the Validation Code</label>
+                    <input type="text" name="email-validation-code" id="email-validation-code" placeholder="validation code" class="form-control" aria-describedby="helpId">                 
+                
 
-            </div>
-            <div class="modal-footer justify-content-between">
+                    <div id="modal-footer" class="modal-footer justify-content-between">
 
-                <div class="float-left">
-                    
-                    <a href="#0" id="lnkNoEmail">                    
-                    
-                    <i class="fa fa-warning" style="color: goldenrod"></i>
-                    Didn't get an email?
-                </a>
+                        <div class="float-left">
+                        
+                            <a href="#0" id="lnkNoEmail">                    
+                        
+                                <i class="fa fa-warning" style="color: goldenrod"></i>
+                                Didn't get an email?
+                            </a>
+                        </div>
+                        <button id="btnEmailValidation" type="button" class="btn btn-primary">Validate</button>
+                    </div>
                 </div>
-                <button id="btnEmailValidation" type="button" class="btn btn-primary">Validate</button>
             </div>
             
             <div class="alert alert-warning hidden" id="NoEmailMessage" style="border-radius: 0; margin-bottom: 0;">

@@ -783,8 +783,9 @@ The {wsApp.Configuration.ApplicationCompany} Team
             if (customer == null)
             {
                 customer = customerBus.CreateEmpty();
-                customer.Email = email;
+                customer.IsNew = true;
             }
+            customer.Email = email;
 
             result = customerBus.ValidateEmailAddress(customer.IsNew, customer);
             return Json(new { isValidated = result, message = customerBus.ValidationErrors.ToString()});

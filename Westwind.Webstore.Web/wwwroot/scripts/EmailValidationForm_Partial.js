@@ -26,11 +26,14 @@ $(function () {
 
         if (email && !emailValidationModel.validationCode ||
             emailValidationModel.email !== email) {
-            sendValidation(email);
+            showValidationModal(email);
         }
     });
 
     $("#btnSendValidationEmail").click(function () {
+        showValidationModal();
+    });
+    $("#btnSendValidationEmailInModal").click(function () {
         sendValidation();
     });
     $("#btnEmailValidation").click(function () {
@@ -40,6 +43,31 @@ $(function () {
         $("#NoEmailMessage").toggleClass("hidden");
     });
 
+    function showValidationModal(email) {
+        if (!email)
+            email = $("#txtEmail").val();
+        if (!email || email.indexOf("@") < 2) {
+            toastr.error("Missing or invalid email address.");
+            return;
+        }
+        
+        emailValidationModel.email = email;
+        $("#email-validation-code").val("");
+        
+        // Hide the send button initially
+        $("#btnSendValidationEmailInModal").hide();
+        
+        // Hide validation code input and Validate button initially
+        $("#validationCodeGroup").addClass("hidden");
+        
+        $("#EmailValidatorModal").modal("show");
+        
+        // Show the send button after 500ms delay
+        setTimeout(function() {
+            $("#btnSendValidationEmailInModal").show();
+        }, 1200);
+    }
+
     function sendValidation(email, customerId) {
         
         if (!email)
@@ -48,6 +76,7 @@ $(function () {
             toastr.error("Missing or invalid email address.");
             return;
         }
+        
         if (!customerId){
             customerId = $("#Customer_Id").val();
         }
@@ -63,16 +92,18 @@ $(function () {
                 $("#email-validation-code").focus();
             });
         
-        $("#EmailValidatorModal").modal("show");
+        // Hide the send button after clicking
+        $("#btnSendValidationEmailInModal").hide();
         
-        
+        // Show the validation code input and Validate button
+        $("#validationCodeGroup").removeClass("hidden");
     }
 
     function validateCode() {
         var code = $("#email-validation-code").val();
         var email = $("#txtEmail").val();
         var customerId = $("#Customer_Id").val();
-
+        
         $.get("/api/account/validate/" + code +"?email=" + encodeURIComponent(email) + "&id=" + encodeURIComponent(customerId),
             function (result) {
                 
