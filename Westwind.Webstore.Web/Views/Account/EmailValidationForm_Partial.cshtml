@@ -21,18 +21,21 @@
                 </small>
                 </div>
                 
-                <div class="text-center mb-3">
-                    <button id="btnSendValidationEmailInModal" type="button" class="btn btn-success" style="display: none;">
+                <div id="ValidationButtonDiv"
+                    class="text-center mb-3 mt-2" 
+                    style="display: none;">
+                    <button id="btnSendValidationEmailInModal" type="button" class="btn btn-success" >
                         <i class="fa fa-envelope"></i> Send Validation Email
                     </button>
+                    <div class="small fst-italic mt-1"  id="emailDisplay"></div>
                 </div>
                 
-                <div class="form-group hidden" id="validationCodeGroup">
+                <div class="form-group hidden mb-2" id="validationCodeGroup">
                     <label for="">Enter the Validation Code</label>
                     <input type="text" name="email-validation-code" id="email-validation-code" placeholder="validation code" class="form-control" aria-describedby="helpId">                 
                 
 
-                    <div id="modal-footer" class="modal-footer justify-content-between">
+                    <div id="modal-footer" class="modal-footer justify-content-between mt-2 border-0">
 
                         <div class="float-left">
                         
@@ -55,7 +58,7 @@
                         to your email rules. If that doesn't work please consider using a different email address.
                     </p>
                     <p>
-                        To resend the validation email, click the <b><i class="fa fa-refresh"></i> Refresh</b> button next to the email address.
+                        To resend the validation email, click the <b><i class="far fa-circle-check"></i> Validate Email</b> button next to the email address.
                     </p>
                 </small>
             </div>

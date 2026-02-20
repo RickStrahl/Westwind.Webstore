@@ -55,7 +55,8 @@ $(function () {
         $("#email-validation-code").val("");
         
         // Hide the send button initially
-        $("#btnSendValidationEmailInModal").hide();
+        $("#ValidationButtonDiv").hide();
+        $("#emailDisplay").text(email); 
         
         // Hide validation code input and Validate button initially
         $("#validationCodeGroup").addClass("hidden");
@@ -64,7 +65,7 @@ $(function () {
         
         // Show the send button after 500ms delay
         setTimeout(function() {
-            $("#btnSendValidationEmailInModal").show();
+            $("#ValidationButtonDiv").show();
         }, 1200);
     }
 
@@ -93,7 +94,7 @@ $(function () {
             });
         
         // Hide the send button after clicking
-        $("#btnSendValidationEmailInModal").hide();
+        $("#ValidationButtonDiv").hide();
         
         // Show the validation code input and Validate button
         $("#validationCodeGroup").removeClass("hidden");
