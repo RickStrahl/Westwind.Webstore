@@ -18,9 +18,14 @@ namespace Westwind.Webstore
 
         public string Tablename = "wws_EmailValidationCodes";
 
+        /// <summary>
+        /// Returns a numeric validation code that's easy to enter
+        /// and copy. 6 digits is enough to be unique and  easy to enter.
+        /// </summary>
+        /// <returns>string id</returns>
         public static string GenerateValidationKey()
         {
-            return DataUtils.GenerateUniqueId(15);
+            return DataUtils.GenerateUniqueNumericIdAsString(6);
         }
 
         public string GenerateCode(string email)
