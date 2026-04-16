@@ -250,10 +250,9 @@ public class ProductManagerController : WebStoreBaseController
 
         try
         {
-            using (var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
-            {
-                file.CopyTo(fs);
-            }
+            using var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+            file.CopyTo(fs);
+            fs.Flush();
         }
         catch (Exception ex)
         {
@@ -282,10 +281,9 @@ public class ProductManagerController : WebStoreBaseController
 
         try
         {
-            using (var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
-            {
-                fs.Write(fileBytes);
-            }
+            using var fs = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+            fs.Write(fileBytes);
+            fs.Close();
         }
         catch (Exception ex)
         {
