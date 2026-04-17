@@ -24,13 +24,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MailKitLite" Version="4.15.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.5">
+    <PackageReference Include="MailKitLite" Version="4.16.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.6">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.5" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.6" />
+    <!--<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.6" />-->
     <PackageReference Include="Westwind.AI" Version="0.3.6" />
     <PackageReference Include="Westwind.Data.EfCore" Version="10.1.0" />
     <PackageReference Include="Westwind.Globalization" Version="3.1.8" />

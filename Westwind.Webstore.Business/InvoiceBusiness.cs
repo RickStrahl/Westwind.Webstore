@@ -185,8 +185,10 @@ namespace Westwind.Webstore.Business
                         Status = inv.CreditCardResult.ProcessingResult ?? "UNPROCESSED",
                         Id = inv.Id,
                         CustId = inv.CustomerId,
-                        LineItems = inv.LineItems
-                    })
+                        LineItems = inv.LineItems,
+                        PoNumber = inv.PoNumber,
+                        OrderCcType = inv.CreditCard.Type ?? string.Empty
+                })
                 .Take(maxCount);
         }
 
@@ -1186,6 +1188,17 @@ namespace Westwind.Webstore.Business
         public string Status { get; set; }
         public string Id { get; init; }
         public string CustId { get; init; }
+
+        /// <summary>
+        /// Customer Reference Number
+        /// </summary>
+        public string PoNumber { get; init; }
+
+        /// <summary>
+        /// Credit Card Type ("CC" or "PP" (PayPal))
+        /// </summary>
+        public string OrderCcType { get; init; }
+
 
         public List<LineItem> LineItems { get; set; }
 

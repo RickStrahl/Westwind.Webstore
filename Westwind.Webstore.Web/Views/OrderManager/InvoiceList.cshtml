@@ -1,4 +1,4 @@
-﻿@model InvoiceListViewModel
+@model InvoiceListViewModel
 
 @{
     ViewBag.Title = $"Order Manager - {wsApp.Configuration.ApplicationName}";
@@ -112,7 +112,12 @@
                         <b>@invoice.Company -</b>
                     }
                     @invoice.Name
-                    <br/>
+
+                    @if (!string.IsNullOrEmpty(invoice.PoNumber))
+                        {
+                            <br /><small><i>Po: @invoice.PoNumber</i></small>
+                        }
+                        <br/>
                     <div class="lh-1">
                         @foreach (var lineItem in invoice.LineItems)
                         {
@@ -134,6 +139,17 @@
                         <div class="text-success">
                             @total
                             <i class="fas fa-check-circle text-success hidable-xs" title="This invoice has been paid."></i>
+                            @if (StringUtils.IsStringInList("PP,PayPal", invoice.OrderCcType, ignoreCase: true) || invoice.OrderCcType == "PayPal") {
+                                <i class="fab fa-paypal hidable-xs text-info"></i>
+                            }
+                            else if (invoice.OrderCcType == "CC")
+                            {
+                                    <i class="fab fa-cc-visa hidable-xs text-info"></i>
+                            } 
+                            else
+                            {
+                                <i class="fad fa-money-check-dollar-pen"></i>
+                            }
                         </div>
                     }
                     else if (invoice.Status == "AUTHORIZED")
@@ -141,8 +157,17 @@
                         <div class="text-warning">
                             @total
                             <i class="fad fa-credit-card text-warning hidable-xs" title="Invoice has been authorized, pending final sale authorization."></i>
+                            @if (invoice.OrderCcType == "PP") {
+                                <i class="fab fa-cc-paypal hidable-xs"></i>
+                            }
+                            else if (invoice.OrderCcType == "CC")
+                            {
+                                <i class="fab fa-cc-visa hidable-xs"></i>
+                            } 
                         </div>
+                   
                         <div style="font-size: 0.5em" class="text-secondary">Authorized and Pending</div>
+                      
                     }
                     else if (string.IsNullOrEmpty(invoice.Status) || invoice.Status == "UNPROCESSED")
                     {
@@ -166,6 +191,7 @@
                         <div class="text-danger">
                             @total
                             <i class="fas fa-times-circle text-danger hidable-xs" title="@invoice.Status"></i>
+                                                                                                                        
                         </div>
                         <div style="font-size: 0.5em" class="text-secondary">@invoice.Status</div>
                     }
