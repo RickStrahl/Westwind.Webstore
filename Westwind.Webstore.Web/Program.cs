@@ -378,14 +378,16 @@ if (wsApp.Configuration.System.ShowConsoleRequestTimings)
 
 
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-    //endpoints.MapRazorPages();
-});
-
+// app.UseEndpoints(endpoints =>
+// {
+//     endpoints.MapControllerRoute(
+//         name: "default",
+//         pattern: "{controller=Home}/{action=Index}/{id?}");
+//     //endpoints.MapRazorPages();
+// });
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
 wsApp.Constants.AppStartedOn = DateTime.Now;
