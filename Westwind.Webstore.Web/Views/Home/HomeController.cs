@@ -300,7 +300,7 @@ body {{ font-family: sans-serif }}
                 if (model.ReceiveDocumentationMonster)
                     invoiceBus.AddLineItem("docmonster_mvp");
                 if (model.ReceiveWebSurge)
-                    invoiceBus.AddLineItem("websurge_2_mvp");
+                    invoiceBus.AddLineItem("websurge_3_mvp");
                 invoice.PromoCode = "MVP_REQUEST";
 
                 invoiceBus.Save();
