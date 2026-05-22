@@ -257,7 +257,7 @@
     }
     <input type="text"
            class="form-text"
-           ondblclick="location.href='@transactionLink'"
+           ondblclick="window.open('@transactionLink')"
            asp-for="Invoice.CreditCardResult.ProcessingResult"
            style="border: none; color: @Invoice.StatusColor(invoice.CreditCardResult.ProcessingResult,true)" 
            title="Payment status - double click to lookup transaction"
