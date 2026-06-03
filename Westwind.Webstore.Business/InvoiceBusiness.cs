@@ -682,6 +682,7 @@ namespace Westwind.Webstore.Business
                 // Always write out the raw response
                 invoice.CreditCardResult.RawProcessingResult = result.RawProcessorResult;
 
+
                 invoice.CreditCardResult.AuthCode = result.AuthorizationCode;
                 invoice.CreditCardResult.TransactionId = result.TransactionId;
                 invoice.CreditCardResult.AvsCode = result.AvsResultCode;

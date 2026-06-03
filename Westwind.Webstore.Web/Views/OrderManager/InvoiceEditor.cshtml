@@ -356,8 +356,10 @@
 </div>
 
         
-<div class="mt-4">
-    <a href="#0" onclick="$('#InvoiceDetail').toggle();">
+ 
+
+
+<div class="mt-4 mb-2"><a href="#0" onclick="$('#InvoiceDetail').toggle();">
         <i class="fad fa-eye"></i>
         Full invoice detail
     </a>
@@ -366,7 +368,19 @@
     }
     <pre style="display: none" id="InvoiceDetail">@JsonSerializationUtils.Serialize(Model.Invoice, formatJsonOutput: true)</pre>
 </div>
-    
+
+@if (!string.IsNullOrEmpty(invoice.CreditCardResult.RawProcessingResult))
+{
+    <div>
+        <a href="#0" onclick="$('#PaymentDetail').toggle();">
+            <i class="fad fa-eye"></i>
+            Payment Details
+        </a>
+        <pre style="display: none" id="PaymentDetail">@Model.Invoice.CreditCardResult.RawProcessingResult</pre>
+    </div>
+}
+
+
 <input type="hidden" asp-for="Invoice.Id" />
 <input type="hidden" asp-for="Invoice.CustomerId" />
 <input type="hidden" asp-for="Invoice.InvoiceNumber" />
