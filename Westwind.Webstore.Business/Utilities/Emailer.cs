@@ -6,7 +6,7 @@ using MimeKit;
 namespace Westwind.Webstore.Business.Utilities
 {
 
-    public class Emailer
+    public class xEmailer
     {
         /// <summary>
         /// Resused Email Server configuration that is implicitly used.

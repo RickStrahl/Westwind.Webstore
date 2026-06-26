@@ -29,7 +29,7 @@ namespace Westwind.Webstore.Business
         }
         public static string _version;
 
-        public static string EnvironmentName { get; set; } = "Development"; 
+        public static string EnvironmentName { get; set; } = "Development";
 
         public static Dictionary<string, string> Categories
         {
@@ -37,7 +37,7 @@ namespace Westwind.Webstore.Business
             {
                 if (_categories != null && _categories.Count > 0) return _categories;
 
-                if (BusinessFactory.Current == null) return default;                
+                if (BusinessFactory.Current == null) return default;
 
                 try
                 {
@@ -46,6 +46,7 @@ namespace Westwind.Webstore.Business
                 }
                 catch
                 {
+                    _categories = [];
                     throw new ApplicationException(
                         "Unable to retrieve categories: Please check and ensure the connection string for is correct.");
                 }
@@ -63,9 +64,9 @@ namespace Westwind.Webstore.Business
         {
             get
             {
-                if (_countries == null || _countries.Count == 0)
-                    LoadLists();
+                if (_countries is { Count: > 10 }) return _countries;
 
+                LoadLists();
                 return _countries;
             }
             set => _countries = value;
@@ -75,15 +76,15 @@ namespace Westwind.Webstore.Business
         {
             get
             {
-                if (_states == null || _states.Count == 0)
-                    LoadLists();
+                if (_states is { Count: > 10 }) return _states;
 
+                LoadLists();
                 return _states;
             }
             set => _states = value;
         }
 
-        public static List<FeaturedProduct> FeaturedItems { get; set;  }
+        public static List<FeaturedProduct> FeaturedItems { get; set; } = [];
 
 
         public static DateTime EmptyDate { get; set; }
@@ -124,21 +125,46 @@ namespace Westwind.Webstore.Business
                         new CountryListItem() {CountryCode = "US", Country = "United States"},
                         new CountryListItem() {CountryCode = "CA", Country = "Canada"},
                         new CountryListItem() {CountryCode = "DE", Country = "Germany"},
+                        new CountryListItem() {CountryCode = "GB", Country = "United Kingdom"},
                         new CountryListItem() {CountryCode = "CH", Country = "Switzerland"},
                         new CountryListItem() {CountryCode = "AU", Country = "Australia"},
-                        new CountryListItem() {CountryCode = "GB", Country = "United Kingdom"},
                         new CountryListItem() { Country = "----------------"}
                     });
 
                 Countries.Add(new CountryListItem() { Country = "Other - my country is not listed", CountryCode = "OTHER" });
-                States = lookupBus.GetStates();
-                States.Insert(0, new StateListItem() { State = $"*** {WebStoreBusinessResources.PleaseSelectAState}" });
-
             }
             catch
             {
+                Countries = [];
+                Countries.InsertRange(1,
+                    new[]
+                    {
+                        new CountryListItem() {CountryCode = "US", Country = "United States"},
+                        new CountryListItem() {CountryCode = "CA", Country = "Canada"},
+                        new CountryListItem() {CountryCode = "DE", Country = "Germany"},
+                        new CountryListItem() {CountryCode = "GB", Country = "United Kingdom"},
+                        new CountryListItem() {CountryCode = "CH", Country = "Switzerland"},
+                        new CountryListItem() {CountryCode = "AU", Country = "Australia"},
+                        new CountryListItem() { CountryCode = "NL", Country = "Netherlands"},
+                        new CountryListItem() { CountryCode = "IT", Country = "Italy"},
+                        new CountryListItem() { Country = "----------------"},
+                        new CountryListItem() { Country = "Other - my country is not listed", CountryCode = "OTHER" }
+                    });
+
                 throw new ApplicationException(
-                    "Unable to retrieve Countries and States: Please check and ensure the connection string for is correct.");
+                    "Unable to retrieve and States: Please check and ensure the connection string for is correct.");
+            }
+
+            try
+            {
+                States = lookupBus.GetStates();
+                States.Insert(0, new StateListItem() { State = $"*** {WebStoreBusinessResources.PleaseSelectAState}" });
+            }
+            catch
+            {
+                States = [];
+                throw new ApplicationException(
+                    "Unable to retrieve States: Please check and ensure the connection string for is correct.");
             }
 
             try
@@ -147,6 +173,7 @@ namespace Westwind.Webstore.Business
             }
             catch
             {
+                FeaturedItems = [];
                 throw new ApplicationException(
                     "Unable to retrieve Featured Products: " + lookupBus.ErrorMessage);
             }

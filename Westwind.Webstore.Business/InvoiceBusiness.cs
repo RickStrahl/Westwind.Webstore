@@ -1042,7 +1042,7 @@ namespace Westwind.Webstore.Business
                     if (string.IsNullOrEmpty(email))
                         email = customer.Email;
 
-                    var emailer = new Emailer();
+                    var emailer = new MailgunHttpEmailer();
                     if (!emailer.SendEmail(email, descript + " (Registration Confirmation)", regText, EmailModes.plain))
                     {
                         Error += $"Item {descript} failed to confirm: {emailer.ErrorMessage}";

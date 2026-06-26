@@ -335,7 +335,7 @@ public class OrderManagerController : WebStoreBaseController
             "../ShoppingCart/EmailConfirmation",
             orderFormModel, this.ControllerContext);
 
-        var emailer = new Emailer();
+        var emailer = new MailgunHttpEmailer();
         var result = emailer.SendEmail(invoice.Customer.Email,
             wsApp.Configuration.ApplicationName + " Order Confirmation #" + invoice.InvoiceNumber,
             confirmation,

@@ -17,7 +17,7 @@ namespace Westwind.Webstore.Business.Test
         [Test]
         public void EmailTest()
         {
-            var emailer = new Emailer();
+            var emailer = new MailgunHttpEmailer();
 
             var result = emailer.SendEmail("Rick Strahl <rstrahl@west-wind.com>", "Test Message", "Test Content");
 
@@ -27,7 +27,7 @@ namespace Westwind.Webstore.Business.Test
         [Test]
         public void Email2Test()
         {
-            var emailer = new Emailer();
+            var emailer = new MailgunHttpEmailer();
 
             var result = emailer.SendEmail("Rick Strahl <rstrahl@west-wind.com>", "Test Message", "Test Content with <b>html</b> embedded.", EmailModes.html);
 
@@ -38,11 +38,31 @@ namespace Westwind.Webstore.Business.Test
         [Test]
         public void AdminEmailTest()
         {
-            var emailer = new Emailer();
+            var emailer = new MailgunHttpEmailer();
 
             var result = emailer.SendAdminEmail("Rick Strahl <rstrahl@west-wind.com>", "Test Message", "Test Content with <b>html</b> embedded.", EmailModes.html);
 
             Assert.IsTrue(result, emailer.ErrorMessage);
         }
+
+        [Test]
+        public void SendMailGunApiEmail()
+        {
+            var emailer = new MailgunHttpEmailer();
+                // domain: wsApp.Configuration.Email.MailgunDomain,
+                // apiKey: wsApp.Configuration.Email.MailgunApiKey,
+                // from: "West Wind Technologies <admin@west-wind.com>");
+
+            var res = emailer.SendEmail("rstrahl@west-wind.com",
+                "Test Email " + DateTime.Now.ToString("t"),
+                "Hello <b>cruel</b> world!",
+                EmailModes.html);
+
+            Assert.IsTrue(res);
+            Console.WriteLine(emailer.ErrorMessage);
+
+        }
+
+
     }
 }

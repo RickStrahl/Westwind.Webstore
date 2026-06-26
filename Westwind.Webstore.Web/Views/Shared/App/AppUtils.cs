@@ -51,7 +51,7 @@ namespace Westwind.Webstore.Web.App
         /// <returns></returns>
         public static bool SendEmail(string email, string title, string body, out string error, bool noHtml = false, bool noCCs = false)
         {
-            var emailer = new Emailer();
+            var emailer = new MailgunHttpEmailer();
             var result =emailer.SendEmail(email,
                 title,
                 body,
@@ -74,7 +74,7 @@ namespace Westwind.Webstore.Web.App
             string confirmationHtml = await ViewRenderer.RenderViewToStringAsync("EmailConfirmation", model, controllerContext);
 
 
-            var emailer = new Emailer();
+            var emailer = new MailgunHttpEmailer();
             return emailer.SendEmail(string.IsNullOrEmpty(invoice.BillingAddress.Email) ? invoice.Customer.Email : invoice.BillingAddress.Email,
                 $"{wsApp.Configuration.ApplicationName} Order Confirmation #{invoice.InvoiceNumber}",
                 confirmationHtml,

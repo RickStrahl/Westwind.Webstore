@@ -138,6 +138,10 @@ namespace Westwind.Webstore.Business
 
     public class EmailConfiguration
     {
+        public string MailgunApiKey { get; set; }
+
+        public string MailgunDomain { get; set; }
+
         public string AdminSenderEmail { get; set; }
         public string MailServer { get; set; }
         public string MailServerUsername { get; set; }
