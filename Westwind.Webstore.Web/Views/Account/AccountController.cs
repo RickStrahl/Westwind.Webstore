@@ -819,7 +819,7 @@ The {wsApp.Configuration.ApplicationCompany} Team
 
                 var le = list.FirstOrDefault(l => l.Vk == vkKey);
 
-                if (le != null && le.Timestamp > DateTime.UtcNow.AddSeconds(-35))
+                if (le != null && le.Timestamp > DateTime.UtcNow.AddSeconds(-25))
                 {
                     //Console.WriteLine("Time out! " + le);
                     return false;

@@ -25,7 +25,6 @@ public class MailgunHttpEmailer
         var config = wsApp.Configuration.Email;
         _domain = domain ?? config.MailgunDomain;
         ApiKey = apiKey ?? config.MailgunApiKey;
-        _from = from ?? config.SenderEmail;
         if (string.IsNullOrWhiteSpace(_from))
         {
             if (!string.IsNullOrEmpty((config.SenderName)))

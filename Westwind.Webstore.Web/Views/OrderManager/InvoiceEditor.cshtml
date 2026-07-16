@@ -1,4 +1,4 @@
-﻿@model InvoiceEditorViewModel
+@model InvoiceEditorViewModel
 
 @section Headers {
     <style>
@@ -215,7 +215,7 @@
                 
                 <button type="submit" name="btnEmailProductConfirmations" id="btnEmailProductConfirmations"
                         class="btn btn-@buttonClass btn-sm" 
-                        onclick="$(this).find('i.fas').removeClass('fa-inbox-out').addClass('fa-spin').addClass('fa-spinner');"
+				        onclick="this.querySelector('i').className='fas fa-spinner fa-spin';"
                         title="Send item license confirmation emails">
                     <i class="fas fa-inbox-out"></i>
                     Product Confirmations
@@ -228,8 +228,7 @@
         {
             <button type="submit" name="btnRequestPaymentInvoice" id="btnRequestPaymentInvoice"
                     class="btn btn-secondary btn-sm" title="Send an invoice to a customer to pay."
-                    onclick="$(this).find('i.fas').removeClass('fa-inbox-out').addClass('fa-spin').addClass('fa-spinner');"
-            >
+					onclick="this.querySelector('i').className='fas fa-spinner fa-spin';">
                 <i class="fas fa-inbox-out"></i>
                 Request Payment
             </button>    
@@ -240,8 +239,7 @@
         @* { *@
         <button type="submit" name="btnEmailOrderConfirmation" id="btnEmailOrderConfirmation"
                 class="btn btn-secondary btn-sm" title="Send order summary confirmation email."
-                onclick="$(this).find('i.fas').removeClass('fa-inbox-out').addClass('fa-spin').addClass('fa-spinner');"
-                >
+				onclick=" this.querySelector('i').className='fas fa-spinner fa-spin' ;">
             <i class="fas fa-inbox-out"></i>
             Order Confirmation
         </button>

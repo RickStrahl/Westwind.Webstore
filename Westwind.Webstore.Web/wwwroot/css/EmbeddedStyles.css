@@ -1,4 +1,4 @@
-﻿html, body {
+html, body {
     font-size: 16px;
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Liberation Sans",sans-serif;
     line-height: 1.45;
@@ -66,15 +66,19 @@ h4.page-header-text {
 }
 .btn-primary {
     background: #007bff;
+    color: #eee;
 }
 .btn-secondary {
     background: #6c757d;
+    color: white;
 }
 .btn-success {
     background: #28a745;
+    color: #eee;
 }
 .btn-warning {
-    background: #ffc107;
+    background: goldenrod;
+    color: white;
 }
 
 
