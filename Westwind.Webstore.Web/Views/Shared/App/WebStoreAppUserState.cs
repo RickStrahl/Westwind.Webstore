@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Westwind.AspNetCore.Security;
-using Westwind.Webstore.Business.Entities;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Westwind.AspNetCore;
+using Westwind.AspNetCore.Security;
+using Westwind.Utilities;
 using Westwind.Webstore.Business;
+using Westwind.Webstore.Business.Entities;
 
 namespace Westwind.Webstore.Web.Models
 {
@@ -49,7 +51,7 @@ namespace Westwind.Webstore.Web.Models
         /// <param name="invoice"></param>
         public void SetInvoiceSettings(Invoice invoice)
         {
-             if (invoice != null)
+            if (invoice != null)
             {
                 InvoiceId = invoice.Id;
                 CartItemCount = invoice.LineItems.Count;
@@ -87,9 +89,11 @@ namespace Westwind.Webstore.Web.Models
             InvoiceId = null;
             CartItemCount = 0;
         }
+
+
+
+
     }
-
-
 
 }
 

@@ -36,6 +36,9 @@ using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 using Microsoft.Extensions.Logging;
+using System.Net;
+using Westwind.AspNetCore.Security;
+using Westwind.Webstore.Web.Models;
 
 var configFile = "_webstore-configuration.json";
 bool noConfig = !File.Exists(configFile);
@@ -294,33 +297,6 @@ app.UseCustomHeaders((opt) =>
 
 
 
-app.UseStaticFiles();
-
-var itemImagePath = wsApp.Configuration.ProductImageUploadFilePath ?? string.Empty;
-if (!string.IsNullOrEmpty(itemImagePath))
-{
-    itemImagePath = System.IO.Path.GetFullPath(itemImagePath);
-    if (System.IO.Directory.Exists(itemImagePath))
-    {
-           app.UseStaticFiles(new StaticFileOptions()
-           {
-                FileProvider = new PhysicalFileProvider(itemImagePath),
-                RequestPath = new PathString("/product-images"),
-                DefaultContentType = "application/octet-stream"
-           });
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Added image path mapping to: {itemImagePath}\n");
-        Console.ResetColor();
-    }
-    else
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"Warning: Image Path doesn't exist: {itemImagePath}\n");
-        Console.ResetColor();
-        Log.Warning($"Image Path doesn't exist: {itemImagePath}");
-    }
-}
-
 app.UseStatusCodePages(new StatusCodePagesOptions
 {
     HandleAsync =  (ctx) =>
@@ -343,9 +319,60 @@ app.UseStatusCodePages(new StatusCodePagesOptions
 
 app.UseAuthentication();
 
+
+
+
+app.Use(async (ctx, next) =>
+{
+    string path = ctx.Request.Path.Value;
+
+    if (path.Contains("/admin/", StringComparison.OrdinalIgnoreCase) && path.Contains('.'))
+    {
+        var userState = UserState.CreateUserState<WebStoreAppUserState>(ctx);
+        if (!userState.IsAdmin)
+        {
+            ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
+//            await ctx.Response.WriteAsync("Unauthorized: " + ctx.Request.Path);
+            throw new HttpRequestException("Unauthorized: " + ctx.Request.Path, null, statusCode: System.Net.HttpStatusCode.Unauthorized);
+        }
+    }
+
+    await next();
+});
+
+app.UseStaticFiles();
+
+
 app.UseRouting();
 
 app.UseAuthorization();
+
+
+var itemImagePath = wsApp.Configuration.ProductImageUploadFilePath ?? string.Empty;
+if (!string.IsNullOrEmpty(itemImagePath))
+{
+    itemImagePath = System.IO.Path.GetFullPath(itemImagePath);
+    if (System.IO.Directory.Exists(itemImagePath))
+    {
+        app.UseStaticFiles(new StaticFileOptions()
+        {
+            FileProvider = new PhysicalFileProvider(itemImagePath),
+            RequestPath = new PathString("/product-images"),
+            DefaultContentType = "application/octet-stream"
+        });
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Added image path mapping to: {itemImagePath}\n");
+        Console.ResetColor();
+    }
+    else
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"Warning: Image Path doesn't exist: {itemImagePath}\n");
+        Console.ResetColor();
+        Log.Warning($"Image Path doesn't exist: {itemImagePath}");
+    }
+}
+
 
 app.UseCors("CorsPolicy");
 
