@@ -319,9 +319,7 @@ app.UseStatusCodePages(new StatusCodePagesOptions
 
 app.UseAuthentication();
 
-
-
-
+// Custom wwwroot folder Authorization validation
 app.Use(async (ctx, next) =>
 {
     string path = ctx.Request.Path.Value;
@@ -332,8 +330,9 @@ app.Use(async (ctx, next) =>
         if (!userState.IsAdmin)
         {
             ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
-//            await ctx.Response.WriteAsync("Unauthorized: " + ctx.Request.Path);
-            throw new HttpRequestException("Unauthorized: " + ctx.Request.Path, null, statusCode: System.Net.HttpStatusCode.Unauthorized);
+            await ctx.Response.WriteAsync("401 Unauthorized");
+            await ctx.Response.CompleteAsync();
+    //      throw new HttpRequestException("Unauthorized: " + ctx.Request.Path, null, statusCode: System.Net.HttpStatusCode.Unauthorized);
         }
     }
 

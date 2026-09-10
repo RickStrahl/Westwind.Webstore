@@ -32,7 +32,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
     <!--<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.6" />-->
     <PackageReference Include="Westwind.AI" Version="0.3.8.1" />
-    <PackageReference Include="Westwind.Data.EfCore" Version="10.1.1" />
+    <PackageReference Include="Westwind.Data.EfCore" Version="10.1.3" />
     <PackageReference Include="Westwind.Globalization" Version="3.1.8" />
 
     <!-- private package in ./_SupportPackages folder -->
