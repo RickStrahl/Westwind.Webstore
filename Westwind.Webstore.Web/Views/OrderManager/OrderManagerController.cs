@@ -195,6 +195,8 @@ public class OrderManagerController : WebStoreBaseController
         invoice.Customer.Company = minvoice.Customer.Company;
         invoice.Customer.Email = minvoice.Customer.Email;
 
+        invoice.BillingAddress.AddressCompany = minvoice.BillingAddress.AddressCompany;
+        invoice.BillingAddress.AddressFullname = minvoice.BillingAddress.AddressFullname;
         invoice.BillingAddress.StreetAddress = minvoice.BillingAddress.StreetAddress;
         invoice.BillingAddress.City = minvoice.BillingAddress.City;
         invoice.BillingAddress.PostalCode = minvoice.BillingAddress.PostalCode;

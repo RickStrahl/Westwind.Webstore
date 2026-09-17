@@ -4,15 +4,17 @@
  *                          uses configured connectionstring
 */
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
@@ -24,6 +26,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Serilog;
 using Westwind.AspNetCore;
@@ -31,13 +35,11 @@ using Westwind.AspNetCore.Errors;
 using Westwind.AspNetCore.Extensions;
 using Westwind.AspNetCore.LiveReload;
 using Westwind.AspNetCore.Middleware;
+using Westwind.AspNetCore.Security;
 using Westwind.Globalization.AspnetCore;
 using Westwind.Utilities;
 using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
-using Microsoft.Extensions.Logging;
-using System.Net;
-using Westwind.AspNetCore.Security;
 using Westwind.Webstore.Web.Models;
 
 var configFile = "_webstore-configuration.json";
@@ -156,15 +158,14 @@ services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
         builder => builder
-            .WithOrigins(wsApp.Configuration.ApplicationHomeUrl,
-                    "http://localhost:5173",
-                    "https://localhost:5174",
-                    "https://websurgeserver.west-wind.com")
+            .WithOrigins(wsApp.Configuration.ApplicationHomeUrl)
             //.AllowAnyOrigin()  // doesn't work with AllowCredentials
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());
 });
+
+
 
 // set up and configure Authentication - make sure to call .UseAuthentication()
 services
@@ -296,6 +297,10 @@ app.UseCustomHeaders((opt) =>
 });
 
 
+app.MapGet("/admin/{*path}", async (HttpContext ctx, string path) =>
+{
+    return "Path: " + path;
+});
 
 app.UseStatusCodePages(new StatusCodePagesOptions
 {
@@ -320,32 +325,35 @@ app.UseStatusCodePages(new StatusCodePagesOptions
 app.UseAuthentication();
 
 // Custom wwwroot folder Authorization validation
-app.Use(async (ctx, next) =>
-{
-    string path = ctx.Request.Path.Value;
+//app.Use(async (ctx, next) =>
+//{
+//    string path = ctx.Request.Path.Value;
+//    if (path.Contains("/admin/", StringComparison.OrdinalIgnoreCase) && path.Contains('.'))
+//    {
+//        var userState = UserState.CreateUserState<WebStoreAppUserState>(ctx);
+//        if (!userState.IsAdmin)
+//        {
+//            ctx.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+//            await ctx.Response.WriteAsync("401 Unauthorized");
+//            await ctx.Response.CompleteAsync();
+//            //      throw new HttpRequestException("Unauthorized: " + ctx.Request.Path, null, statusCode: System.Net.HttpStatusCode.Unauthorized);
+//        }
+//    }
 
-    if (path.Contains("/admin/", StringComparison.OrdinalIgnoreCase) && path.Contains('.'))
-    {
-        var userState = UserState.CreateUserState<WebStoreAppUserState>(ctx);
-        if (!userState.IsAdmin)
-        {
-            ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
-            await ctx.Response.WriteAsync("401 Unauthorized");
-            await ctx.Response.CompleteAsync();
-    //      throw new HttpRequestException("Unauthorized: " + ctx.Request.Path, null, statusCode: System.Net.HttpStatusCode.Unauthorized);
-        }
-    }
-
-    await next();
-});
+//    await next();
+//});
 
 app.UseStaticFiles();
-
-
 app.UseRouting();
 
-app.UseAuthorization();
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(app.Environment.WebRootPath, "admin")),
+
+    RequestPath = "/admin"
+});
 
 var itemImagePath = wsApp.Configuration.ProductImageUploadFilePath ?? string.Empty;
 if (!string.IsNullOrEmpty(itemImagePath))

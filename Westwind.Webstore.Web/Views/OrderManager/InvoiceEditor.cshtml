@@ -286,19 +286,48 @@
     Invoice Billing Address
 </h3>
 <div class="header-byline">Billing address used on this invoice - does not update customers current address.</div>
-    
+
 <div class="form-group mt-2">
-    <div class="input-group">
-        <textArea type="text"
-                                  class="form-control"
-                                  placeholder="Enter your Address"
-                                  asp-for="Invoice.BillingAddress.StreetAddress"
-                                  autocapitalize="off"
-                                  autocomplete="off"
-                                  spellcheck="false"
-                                  autocorrect="off"></textArea>
-    </div>
+	<div class="responsive-container">
+	<div class="input-group">
+		<input type="text"
+									class="form-control"
+									placeholder="Full Name"
+									asp-for="Invoice.BillingAddress.AddressFullname"
+									autocapitalize="off"
+									autocomplete="off"
+									spellcheck="false"
+									autocorrect="off" />
+	</div>
+
+
+
+		<div class="input-group">
+			<input type="text"
+										class="form-control"
+										placeholder="Company"
+										asp-for="Invoice.BillingAddress.AddressCompany"
+										autocapitalize="off"
+										autocomplete="off"
+										spellcheck="false"
+										autocorrect="off" />
+		</div>
+	</div>
 </div>
+
+<div class="form-group mt-2">
+	<div class="input-group">
+		<textArea type="text"
+									class="form-control"
+									placeholder="Enter your Address"
+									asp-for="Invoice.BillingAddress.StreetAddress"
+									autocapitalize="off"
+									autocomplete="off"
+									spellcheck="false"
+									autocorrect="off"></textArea>
+	</div>
+</div>
+
     
     
 <div class="form-group mt-2">

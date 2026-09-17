@@ -112,7 +112,7 @@ namespace Westwind.Webstore.Business.Entities
                     else
                         _billingAddress = new Address();
                 }
-
+               
                 return _billingAddress;
             }
             set

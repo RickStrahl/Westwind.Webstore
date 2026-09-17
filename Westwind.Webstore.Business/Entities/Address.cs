@@ -120,11 +120,17 @@ public class Address
 
         var sb = new StringBuilder();
 
-        if (!noFullName && !string.IsNullOrEmpty(AddressFullname))
+        sb.AppendLine(AddressName);
+
+        if (!noFullName && (!string.IsNullOrEmpty(AddressFullname) || !string.IsNullOrEmpty(AddressCompany)))
         {
-            sb.AppendLine(AddressFullname);
+            sb.Append("<b>");
             if (!string.IsNullOrEmpty(AddressCompany))
-                sb.AppendLine(AddressCompany);
+                sb.Append(AddressCompany);
+            else
+                sb.Append(AddressFullname);
+            sb.AppendLine("</b>");
+
         }
 
         if (!string.IsNullOrEmpty(this.StreetAddress))
