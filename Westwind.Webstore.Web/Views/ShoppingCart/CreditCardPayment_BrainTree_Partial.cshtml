@@ -1,25 +1,76 @@
-﻿@using Westwind.CreditCardProcessing
+@using Westwind.CreditCardProcessing
 @model OrderFormViewModel
 @{
     var invoiceModel = Model.InvoiceModel;
     var invoice = invoiceModel.Invoice;
-    var customer = invoice.Customer;
 }
 <div class="well flex-fill" style="min-height: 205px">
-    
-    <div id="dropin-container" style="width: 100%; margin: 0 auto"></div>
-    
+    <div class="btn-group mb-3" role="group" aria-label="Payment method">
+        <button id="braintree-card-option" type="button" class="btn btn-outline-secondary active" aria-pressed="true">
+            <i class="fas fa-credit-card"></i>
+            Credit Card
+        </button>
+        <button id="braintree-paypal-option" type="button" class="btn btn-outline-secondary" aria-pressed="false">
+            <i class="fab fa-paypal"></i>
+            PayPal
+        </button>
+    </div>
 
-    <div>
-        @* <button id="btnPreValidate"  *@
-        @*         class="btn btn-secondary btn-sm float-end"  *@
-        @*         type="button"> *@
-        @*     <i class="fas fa-credit-card"></i> *@
-        @*     Pre-Validate Card *@
-        @* </button> *@
-        <div class="mt-1" style="font-size: 0.65em">payment processing by <a href="https://www.braintreepayments.com/">BrainTree</a> (a PayPal company)</div>
+    <div id="braintree-card-panel">
+        <div class="row">
+            <div class="col-md-8 mb-3">
+                <label for="braintree-card-number" class="form-label">Card Number</label>
+                <div id="braintree-card-number" class="form-control braintree-hosted-field"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="braintree-cvv" class="form-label">Security Code</label>
+                <div id="braintree-cvv" class="form-control braintree-hosted-field"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="braintree-expiration-date" class="form-label">Expiration Date</label>
+                <div id="braintree-expiration-date" class="form-control braintree-hosted-field"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="braintree-postal-code" class="form-label">Billing Postal Code</label>
+                <div id="braintree-postal-code" class="form-control braintree-hosted-field"></div>
+            </div>
+            <div class="col-12 mb-2">
+                <label for="braintree-cardholder-name" class="form-label">Name on Card</label>
+                <div id="braintree-cardholder-name" class="form-control braintree-hosted-field"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="braintree-paypal-panel" class="d-none">
+        <p class="mb-2">Authorize this payment with your PayPal account, then place your order.</p>
+        <div id="paypal-button" style="max-width: 420px"></div>
+        <div id="paypal-payment-status" class="mt-2" role="status" aria-live="polite"></div>
+    </div>
+
+    <div class="mt-2" style="font-size: 0.65em">
+        payment processing by <a href="https://www.braintreepayments.com/">Braintree</a> (a PayPal company)
     </div>
 </div>
+
+<style>
+    .braintree-hosted-field {
+        height: 38px;
+        padding: 8px 12px;
+    }
+
+    .braintree-hosted-field.braintree-hosted-fields-focused {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .braintree-hosted-field.braintree-hosted-fields-invalid {
+        border-color: #dc3545;
+    }
+
+    .braintree-hosted-field.braintree-hosted-fields-valid {
+        border-color: #198754;
+    }
+</style>
 
 <input id="Nonce" type="hidden" asp-for="@Model.InvoiceModel.Nonce" />
 <input id="Descriptor" type="hidden" asp-for="@Model.InvoiceModel.Descriptor" />
@@ -32,18 +83,24 @@
     cc.Merchant.PrivateKey = wsApp.Configuration.Payment.PrivateKey;
     cc.Merchant.PublicKey = wsApp.Configuration.Payment.PublicKey;
     cc.Configuration.UseTestTransaction = wsApp.Configuration.Payment.TestMode;
-    
+
     var clientToken = cc.GenerateClientToken();
+    var clientTokenJson = System.Text.Json.JsonSerializer.Serialize(clientToken);
+    var amountJson = System.Text.Json.JsonSerializer.Serialize(
+        invoice.InvoiceTotal.ToString("F2", System.Globalization.CultureInfo.InvariantCulture));
 }
 
-<script src="https://js.braintreegateway.com/web/dropin/1.42.0/js/dropin.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.146.0/js/client.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.146.0/js/hosted-fields.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.146.0/js/data-collector.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.146.0/js/paypal-checkout.min.js"></script>
 <script>
     var ccConfig = {
         cardProcessor: "Braintree",
         useClientProcessing: true,
-        amount: @invoice.InvoiceTotal.ToString("F2"),
-        clientToken: "@clientToken"
+        amount: @Html.Raw(amountJson),
+        currency: "USD",
+        clientToken: @Html.Raw(clientTokenJson)
     };
 </script>
 <script src="/scripts/cc_braintree_processing.js?v=@wsApp.Version"></script>
-
