@@ -4,53 +4,6 @@
     var invoiceModel = Model.InvoiceModel;
     var invoice = invoiceModel.Invoice;
 }
-<div class="well flex-fill" style="min-height: 205px">
-    <div class="btn-group mb-3" role="group" aria-label="Payment method">
-        <button id="braintree-card-option" type="button" class="btn btn-outline-secondary active" aria-pressed="true">
-            <i class="fas fa-credit-card"></i>
-            Credit Card
-        </button>
-        <button id="braintree-paypal-option" type="button" class="btn btn-outline-secondary" aria-pressed="false">
-            <i class="fab fa-paypal"></i>
-            PayPal
-        </button>
-    </div>
-
-    <div id="braintree-card-panel">
-        <div class="row">
-            <div class="col-md-8 mb-3">
-                <label for="braintree-card-number" class="form-label">Card Number</label>
-                <div id="braintree-card-number" class="form-control braintree-hosted-field"></div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label for="braintree-cvv" class="form-label">Security Code</label>
-                <div id="braintree-cvv" class="form-control braintree-hosted-field"></div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="braintree-expiration-date" class="form-label">Expiration Date</label>
-                <div id="braintree-expiration-date" class="form-control braintree-hosted-field"></div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="braintree-postal-code" class="form-label">Billing Postal Code</label>
-                <div id="braintree-postal-code" class="form-control braintree-hosted-field"></div>
-            </div>
-            <div class="col-12 mb-2">
-                <label for="braintree-cardholder-name" class="form-label">Name on Card</label>
-                <div id="braintree-cardholder-name" class="form-control braintree-hosted-field"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="braintree-paypal-panel" class="d-none">
-        <p class="mb-2">Authorize this payment with your PayPal account, then place your order.</p>
-        <div id="paypal-button" style="max-width: 420px"></div>
-        <div id="paypal-payment-status" class="mt-2" role="status" aria-live="polite"></div>
-    </div>
-
-    <div class="mt-2" style="font-size: 0.65em">
-        payment processing by <a href="https://www.braintreepayments.com/">Braintree</a> (a PayPal company)
-    </div>
-</div>
 
 <style>
     .braintree-hosted-field {
@@ -70,7 +23,65 @@
     .braintree-hosted-field.braintree-hosted-fields-valid {
         border-color: #198754;
     }
+    #paypal-payment-status
+    {
+        font-weight: 600;
+    }
+    .btn-outline-secondary.active {
+		background: steelblue
+	}    
 </style>
+
+<div class="well flex-fill" style="min-height: 205px">
+    <div class="btn-group mb-3" role="group" aria-label="Payment method">
+        <button id="braintree-card-option" type="button" class="btn btn-outline-secondary active" aria-pressed="true">
+            <i class="fas fa-credit-card"></i>
+            Credit Card
+        </button>
+        <button id="braintree-paypal-option" type="button" class="btn btn-outline-secondary" aria-pressed="false">
+            <i class="fab fa-paypal"></i>
+            PayPal
+        </button>
+    </div>
+
+    <div id="braintree-card-panel">
+        <div class="row">
+            <div class="col-12 mb-2">
+                <label for="braintree-cardholder-name" class="form-label">Name on Card</label>
+                <div id="braintree-cardholder-name" class="form-control braintree-hosted-field"></div>
+            </div>
+            <div class="col-md-8 mb-3">
+                <label for="braintree-card-number" class="form-label">Card Number</label>
+                <div id="braintree-card-number" class="form-control braintree-hosted-field"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="braintree-cvv" class="form-label">Security Code</label>
+                <div id="braintree-cvv" class="form-control braintree-hosted-field"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="braintree-expiration-date" class="form-label">Expiration Date</label>
+                <div id="braintree-expiration-date" class="form-control braintree-hosted-field"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="braintree-postal-code" class="form-label">Billing Postal Code</label>
+                <div id="braintree-postal-code" class="form-control braintree-hosted-field"></div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div id="braintree-paypal-panel" class="d-none">
+        <p class="mb-2">Authorize this payment with your PayPal account, then place your order.</p>
+        <div id="paypal-button" style="max-width: 420px"></div>		
+        <div id="paypal-payment-status" class="mt-2" role="status" aria-live="polite"></div>
+    </div>
+
+    <div class="mt-2" style="font-size: 0.65em">
+        payment processing by <a href="https://www.braintreepayments.com/" target="_blank">Braintree</a> (a PayPal company)
+    </div>
+</div>
+
+
 
 <input id="Nonce" type="hidden" asp-for="@Model.InvoiceModel.Nonce" />
 <input id="Descriptor" type="hidden" asp-for="@Model.InvoiceModel.Descriptor" />

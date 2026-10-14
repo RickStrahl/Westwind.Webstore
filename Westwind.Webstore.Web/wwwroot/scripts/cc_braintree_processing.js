@@ -168,8 +168,8 @@ var brainTree = window.brainTree = {
                             brainTree.setPaymentMethod(payload);
                             $("#paypal-payment-status")
                                 .removeClass("text-danger")
-                                .addClass("text-success")
-                                .text("PayPal authorization complete. Place your order to finish payment.");
+                                .addClass("text-success")                                
+                                .text("PayPal authorization complete. Place your order to finish payment.");                            
                         }).catch(function (tokenizeErr) {
                             brainTree.showError("PayPal authorization could not be completed. Please try again.", tokenizeErr);
                         });
