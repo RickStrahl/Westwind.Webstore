@@ -269,6 +269,39 @@ namespace Westwind.Webstore.Web.Views.Admin
         {
             return ImportExportSeedData.ExportObject();
         }
+
+        [Route("/admin/cclog")]
+        public object CCLog(bool delete = false) 
+        {
+            var logFile = Path.Combine(wsApp.Constants.WebRootFolder, "admin", "cclog.txt");
+            if (delete && System.IO.File.Exists(logFile))
+            {
+                var txt = System.IO.File.ReadAllText(logFile);
+                var lines = txt.GetLines();
+                var lineCount =  txt.CountLines();
+                //delete all but that last 5 lines
+                if (lineCount > 5)
+                {
+                    var linesToKeep = lines.Skip(lineCount - 5);
+                    System.IO.File.WriteAllLines(logFile, linesToKeep);
+                }
+            }
+
+            return File("admin/cclog.txt", "text/plain");
+        }
+
+        [Route("/admin/errorlog")]
+        public object ErrorLog(bool delete = false)
+        {
+            var logFile = Path.Combine(wsApp.Constants.WebRootFolder, "admin", "applicationlog.txt");
+            if (delete)
+            {
+                if (System.IO.File.Exists(logFile))
+                    System.IO.File.Delete(logFile);
+            }
+
+            return File("admin/applicationlog.txt", "text/plain");
+        }
     }
 
 

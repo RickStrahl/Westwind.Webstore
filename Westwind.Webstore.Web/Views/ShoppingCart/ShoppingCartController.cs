@@ -651,12 +651,17 @@ Nonce:      {inv.CreditCard.Nonce}";
             if (!isPrintInvoice && string.IsNullOrEmpty(invoice.OrderStatus))
             {
                invoice.OrderStatus = "Order placed";
+                bool isApproved = invoice.CreditCardResult.IsApproved();
 
-               await AppUtils.SendOrderConfirmationEmail(model, ControllerContext);
-
-                if (invoice.CreditCardResult.IsApproved())
+                if (isApproved)
                 {
                     invoice.Completed = DateTime.Now;
+                }
+
+                await AppUtils.SendOrderConfirmationEmail(model, ControllerContext);
+
+                if (isApproved)
+                {
                     invoiceBusiness.SendEmailProductConfirmations();
                 }
 
