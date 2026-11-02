@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
@@ -73,10 +73,12 @@ namespace Westwind.Webstore.Web.App
             var invoice = model.InvoiceModel.Invoice;
             string confirmationHtml = await ViewRenderer.RenderViewToStringAsync("EmailConfirmation", model, controllerContext);
 
+            string titleText = model.IsPaymentRequest ? "Request for Payment" : "Order Confirmation";
+
 
             var emailer = new MailgunHttpEmailer();
             return emailer.SendEmail(string.IsNullOrEmpty(invoice.BillingAddress.Email) ? invoice.Customer.Email : invoice.BillingAddress.Email,
-                $"{wsApp.Configuration.ApplicationName} Order Confirmation #{invoice.InvoiceNumber}",
+                $"{wsApp.Configuration.ApplicationName} {titleText} #{invoice.InvoiceNumber}",
                 confirmationHtml,
                 EmailModes.html);
         }

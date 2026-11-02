@@ -1,4 +1,4 @@
-﻿using Westwind.Webstore.Business;
+using Westwind.Webstore.Business;
 using Westwind.Webstore.Business.Entities;
 using Westwind.Webstore.Web.Models;
 
@@ -26,6 +26,12 @@ namespace Westwind.Webstore.Web.Views
         public string dtto { get; set; }
 
         public string Evc { get; set; }
+
+        /// <summary>
+        /// When true, the order confirmation email is sent as a
+        /// Request for Payment (title and subject change).
+        /// </summary>
+        public bool IsPaymentRequest { get; set; }
     }
 
     public class OrderFormFastViewModel : WebStoreBaseViewModel

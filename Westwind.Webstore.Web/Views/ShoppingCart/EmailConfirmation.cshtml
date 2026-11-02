@@ -12,7 +12,9 @@
     var invoice = Model.InvoiceModel.Invoice;
     Model.InvoiceModel.NoLineItemImages = false;
 
-    if (isPendingOrder)
+    if (Model.IsPaymentRequest)
+        title = "Request for Payment - " + config.ApplicationName;
+    else if (isPendingOrder)
         title = "Pending Order Receipt - " + config.ApplicationName;    
 }
 <!DOCTYPE html>
@@ -133,7 +135,11 @@
     </div>
     
     <h2 class="page-header-text">
-        @if (Model.InvoiceModel.Invoice.CreditCardResult.IsApproved())
+        @if (Model.IsPaymentRequest)
+        {
+            <span>Request for Payment #@invoice.InvoiceNumber</span>
+        }
+        else if (Model.InvoiceModel.Invoice.CreditCardResult.IsApproved())
         {
             <span>Order Confirmation #@invoice.InvoiceNumber</span>
         }

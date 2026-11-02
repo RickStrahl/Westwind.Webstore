@@ -1,7 +1,7 @@
 ---
 title: "Upgrade vulnerable AutoMapper dependency"
 kind: problem
-status: pending
+status: later
 created: 2026-10-13
 summary: "The web project build reports a known high-severity vulnerability in AutoMapper 13.0.1 (GHSA-rvv3-g6hj-g44x)."
 ---

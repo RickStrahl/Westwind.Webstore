@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -309,13 +309,14 @@ public class OrderManagerController : WebStoreBaseController
         }
         var orderModel = CreateViewModel<OrderFormViewModel>();
         orderModel.InvoiceModel = new InvoiceViewModel(invoice);
+        orderModel.IsPaymentRequest = true;
 
-        string message = "Order Confirmation Email sent.";
+        string message = "Request for Payment Email sent.";
         string icon = "success";
          bool result =  await AppUtils.SendOrderConfirmationEmail(orderModel, ControllerContext);
          if (!result)
          {
-             message = "Order Confirmation failed. " + orderModel.ErrorDisplay.Message;
+             message = "Request for Payment Email failed. " + orderModel.ErrorDisplay.Message;
              icon = "error";
          }
 
