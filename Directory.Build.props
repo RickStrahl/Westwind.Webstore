@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <ProductVersion>1.5</ProductVersion>
+    <FrameworkVersion>net11.0</FrameworkVersion>
+    <!--<RollForwardType>LatestMinor</RollForwardType>-->
+    <RollForwardType>LatestMajor</RollForwardType>
+ 
+  </PropertyGroup>
+</Project>

@@ -2,6 +2,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
     <File Path="README.md" />
     <File Path="TODO.md" />
     <File Path="Westwind.Webstore.Business/Migrations.md" />
