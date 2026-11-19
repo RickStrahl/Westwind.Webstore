@@ -40,6 +40,7 @@ namespace Westwind.Webstore.Business.Entities
                 .UseSqlServer(connectionString,
                     opt =>
                     {
+                        opt.UseCompatibilityLevel(wsApp.Configuration.System.SqlCompatibilityLevel);
                         opt.EnableRetryOnFailure()
                             .CommandTimeout(15)
                             .MigrationsAssembly("Westwind.WebStore.Business");
@@ -63,12 +64,8 @@ namespace Westwind.Webstore.Business.Entities
         /// <returns></returns>
         public static WebStoreContext CreateContext(string connectionString = null)
         {
-            var builder = new DbContextOptionsBuilder<WebStoreContext>();
-            builder.UseSqlServer(connectionString ?? wsApp.Configuration.ConnectionString);
-            if (wsApp.Configuration.System.ShowConsoleDbCommands)
-                builder.LogTo(Console.WriteLine,  new  [] { RelationalEventId.CommandExecuted})
-                    .EnableSensitiveDataLogging();
-            var context = new WebStoreContext(builder.Options);
+            var options = CreateDbContextOptions(connectionString: connectionString);            
+            var context = new WebStoreContext(options);
             return context;
         }
 
@@ -111,7 +108,7 @@ namespace Westwind.Webstore.Business.Entities
 
             // Auto configuration
             ConnectionString = wsApp.Configuration.ConnectionString;
-            optionsBuilder.UseSqlServer(ConnectionString);
+            optionsBuilder.UseSqlServer(ConnectionString, o=> o.UseCompatibilityLevel(wsApp.Configuration.System.SqlCompatibilityLevel));
             if (wsApp.Configuration.System.ShowConsoleDbCommands)
                 optionsBuilder.LogTo(Console.WriteLine,  new  [] { RelationalEventId.CommandExecuted})
                     .EnableSensitiveDataLogging();

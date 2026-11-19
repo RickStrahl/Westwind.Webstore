@@ -21,6 +21,7 @@ namespace Westwind.Webstore.Business.Entities.Context
             var optionsBuilder = new DbContextOptionsBuilder<WebStoreContext>();
             optionsBuilder.UseSqlServer(conn, opt =>
             {
+                opt.UseCompatibilityLevel(wsApp.Configuration.System.SqlCompatibilityLevel);
                 opt.CommandTimeout(15);
                 opt.EnableRetryOnFailure();
             });

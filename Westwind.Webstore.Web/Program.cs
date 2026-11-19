@@ -62,6 +62,8 @@ var config = wsApp.Configuration;
 builder.Configuration.GetSection("WebStore").Bind(config);
 services.AddSingleton(config);
 
+//noConfig = true; // force write if true - useful to write out all settings from time to time if new ones were added.
+
 if (noConfig)
 {
 

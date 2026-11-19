@@ -267,8 +267,9 @@ namespace Westwind.Webstore.Business
 
         public bool ShowConsoleRequestTimings { get; set; }
 
-
         public bool ShowConsoleDbCommands { get; set; }
+
+        public int SqlCompatibilityLevel { get; set; } = 150;  // 150: 2019,  160: 2022
     }
 
     public enum ErrorDisplayModes
